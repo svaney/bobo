@@ -20,6 +20,11 @@ allprojects {
         google()
         jcenter()
     }
+
+    ext {
+        supportLibrariesVersion = '27.0.2'
+        playServicesVersion = '11.8.0'
+    }
 }
 
 task clean(type: Delete) {
