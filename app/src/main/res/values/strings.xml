@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">BoBo</string>
+    <string name="app_name" translatable="false">BoBo</string>
+    <string name="button_text_retry">RETRY</string>
 </resources>
