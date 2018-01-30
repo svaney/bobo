@@ -36,6 +36,8 @@ public class RetrofitCallback<ContentType> implements Callback<ContentType> {
                     }
                 }
             }
+        } else {
+            mCallback.onFailure(new Throwable());
         }
     }
 

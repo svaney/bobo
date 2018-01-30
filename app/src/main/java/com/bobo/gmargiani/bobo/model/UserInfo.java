@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.model;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
@@ -16,6 +17,8 @@ public class UserInfo implements NetDataListener {
     private ApiManager apiManager;
     private EventBus eventBus;
 
+    private AuthorizedEvent authorizedEvent;
+
     private TestDataEvent testDataEvent;
 
     public UserInfo(EventBus eventBus) {
@@ -27,6 +30,15 @@ public class UserInfo implements NetDataListener {
         this.apiManager = apiManager;
     }
 
+    public void requestAuthorizedEvent() {
+        if (authorizedEvent == null) {
+            authorizedEvent = new AuthorizedEvent();
+            authorizedEvent.setState(RootEvent.STATE_SUCCESS);
+        }
+
+        eventBus.post(authorizedEvent);
+    }
+
     public void requestTestData(boolean forceRefresh, boolean update, String deviceType, String channel) {
 
         if (!forceRefresh && shouldNotRefresh(testDataEvent, update)) {
@@ -35,7 +47,7 @@ public class UserInfo implements NetDataListener {
 
             boolean newEventNeeded = testDataEvent == null || forceRefresh;
 
-            testDataEvent = newEventNeeded ? new TestDataEvent() : testDataEvent.copyData();
+            testDataEvent = newEventNeeded ? new TestDataEvent() : (TestDataEvent) testDataEvent.copyData();
 
             testDataEvent.setState(newEventNeeded ? RootEvent.STATE_LOADING : RootEvent.STATE_UPDATING);
 
@@ -51,7 +63,7 @@ public class UserInfo implements NetDataListener {
 
         if (testDataEvent != null) {
 
-            testDataEvent.copyData();
+            testDataEvent = (TestDataEvent) testDataEvent.copyData();
 
             if (testDataEvent.isUpdating()) {
                 testDataEvent.setState(RootEvent.STATE_SUCCESS);
@@ -60,7 +72,7 @@ public class UserInfo implements NetDataListener {
                 }
             } else if (testDataEvent.isLoading()) {
                 if (!response.isNetworkFailure()) {
-                    if (response.isSuccess()){
+                    if (response.isSuccess()) {
                         testDataEvent.setState(RootEvent.STATE_SUCCESS);
                         testDataEvent.setAppVersion(response.getResult());
                     } else {
@@ -97,4 +109,6 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
+
+
 }

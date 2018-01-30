@@ -21,7 +21,7 @@ public class RetrofitApi extends NetApi {
 
     @Override
     public void getTestData(String deviceType, String channel, RestCallback<ApiResponse<AppVersion>> callback) {
-        Call<ApiResponse<AppVersion>> call = retService.getTestData(COMMON_GET_APP_CLIENT_STATUS, deviceType);
+        Call<ApiResponse<AppVersion>> call = retService.getTestData(COMMON_GET_APP_CLIENT_STATUS, deviceType, channel);
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
     }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/profile_bar_wrapper_height">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/profile_bar_card_height"
+        android:layout_gravity="center"
+        android:layout_margin="6dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <LinearLayout
+                android:id="@+id/right_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/profile_btn"
+                    android:layout_width="@dimen/profile_bar_icon_size"
+                    android:layout_height="@dimen/profile_bar_icon_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_account_circle" />
+
+                <ImageView
+                    android:id="@+id/setting_btn"
+                    android:layout_width="@dimen/profile_bar_icon_size"
+                    android:layout_height="@dimen/profile_bar_icon_size"
+                    android:layout_marginLeft="12dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_settings_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/left_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/right_container"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/balance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_bar_balance" />
+
+                <TextView
+                    android:id="@+id/blocked_balance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_bar_clocked_balance" />
+
+                <TextView
+                    android:id="@+id/login_register_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/log_in_register" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

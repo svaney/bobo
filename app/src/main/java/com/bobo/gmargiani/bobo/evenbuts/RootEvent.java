@@ -77,5 +77,5 @@ public abstract class RootEvent {
         this.errorText = errorText;
     }
 
-    public abstract TestDataEvent copyData();
+    public abstract Object copyData();
 }

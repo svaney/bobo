@@ -10,16 +10,20 @@ import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by gmargiani on 1/30/2018.
  */
 
-public class RootActivity extends AppCompatActivity {
+public abstract class RootActivity extends AppCompatActivity {
     protected UserInfo userInfo;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -74,4 +78,5 @@ public class RootActivity extends AppCompatActivity {
         }
     }
 
+    public abstract int getLayoutId();
 }

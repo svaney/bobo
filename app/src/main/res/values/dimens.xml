@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="profile_bar_wrapper_height">82dp</dimen>
+    <dimen name="profile_bar_card_height">64dp</dimen>
+    <dimen name="profile_bar_icon_size">24dp</dimen>
+</resources>

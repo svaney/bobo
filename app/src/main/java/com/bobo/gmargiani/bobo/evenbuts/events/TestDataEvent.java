@@ -11,7 +11,7 @@ public class TestDataEvent extends RootEvent {
     private AppVersion appVersion;
 
     @Override
-    public TestDataEvent copyData() {
+    public Object copyData() {
         TestDataEvent ts = new TestDataEvent();
 
         ts.setState(getState());

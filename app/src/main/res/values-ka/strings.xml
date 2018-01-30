@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="button_text_retry">თავიდან</string>
+    <string name="log_in_register">შესვლა / რეგისტრაცია</string>
+    <string name="profile_bar_balance">ბალანსი: </string>
+    <string name="profile_bar_clocked_balance">დაბლოკილი: </string>
 </resources>

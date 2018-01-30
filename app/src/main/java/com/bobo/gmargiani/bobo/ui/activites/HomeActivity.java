@@ -1,55 +1,61 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class HomeActivity extends RootActivity {
-    @BindView(R.id.text_view)
-    TextView tv;
-
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
 
-    private TestDataEvent appVersionEvent;
+    @BindView(R.id.profile_bar)
+    ViewGroup profileBar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-    }
+    @BindView(R.id.balance_tv)
+    TextView balanceTv;
+
+    @BindView(R.id.profile_btn)
+    View profileBtn;
+
+    @BindView(R.id.blocked_balance_tv)
+    TextView blockedBalanceTv;
+
+    @BindView(R.id.login_register_tv)
+    View loginRegisterBtn;
+    
+    private AuthorizedEvent authorizedEvent;
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        userInfo.requestTestData(true, false, "ANDROID", "MOBILE-EXT");
+        userInfo.requestAuthorizedEvent();
     }
 
-    @Subscribe
-    public void onTestData(TestDataEvent event) {
-        if (event != appVersionEvent) {
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthorizedEvent(AuthorizedEvent event) {
+        if (event != authorizedEvent) {
+            authorizedEvent = event;
             refreshLayout.setRefreshing(false);
             refreshLayout.setRefreshing(event.isUpdating());
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
                     showFullLoading();
-                    showData();
                     break;
-                case RootEvent.STATE_UPDATING:
                 case RootEvent.STATE_SUCCESS:
                     showContent();
+                    setUpAuthorizedEvent();
                     break;
                 case RootEvent.STATE_DATA_ERROR:
                     showFullError();
@@ -61,33 +67,42 @@ public class HomeActivity extends RootActivity {
         }
     }
 
-    private void showData() {
-        tv.setText("must update client: " + appVersionEvent.getAppVersion().isMustUpdateClient());
+
+    private void setUpAuthorizedEvent() {
+        balanceTv.setVisibility(authorizedEvent.isAuthorized() ? View.VISIBLE : View.GONE);
+        blockedBalanceTv.setVisibility(authorizedEvent.isAuthorized() ? View.VISIBLE : View.GONE);
+        profileBtn.setVisibility(authorizedEvent.isAuthorized() ? View.VISIBLE : View.GONE);
+        loginRegisterBtn.setVisibility(authorizedEvent.isAuthorized() ? View.GONE : View.VISIBLE);
+
+        if (authorizedEvent.isAuthorized()) {
+
+        } else {
+
+        }
     }
 
-    @OnClick(R.id.full_retry)
-    public void onRetryClick() {
-        userInfo.requestTestData(true, false, "ANDROID", "MOBILE-EXT");
+    @OnClick(R.id.setting_btn)
+    protected void onSettingsClick() {
+
     }
 
-    @OnClick(R.id.force_refresh)
-    public void onForceRefreshClick() {
-        userInfo.requestTestData(true, false, "ANDROID", "MOBILE-EXT");
+    @OnClick(R.id.profile_btn)
+    protected void onProfileClick() {
+
     }
 
-    @OnClick(R.id.update)
-    public void onUpdateClick() {
-        userInfo.requestTestData(false, true, "ANDROID", "MOBILE-EXT");
+    @OnClick(R.id.login_register_tv)
+    protected void onLoginRegisterClick() {
+
     }
 
-    @OnClick(R.id.get_data_with_error)
-    public void onGetErrorClick() {
-        userInfo.requestTestData(false, false, "ANDROID", "MOBILE");
+    @OnClick(R.id.new_order)
+    protected void onNewOrderClick() {
+
     }
 
-    @OnClick(R.id.get_data_with_error_update)
-    public void onGetErrorUpdateClick() {
-        userInfo.requestTestData(false, false, "ANDROID", "MOBILE");
+    public int getLayoutId() {
+        return R.layout.activity_home;
     }
 }
 

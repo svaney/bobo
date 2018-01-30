@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">BoBo</string>
     <string name="button_text_retry">RETRY</string>
+    <string name="log_in_register">Log in / Register</string>
+    <string name="profile_bar_balance">Balance: </string>
+    <string name="profile_bar_clocked_balance">Blocked: </string>
 </resources>
