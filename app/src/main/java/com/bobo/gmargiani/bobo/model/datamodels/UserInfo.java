@@ -1,11 +1,10 @@
-package com.bobo.gmargiani.bobo.model;
+package com.bobo.gmargiani.bobo.model.datamodels;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
-import com.bobo.gmargiani.bobo.rest.NetApi;
 
 import org.greenrobot.eventbus.EventBus;
 

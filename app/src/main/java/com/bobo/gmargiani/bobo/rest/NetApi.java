@@ -1,6 +1,6 @@
 package com.bobo.gmargiani.bobo.rest;
 
-import com.bobo.gmargiani.bobo.model.AppVersion;
+import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
 
 /**
  * Created by gmargiani on 1/30/2018.

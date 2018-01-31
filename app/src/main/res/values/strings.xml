@@ -4,4 +4,14 @@
     <string name="log_in_register">Log in / Register</string>
     <string name="profile_bar_balance">Balance: </string>
     <string name="profile_bar_clocked_balance">Blocked: </string>
+    <string name="enter_your_order_details_here">Enter your order details here</string>
+    <string name="new_order_comment">comment</string>
+    <string name="add_product">ADD PRODUCT</string>
+    <string name="new_order_error_now_items">To continue, please add at least one product</string>
+    <string name="product_dialog_title_product_title">Product Title</string>
+    <string name="product_dialog_title_details">Details</string>
+    <string name="product_dialog_radio_weight_title">Weight</string>
+    <string name="product_dialog_radio_bolume_title">Volume</string>
+    <string name="product_dialog_radio_size_title">Size</string>
+    <string name="product_dialog_radio_other_title">Other (Ex.: Total 5 GEL)</string>
 </resources>

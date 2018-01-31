@@ -1,7 +1,7 @@
 package com.bobo.gmargiani.bobo.evenbuts.events;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
-import com.bobo.gmargiani.bobo.model.AppVersion;
+import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
 
 /**
  * Created by gmargiani on 1/30/2018.

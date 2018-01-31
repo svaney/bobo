@@ -7,14 +7,29 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_bar_card_height"
         android:layout_gravity="center"
-        android:layout_margin="6dp">
+        android:layout_margin="@dimen/item_default_small_margin">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginLeft="@dimen/item_default_margin"
+            android:layout_marginRight="@dimen/item_default_margin">
+
+            <FrameLayout
+                android:id="@+id/most_left_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/back_button"
+                    android:layout_width="@dimen/profile_bar_icon_size"
+                    android:layout_height="@dimen/profile_bar_icon_size"
+                    android:layout_marginRight="@dimen/item_default_margin"
+                    android:src="@drawable/ic_arrow_back_black" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/right_container"
@@ -35,7 +50,7 @@
                     android:id="@+id/setting_btn"
                     android:layout_width="@dimen/profile_bar_icon_size"
                     android:layout_height="@dimen/profile_bar_icon_size"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginLeft="@dimen/item_default_margin"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_settings_black" />
             </LinearLayout>
@@ -44,9 +59,9 @@
                 android:id="@+id/left_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/right_container"
+                android:layout_toRightOf="@id/most_left_view"
                 android:orientation="vertical">
 
                 <TextView
@@ -68,7 +83,6 @@
                     android:text="@string/log_in_register" />
 
             </LinearLayout>
-
 
         </RelativeLayout>
 

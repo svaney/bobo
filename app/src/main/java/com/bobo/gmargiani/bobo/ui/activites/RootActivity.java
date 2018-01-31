@@ -1,14 +1,14 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
-import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
+import com.bobo.gmargiani.bobo.ui.dialogs.NewItemDetailsDialogFragment;
 
 import butterknife.ButterKnife;
 
@@ -76,6 +76,16 @@ public abstract class RootActivity extends AppCompatActivity {
         if (content != null) {
             content.setVisibility(show ? View.VISIBLE : View.GONE);
         }
+    }
+
+    public void showConditionalDialog() {
+
+
+
+        final NewItemDetailsDialogFragment dialog = new NewItemDetailsDialogFragment();
+
+        dialog.show(this.getSupportFragmentManager(), "NEW_ITEM");
+        dialog.setCancelable(false);
     }
 
     public abstract int getLayoutId();

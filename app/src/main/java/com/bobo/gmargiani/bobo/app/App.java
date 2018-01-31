@@ -1,11 +1,8 @@
 package com.bobo.gmargiani.bobo.app;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 
-import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.NetApi;
 import com.bobo.gmargiani.bobo.rest.RetrofitApi;

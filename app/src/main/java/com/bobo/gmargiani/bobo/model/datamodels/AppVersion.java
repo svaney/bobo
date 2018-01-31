@@ -1,4 +1,4 @@
-package com.bobo.gmargiani.bobo.model;
+package com.bobo.gmargiani.bobo.model.datamodels;
 
 /**
  * Created by gmargiani on 1/30/2018.

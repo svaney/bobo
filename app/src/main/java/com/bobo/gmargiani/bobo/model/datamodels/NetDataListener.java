@@ -1,4 +1,4 @@
-package com.bobo.gmargiani.bobo.model;
+package com.bobo.gmargiani.bobo.model.datamodels;
 
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
