@@ -1,4 +1,4 @@
-package com.bobo.gmargiani.bobo.ui.adapters;
+package com.bobo.gmargiani.bobo.ui.adapters.interfaces;
 
 /**
  * Created by gmargiani on 1/31/2018.

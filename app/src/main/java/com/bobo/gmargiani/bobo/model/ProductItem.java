@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.model;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 /**
@@ -7,11 +8,12 @@ import java.math.BigDecimal;
  */
 
 public class ProductItem {
-    public String title;
-    public short unitType;
-    public short unitMeasureType;
-    public BigDecimal amount;
-    public String comment;
+    String title;
+    short unitType;
+    short unitMeasureType;
+    BigDecimal amount;
+    String comment;
+    File file;
 
     public String getTitle() {
         return title;
@@ -29,7 +31,7 @@ public class ProductItem {
         this.unitType = unitType;
     }
 
-    public short getMeasureUnit() {
+    public short getMeasureUnitType() {
         return unitMeasureType;
     }
 
@@ -51,5 +53,13 @@ public class ProductItem {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -19,8 +19,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
-import com.bobo.gmargiani.bobo.ui.adapters.BasicRecyclerItemClickListener;
-import com.bobo.gmargiani.bobo.utils.ImageUtils;
+import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
 
 import java.util.ArrayList;
 

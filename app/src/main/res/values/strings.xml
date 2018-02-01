@@ -24,4 +24,5 @@
     <string name="button_text_add_picture">ADD PICTURE</string>
     <string name="select_picture_gallery">Gallery</string>
     <string name="select_picture_camera">Camera</string>
+    <string name="select_picture_remove">Remove photo</string>
 </resources>

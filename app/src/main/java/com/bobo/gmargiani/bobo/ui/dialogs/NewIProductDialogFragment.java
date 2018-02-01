@@ -1,6 +1,8 @@
 package com.bobo.gmargiani.bobo.ui.dialogs;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.bobo.gmargiani.bobo.R;
@@ -22,7 +23,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent
 import com.bobo.gmargiani.bobo.model.ProductItem;
 import com.bobo.gmargiani.bobo.ui.activites.NewOrderActivity;
 import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
-import com.bobo.gmargiani.bobo.ui.adapters.BasicRecyclerItemClickListener;
+import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.views.DropDownChooser;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
@@ -32,6 +33,7 @@ import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -76,6 +78,11 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
     private View sizeContainer;
     private View commentContainer;
 
+    private View radioContainer;
+    private View inputContainer;
+    private View pictureContainer;
+
+    private File file;
     private int selectedSizePosition = KG_POSITION;
     private int selectedSizeType = ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT;
 
@@ -94,7 +101,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         volumes.add(getString(R.string.volume_millilitre_long));
 
         setUpViews(v);
-        setUpScreenData();
+        setUpInitialScreen();
 
         return builder.create();
 
@@ -129,23 +136,21 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         commentET = v.findViewById(R.id.other_comment_et);
         productTitleET = v.findViewById(R.id.product_title);
 
-
-        amountInputET.addTextChangedListener(textWatcher);
-        commentET.addTextChangedListener(textWatcher);
-        productTitleET.addTextChangedListener(textWatcher);
-
+        radioContainer = v.findViewById(R.id.radio_container);
+        inputContainer = v.findViewById(R.id.input_container);
+        pictureContainer = v.findViewById(R.id.picture_container);
 
     }
 
-    private void setUpScreenData() {
+    private void setUpInitialScreen() {
 
         AppUtils.closeKeyboard(dummyView);
 
         setUpViewClickListeners();
 
-        ((RadioButton) radioGroup.findViewById(R.id.radio_weight)).setChecked(true);
+        setPicture();
 
-        ImageLoader.loadImage(productImage, R.drawable.new_product_image_placeholder);
+        handleViews();
 
     }
 
@@ -163,9 +168,6 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
 
         dropDownChooser.setText(weights.get(selectedSizePosition));
         amountInputET.setHint(R.string.product_dialog_radio_weight_title);
-
-        handleAddButton();
-
     }
 
     private void setUpVolumeInput() {
@@ -176,37 +178,29 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
             @Override
             public void onClick(View v) {
                 ((RootActivity) getActivity()).showTextListDialog(getString(R.string.product_dialog_radio_volume_title),
-                        volumes, LIST_TYPE_MEASURMENT,NewIProductDialogFragment.this);
+                        volumes, LIST_TYPE_MEASURMENT, NewIProductDialogFragment.this);
             }
         });
 
         dropDownChooser.setText(volumes.get(selectedSizePosition));
         amountInputET.setHint(R.string.product_dialog_radio_volume_title);
-
-        handleAddButton();
     }
 
     private void setUpOtherInput() {
         sizeContainer.setVisibility(View.GONE);
         commentContainer.setVisibility(View.VISIBLE);
-
-        handleAddButton();
     }
 
     private void handleAddButton() {
-        switch (selectedSizeType) {
-            case ModelConsts.PRODUCT_UNIT_TYPE_VOLUME:
-            case ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT:
-                addButton.setEnabled(!TextUtils.isEmpty(productTitleET.getText().toString()) && !TextUtils.isEmpty(amountInputET.getText().toString()));
-                break;
-            case ModelConsts.PRODUCT_UNIT_TYPE_OTHER:
-                addButton.setEnabled(!TextUtils.isEmpty(productTitleET.getText().toString()) && !TextUtils.isEmpty(commentET.getText().toString()));
-                break;
-        }
+        addButton.setEnabled(pictureContainer.getVisibility() == View.VISIBLE);
     }
 
 
     private void setUpViewClickListeners() {
+
+        productTitleET.addTextChangedListener(titleTextWatcher);
+        amountInputET.addTextChangedListener(amountTextWatcher);
+        commentET.addTextChangedListener(amountTextWatcher);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,6 +219,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppUtils.closeKeyboard(dummyView);
                 addProductImage();
             }
         });
@@ -240,6 +235,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 AppUtils.closeKeyboard(dummyView);
+                clearTextViews();
                 switch (checkedId) {
                     case R.id.radio_weight:
                         selectedSizeType = ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT;
@@ -253,6 +249,9 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
                 }
 
                 typeOrUnitChanged();
+                if (group.getCheckedRadioButtonId() != -1) {
+                    handleViews();
+                }
             }
         });
     }
@@ -261,22 +260,27 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         ArrayList<String> arr = new ArrayList<>();
         arr.add(getString(R.string.select_picture_gallery));
         arr.add(getString(R.string.select_picture_camera));
+        if (file != null) {
+            arr.add(getString(R.string.select_picture_remove));
+        }
         ((RootActivity) getActivity()).showTextListDialog("", arr, LIST_TYPE_PICTURE, this);
     }
 
 
     @Override
     public void onItemClick(int position, int listType) {
-        switch (listType){
+        switch (listType) {
             case LIST_TYPE_MEASURMENT:
                 selectedSizePosition = position;
                 typeOrUnitChanged();
                 break;
             case LIST_TYPE_PICTURE:
-                if (position == 0){
+                if (position == 0) {
                     ImageUtils.manageGallery(getActivity());
-                } else {
+                } else if (position == 1) {
                     ImageUtils.manageCamera(getActivity());
+                } else {
+                    setPicture();
                 }
                 break;
         }
@@ -300,6 +304,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
     private void createAndAddItem() {
         ProductItem item = new ProductItem();
         item.setTitle(productTitleET.getText().toString());
+        item.setFile(file);
 
         switch (selectedSizeType) {
             case ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT:
@@ -319,25 +324,8 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         }
 
         ((NewOrderActivity) getActivity()).addNewProduct(item);
+        dismiss();
     }
-
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            handleAddButton();
-        }
-    };
-
 
     @Subscribe
     public void onPermissionsGranted(GrantedPermissionsEvent event) {
@@ -360,9 +348,106 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
             }
 
             if (!TextUtils.isEmpty(path)) {
-                ImageLoader.loadImage(productImage, -1);
-                ImageLoader.loadImage(productImage, path);
+                File imgFile = new File(path);
+                if (imgFile.exists()) {
+                    this.file = imgFile;
+                    setPicture();
+                } else {
+                    setPicture();
+                }
+            } else {
+                setPicture();
             }
         }
+    }
+
+    private void setPicture() {
+        if (file != null) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            ImageLoader.loadImage(productImage, myBitmap);
+        } else {
+            ImageLoader.loadImage(productImage, R.drawable.new_product_image_placeholder);
+        }
+    }
+
+    private TextWatcher titleTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            handleViews();
+        }
+    };
+
+
+    private TextWatcher amountTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            handleViews();
+        }
+    };
+
+    private void handleViews() {
+        if (productTitleET.getText().length() > 0) {
+            radioContainer.setVisibility(View.VISIBLE);
+        } else {
+            radioContainer.setVisibility(View.GONE);
+            inputContainer.setVisibility(View.GONE);
+            pictureContainer.setVisibility(View.GONE);
+            radioGroup.clearCheck();
+            file = null;
+            clearTextViews();
+            handleAddButton();
+            return;
+        }
+
+        if (radioGroup.getCheckedRadioButtonId() != -1) {
+            inputContainer.setVisibility(View.VISIBLE);
+        } else {
+            inputContainer.setVisibility(View.GONE);
+            pictureContainer.setVisibility(View.GONE);
+            file = null;
+            clearTextViews();
+            handleAddButton();
+            return;
+        }
+
+        if (commentET.getText().length() > 0 || amountInputET.getText().length() > 0) {
+            pictureContainer.setVisibility(View.VISIBLE);
+            file = null;
+        } else {
+            pictureContainer.setVisibility(View.GONE);
+        }
+
+        setPicture();
+
+        handleAddButton();
+    }
+
+    private void clearTextViews() {
+        amountInputET.removeTextChangedListener(amountTextWatcher);
+        commentET.removeTextChangedListener(amountTextWatcher);
+        amountInputET.setText("");
+        commentET.setText("");
+        amountInputET.addTextChangedListener(amountTextWatcher);
+        commentET.addTextChangedListener(amountTextWatcher);
     }
 }

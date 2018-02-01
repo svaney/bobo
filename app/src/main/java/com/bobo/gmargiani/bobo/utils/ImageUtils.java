@@ -53,8 +53,10 @@ public class ImageUtils {
     @SuppressLint("NewApi")
     public static void manageGallery(Activity activity) {
         if (AppUtils.atLeastMarshmallow()) {
-            if (!AppUtils.hasPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, AppConsts.PERMISSION_EXTERNAL_STORAGE);
+            if (!AppUtils.hasPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    || !AppUtils.hasPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        AppConsts.PERMISSION_EXTERNAL_STORAGE);
             } else {
                 openGallery(activity);
             }
@@ -116,8 +118,12 @@ public class ImageUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private static void requestPermission(Activity activity, String permission, int permissionCode) {
-        activity.requestPermissions(new String[]{permission}, permissionCode);
+        requestPermissions(activity, new String[]{permission}, permissionCode);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static void requestPermissions(Activity activity, String[] permission, int permissionCode) {
+        activity.requestPermissions(permission, permissionCode);
     }
 
     private static Cursor getOrientation(Uri photoUri, Activity activity) {
@@ -243,7 +249,7 @@ public class ImageUtils {
             file.createNewFile();
         }
 
-        FileOutputStream fOut = new FileOutputStream(imageFile);
+        FileOutputStream fOut = new FileOutputStream(imageFile, false);
         bmp.compress(Bitmap.CompressFormat.JPEG, quality, fOut);
         fOut.flush();
         fOut.close();
