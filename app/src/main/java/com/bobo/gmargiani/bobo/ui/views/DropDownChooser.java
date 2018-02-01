@@ -16,8 +16,7 @@ import com.bobo.gmargiani.bobo.R;
 
 public class DropDownChooser extends LinearLayout implements View.OnClickListener {
 
-    private TextView titleTV;
-    private TextView insideTextTV;
+    private TextView textTV;
     private ImageView imageView;
     private OnClickListener listener;
 
@@ -35,19 +34,14 @@ public class DropDownChooser extends LinearLayout implements View.OnClickListene
     private void setUpView() {
         inflate(getContext(), R.layout.component_drop_down_chooser, this);
 
-        titleTV = findViewById(R.id.title);
-        insideTextTV = findViewById(R.id.inside_text);
+        textTV = findViewById(R.id.text_tv);
         imageView = findViewById(R.id.image);
 
         imageView.setOnClickListener(this);
     }
 
-    public void setTitle(String title) {
-        titleTV.setText(title);
-    }
-
-    public void setInsideText(String text) {
-        insideTextTV.setText(text);
+    public void setText(String text) {
+        textTV.setText(text);
     }
 
     public void setImageId(int imageId) {
@@ -63,9 +57,5 @@ public class DropDownChooser extends LinearLayout implements View.OnClickListene
         if (v == imageView && listener != null) {
             listener.onClick(v);
         }
-    }
-
-    public void showTitle(boolean show) {
-        titleTV.setVisibility(show ? VISIBLE : GONE);
     }
 }

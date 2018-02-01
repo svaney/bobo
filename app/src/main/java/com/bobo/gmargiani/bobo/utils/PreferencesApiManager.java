@@ -2,9 +2,8 @@ package com.bobo.gmargiani.bobo.utils;
 
 import android.content.SharedPreferences;
 
-import com.bobo.gmargiani.bobo.utils.consts.Consts;
-
-import org.greenrobot.eventbus.EventBus;
+import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
+import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
 
 /**
  * Created by gmargiani on 1/30/2018.
@@ -34,12 +33,12 @@ public class PreferencesApiManager {
 
     public String getCurrentLanguage() {
         String locale = getLocale();
-        String language = locale.equalsIgnoreCase(Consts.KA) ? Consts.KA : Consts.EN;
+        String language = locale.equalsIgnoreCase(AppConsts.KA) ? AppConsts.KA : AppConsts.EN;
         return language;
     }
 
     public String getLocale() {
-        String locale = mSharedPreferences.getString(SELECTED_LOCALE, Consts.KA);
+        String locale = mSharedPreferences.getString(SELECTED_LOCALE, AppConsts.KA);
         return locale;
     }
 }

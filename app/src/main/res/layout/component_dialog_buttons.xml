@@ -13,7 +13,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginRight="5dp"
         android:gravity="center"
-        android:text="CANCEL" />
+        android:text="@string/button_text_cancel" />
 
     <Button
         android:id="@+id/add_button"
@@ -24,6 +24,6 @@
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/dismiss_button"
         android:gravity="center"
-        android:text="ADD" />
+        android:text="@string/button_text_add" />
 
 </RelativeLayout>

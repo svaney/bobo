@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="weight_kg_long">კილოგრამი</string>
+    <string name="weight_gram_long">გრამი</string>
+    <string name="volume_litre_long">ლიტრი</string>
+    <string name="volume_millilitre_long">მილილიტრი</string>
+
+
     <string name="button_text_retry">თავიდან</string>
+    <string name="button_text_cancel">გაუქმება</string>
+    <string name="button_text_add_picture">სურათის ატვირთვა</string>
+
     <string name="log_in_register">შესვლა / რეგისტრაცია</string>
     <string name="profile_bar_balance">ბალანსი: </string>
     <string name="profile_bar_clocked_balance">დაბლოკილი: </string>
     <string name="enter_your_order_details_here">დაამატეთ თქვენი შეკვეთის დეტალები</string>
-    <string name="new_order_comment">კომენტარი</string>
+    <string name="new_product_comment">კომენტარი</string>
     <string name="add_product">პროდუქტის დამატება</string>
     <string name="new_order_error_now_items">გასაგრძლებლად, გთხოვთ დაამატოთ მინიმუმ ერთი პროდუქტი</string>
     <string name="product_dialog_title_product_title">პროდუქტის დასახელება</string>
     <string name="product_dialog_title_details">დეტალები</string>
     <string name="product_dialog_radio_weight_title">წონა</string>
-    <string name="product_dialog_radio_bolume_title">მოცულობა</string>
+    <string name="product_dialog_radio_volume_title">მოცულობა</string>
+    <string name="product_comment_volume_title">კომენტარი</string>
     <string name="product_dialog_radio_size_title">ზომა</string>
     <string name="product_dialog_radio_other_title">სხვა (მაგ.: 5 ლარის)</string>
+
+    <string name="select_picture_gallery">გალერეა</string>
+    <string name="select_picture_camera">ფოტოკამერა</string>
 </resources>

@@ -47,7 +47,9 @@
                         android:id="@+id/product_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/product_dialog_title_product_title" />
+                        android:hint="@string/product_dialog_title_product_title"
+                        android:maxLength="60"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -73,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/item_default_small_margin"
-                        android:text="@string/product_dialog_radio_bolume_title" />
+                        android:text="@string/product_dialog_radio_volume_title" />
 
                     <RadioButton
                         android:id="@+id/radio_other"
@@ -83,9 +85,11 @@
                         android:text="@string/product_dialog_radio_other_title" />
 
                     <RelativeLayout
+                        android:id="@+id/size_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/item_default_margin">
+                        android:layout_marginRight="@dimen/item_default_margin"
+                        android:layout_marginTop="@dimen/item_default_margin">
 
                         <com.bobo.gmargiani.bobo.ui.views.DropDownChooser
                             android:id="@+id/drop_down"
@@ -94,20 +98,66 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true" />
 
+
                         <EditText
                             android:id="@+id/amount_input_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:layout_margin="@dimen/item_default_margin"
+                            android:layout_marginRight="@dimen/item_default_small_margin"
                             android:layout_toLeftOf="@id/drop_down"
-                            android:gravity="right" />
+                            android:inputType="numberDecimal"
+                            android:maxLength="6" />
+
 
                     </RelativeLayout>
 
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/comment_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/item_default_margin"
+                        android:layout_marginTop="@dimen/item_default_margin">
+
+                        <EditText
+                            android:id="@+id/other_comment_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/new_product_comment"
+                            android:maxLength="500"
+                            android:maxLines="4" />
+
+                    </android.support.design.widget.TextInputLayout>
+
 
                 </RadioGroup>
+
+                <include layout="@layout/component_horizontal_divider" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/item_default_margin"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/add_picture_button"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/button_text_add_picture" />
+
+                    <ImageView
+                        android:id="@+id/product_image"
+                        android:layout_width="100dp"
+                        android:layout_height="70dp"
+                        android:layout_marginLeft="@dimen/item_default_margin"
+                        android:alpha="0.5"
+                        android:scaleType="fitXY" />
+
+                </LinearLayout>
 
                 <include layout="@layout/component_horizontal_divider" />
 

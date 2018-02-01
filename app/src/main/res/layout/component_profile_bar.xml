@@ -16,21 +16,6 @@
             android:layout_marginLeft="@dimen/item_default_margin"
             android:layout_marginRight="@dimen/item_default_margin">
 
-            <FrameLayout
-                android:id="@+id/most_left_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true">
-
-                <ImageView
-                    android:id="@+id/back_button"
-                    android:layout_width="@dimen/profile_bar_icon_size"
-                    android:layout_height="@dimen/profile_bar_icon_size"
-                    android:layout_marginRight="@dimen/item_default_margin"
-                    android:src="@drawable/ic_arrow_back_black" />
-            </FrameLayout>
-
             <LinearLayout
                 android:id="@+id/right_container"
                 android:layout_width="wrap_content"
@@ -43,6 +28,8 @@
                     android:id="@+id/profile_btn"
                     android:layout_width="@dimen/profile_bar_icon_size"
                     android:layout_height="@dimen/profile_bar_icon_size"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_account_circle" />
 
@@ -51,17 +38,19 @@
                     android:layout_width="@dimen/profile_bar_icon_size"
                     android:layout_height="@dimen/profile_bar_icon_size"
                     android:layout_marginLeft="@dimen/item_default_margin"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_settings_black" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/left_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/right_container"
-                android:layout_toRightOf="@id/most_left_view"
                 android:orientation="vertical">
 
                 <TextView
@@ -76,8 +65,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/profile_bar_clocked_balance" />
 
-                <TextView
-                    android:id="@+id/login_register_tv"
+
+                <Button
+                    android:id="@+id/login_register_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/log_in_register" />

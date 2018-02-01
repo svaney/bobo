@@ -5,5 +5,5 @@ package com.bobo.gmargiani.bobo.ui.adapters;
  */
 
 public interface BasicRecyclerItemClickListener {
-    void onClick(int position);
+    void onItemClick(int position, int type);
 }

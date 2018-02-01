@@ -1,7 +1,9 @@
 package com.bobo.gmargiani.bobo.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -110,6 +112,12 @@ public class AppUtils {
 
     public static boolean atLeastMarshmallow() {
         return getAndroidVersion() >= Build.VERSION_CODES.M;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public static boolean hasPermission(Activity activity, String permission) {
+        int hasLocationPermission = activity.checkSelfPermission(permission);
+        return hasLocationPermission == PackageManager.PERMISSION_GRANTED;
     }
 
     public static int getDimen(int dimensionId, Context context) {
