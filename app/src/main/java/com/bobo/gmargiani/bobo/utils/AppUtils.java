@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.bobo.gmargiani.bobo.app.App;
 
@@ -33,11 +34,6 @@ public class AppUtils {
         ConnectivityManager cm = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm != null && cm.getActiveNetworkInfo() != null;
-    }
-
-    public static void closeKeyboard(View focused) {
-        InputMethodManager imm = (InputMethodManager) focused.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
     }
 
     public static int convertDpToPixels(float dp, Context context) {

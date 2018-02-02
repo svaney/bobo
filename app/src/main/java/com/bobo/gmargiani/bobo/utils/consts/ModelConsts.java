@@ -12,7 +12,7 @@ public class ModelConsts {
     public static final short WEIGHT_UNIT_MEASURE_TYPE_KILOGRAM = 10;
     public static final short WEIGHT_UNIT_MEASURE_TYPE_GRAM = 20;
 
-    public static final short VOLUME_UNIT_MEASURE_TYPE_LITRE = 10;
-    public static final short VOLUME_UNIT_MEASURE_TYPE_MILLILITRE = 20;
+    public static final short VOLUME_UNIT_MEASURE_TYPE_LITRE = 30;
+    public static final short VOLUME_UNIT_MEASURE_TYPE_MILLILITRE = 40;
 
 }

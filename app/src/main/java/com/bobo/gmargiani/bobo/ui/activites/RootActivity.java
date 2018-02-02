@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
-import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
@@ -148,19 +147,10 @@ public abstract class RootActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (resultCode) {
-            case RESULT_OK:
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActivityResultEvent activityResultEvent = new ActivityResultEvent(requestCode, resultCode, data);
-                        App.getInstance().getEventBus().post(activityResultEvent);
-                    }
-                }, 400);
-                break;
-        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        App.getInstance().postActivityResultEvent(requestCode, resultCode, data);
     }
 
     @Override

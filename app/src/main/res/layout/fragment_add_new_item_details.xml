@@ -5,6 +5,7 @@
     android:layout_margin="@dimen/item_default_margin"
     android:orientation="vertical"
     android:paddingBottom="@dimen/item_default_margin"
+    android:id="@+id/sliding_layout"
     android:paddingTop="@dimen/item_default_margin">
 
     <FrameLayout
@@ -189,7 +190,7 @@
 
                     <include
                         android:id="@+id/button_container"
-                        layout="@layout/component_dialog_buttons"
+                        layout="@layout/component_confirm_cancel_buttons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/item_default_margin"

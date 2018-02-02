@@ -28,4 +28,7 @@
     <string name="select_picture_gallery">გალერეა</string>
     <string name="select_picture_camera">ფოტოკამერა</string>
     <string name="select_picture_remove">Remove photo</string>
+    <string name="button_text_save">SAVE</string>
+    <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
+    <string name="button_text_change_picture">CHANGE PICTURE</string>
 </resources>

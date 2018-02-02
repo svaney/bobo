@@ -29,6 +29,7 @@ import com.bobo.gmargiani.bobo.ui.views.DropDownChooser;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ImageUtils;
+import com.bobo.gmargiani.bobo.utils.ViewUtils;
 import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
 import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
 
@@ -82,8 +83,6 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
     private View radioContainer;
     private View inputContainer;
     private View pictureContainer;
-
-    private ScrollView scrollView;
 
     private File file;
     private int selectedSizePosition = KG_POSITION;
@@ -143,18 +142,17 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         inputContainer = v.findViewById(R.id.input_container);
         pictureContainer = v.findViewById(R.id.picture_container);
 
-        scrollView = v.findViewById(R.id.scroll_view);
     }
 
     private void setUpInitialScreen() {
-
-        AppUtils.closeKeyboard(dummyView);
 
         setUpViewClickListeners();
 
         setPicture();
 
         handleViews();
+
+        ViewUtils.focusEditText(productTitleET);
 
     }
 
@@ -197,12 +195,6 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
 
     private void handleAddButton() {
         addButton.setEnabled(pictureContainer.getVisibility() == View.VISIBLE);
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
     }
 
 
@@ -229,7 +221,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppUtils.closeKeyboard(dummyView);
+                ViewUtils.closeKeyboard(dummyView);
                 addProductImage();
             }
         });
@@ -244,7 +236,6 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                AppUtils.closeKeyboard(dummyView);
                 clearTextViews();
                 switch (checkedId) {
                     case R.id.radio_weight:
@@ -261,7 +252,13 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
                 typeOrUnitChanged();
                 if (group.getCheckedRadioButtonId() != -1) {
                     handleViews();
+                    if (commentContainer.getVisibility() != View.VISIBLE) {
+                        ViewUtils.focusEditText(amountInputET);
+                    } else {
+                        ViewUtils.focusEditText(commentET);
+                    }
                 }
+
             }
         });
     }
@@ -374,9 +371,10 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
     private void setPicture() {
         if (file != null) {
             Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            productImage.setVisibility(View.VISIBLE);
             ImageLoader.loadImage(productImage, myBitmap);
         } else {
-            ImageLoader.loadImage(productImage, R.drawable.new_product_image_placeholder);
+            productImage.setVisibility(View.GONE);
         }
     }
 

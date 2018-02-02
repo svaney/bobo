@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/item_default_margin"
                 android:layout_toLeftOf="@id/delete_product"
                 android:orientation="vertical">
 

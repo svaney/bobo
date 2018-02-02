@@ -76,9 +76,6 @@ public class NewProductRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         return items.size();
     }
 
-    public void setItems(ArrayList<ProductItem> items) {
-        this.items = items;
-    }
 
     public class ProductItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title, description;
@@ -99,7 +96,7 @@ public class NewProductRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             if (listener != null) {
                 if (view == delete) {
                     listener.onItemDelete(getAdapterPosition());
-                } else {
+                }else {
                     listener.onItemClick(getAdapterPosition());
                 }
             }
