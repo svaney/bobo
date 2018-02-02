@@ -13,6 +13,7 @@
         android:background="@android:color/white">
 
         <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_default_margin">

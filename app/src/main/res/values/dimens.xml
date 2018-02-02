@@ -2,7 +2,7 @@
 <resources>
     <dimen name="profile_bar_wrapper_height">82dp</dimen>
     <dimen name="profile_bar_card_height">64dp</dimen>
-    <dimen name="product_new_item_height">128dp</dimen>
+    <dimen name="product_new_item_height">96dp</dimen>
     <dimen name="profile_bar_icon_size">24dp</dimen>
     <dimen name="item_default_margin">16dp</dimen>
     <dimen name="item_default_small_margin">6dp</dimen>

@@ -60,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="24dp"
-                android:src="@drawable/ic_add_white" />
+                android:src="@drawable/ic_add_white"
+                android:transitionName="fab_button" />
 
         </FrameLayout>
     </LinearLayout>

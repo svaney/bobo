@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
@@ -82,6 +83,8 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
     private View inputContainer;
     private View pictureContainer;
 
+    private ScrollView scrollView;
+
     private File file;
     private int selectedSizePosition = KG_POSITION;
     private int selectedSizeType = ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT;
@@ -140,6 +143,7 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
         inputContainer = v.findViewById(R.id.input_container);
         pictureContainer = v.findViewById(R.id.picture_container);
 
+        scrollView = v.findViewById(R.id.scroll_view);
     }
 
     private void setUpInitialScreen() {
@@ -193,6 +197,12 @@ public class NewIProductDialogFragment extends DialogFragment implements BasicRe
 
     private void handleAddButton() {
         addButton.setEnabled(pictureContainer.getVisibility() == View.VISIBLE);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
 

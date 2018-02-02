@@ -35,6 +35,7 @@ public abstract class RootActivity extends AppCompatActivity {
 
     protected UserInfo userInfo;
 
+    protected Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public abstract class RootActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (resultCode) {
             case RESULT_OK:
-                new Handler().postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         ActivityResultEvent activityResultEvent = new ActivityResultEvent(requestCode, resultCode, data);
@@ -176,7 +177,7 @@ public abstract class RootActivity extends AppCompatActivity {
         }
 
 
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 App.getInstance().getEventBus().post(new GrantedPermissionsEvent(grantedPermissions, requestCode));
