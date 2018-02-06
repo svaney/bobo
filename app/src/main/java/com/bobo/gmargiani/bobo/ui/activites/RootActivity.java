@@ -155,26 +155,7 @@ public abstract class RootActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        final ArrayList<String> grantedPermissions = new ArrayList<>();
-        final ArrayList<String> deniedPermissions = new ArrayList<>();
-
-        for (int i = 0; i < grantResults.length; i++) {
-            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                grantedPermissions.add(permissions[i]);
-            } else {
-                deniedPermissions.add(permissions[i]);
-            }
-        }
-
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                App.getInstance().getEventBus().post(new GrantedPermissionsEvent(grantedPermissions, requestCode));
-                App.getInstance().getEventBus().post(new DeniedPermissionsEvent(deniedPermissions, requestCode));
-            }
-        }, 400);
-
+        App.getInstance().postPermissionEvent(requestCode, permissions, grantResults);
 
     }
 

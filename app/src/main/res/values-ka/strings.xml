@@ -1,34 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="weight_kg_long">კილოგრამი</string>
-    <string name="weight_gram_long">გრამი</string>
-    <string name="volume_litre_long">ლიტრი</string>
-    <string name="volume_millilitre_long">მილილიტრი</string>
+    <string name="measure_unit_weight_kg">კილოგრამი</string>
+    <string name="measure_unit_weight_gram">გრამი</string>
+    <string name="measure_unit_volume_litre">ლიტრი</string>
+    <string name="measure_unit_volume_millilitre">მილილიტრი</string>
 
+    <string name="common_text_comment">კომენტარი</string>
+
+    <string name="tip_text_home_register_button">დარეგისტრირდი ან გაიარე ავტორიზაცია აქედან</string>
+    <string name="tip_text_home_add_order_from_here">შეუკვეთე აქედან</string>
+    <string name="tip_text_new_order_add_product">დაამატე პროდუქტი აქედან</string>
+    <string name="tip_text_new_order_order_description">მიუთითეთ თუ საიდან გსურთ პროდუქტის მოტანა</string>
+    <string name="tip_text_new_order_finish_product">შეკვეთის დასასრულებლად დააჭირეთ აქ</string>
+
+    <string name="tip_button_text_next">შემდეგი</string>
+    <string name="tip_button_text_close">ინსტრუქციების დახურვა</string>
 
     <string name="button_text_retry">თავიდან</string>
+    <string name="button_text_save">შენახვა</string>
+    <string name="button_text_save_remember">დამახსოვრება</string>
     <string name="button_text_cancel">გაუქმება</string>
+    <string name="button_text_add">დამატება</string>
     <string name="button_text_add_picture">სურათის ატვირთვა</string>
+    <string name="button_text_add_product">პროდუქტის დამატება</string>
+    <string name="button_text_change_picture">სურათის შეცვლა</string>
 
-    <string name="log_in_register">შესვლა / რეგისტრაცია</string>
+    <string name="error_order_without_items">გასაგრძლებლად, გთხოვთ დაამატოთ მინიმუმ ერთი პროდუქტი</string>
+    <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
+
+    <string name="hint_enter_order_description_here">საიდან გსურთ პროდუქტის მოტანა?</string>
+
+    <string name="profile_bar_log_in_register">შესვლა / რეგისტრაცია</string>
     <string name="profile_bar_balance">ბალანსი: </string>
     <string name="profile_bar_clocked_balance">დაბლოკილი: </string>
+
     <string name="enter_your_order_details_here">დაამატეთ თქვენი შეკვეთის დეტალები</string>
-    <string name="new_product_comment">კომენტარი</string>
-    <string name="add_product">პროდუქტის დამატება</string>
-    <string name="new_order_error_now_items">გასაგრძლებლად, გთხოვთ დაამატოთ მინიმუმ ერთი პროდუქტი</string>
+
     <string name="product_dialog_title_product_title">პროდუქტის დასახელება</string>
     <string name="product_dialog_title_details">დეტალები</string>
     <string name="product_dialog_radio_weight_title">წონა</string>
     <string name="product_dialog_radio_volume_title">მოცულობა</string>
-    <string name="product_comment_volume_title">კომენტარი</string>
     <string name="product_dialog_radio_size_title">ზომა</string>
-    <string name="product_dialog_radio_other_title">სხვა (მაგ.: 5 ლარის)</string>
+    <string name="product_dialog_specify_size">ზომის მითითება</string>
 
     <string name="select_picture_gallery">გალერეა</string>
     <string name="select_picture_camera">ფოტოკამერა</string>
-    <string name="select_picture_remove">Remove photo</string>
-    <string name="button_text_save">SAVE</string>
-    <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
-    <string name="button_text_change_picture">CHANGE PICTURE</string>
+    <string name="select_picture_remove">ფოტოს წაშლა</string>
+
+
+
 </resources>

@@ -18,12 +18,17 @@ import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
+import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class HomeActivity extends RootActivity {
     @BindView(R.id.profile_bar)
@@ -50,20 +55,22 @@ public class HomeActivity extends RootActivity {
     @BindView(R.id.toolbar_text)
     View toolbarText;
 
-    private AuthorizedEvent authorizedEvent;
+    @BindView(R.id.setting_btn)
+    View settingsBtn;
 
+    private AuthorizedEvent authorizedEvent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        ViewUtils.shakeView(newOrderButton);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         userInfo.requestAuthorizedEvent();
-
     }
 
     @Override
@@ -107,6 +114,29 @@ public class HomeActivity extends RootActivity {
         loginRegisterBtn.setVisibility(authorizedEvent.isAuthorized() ? View.GONE : View.VISIBLE);
 
         animateScreenStart(600, true);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            //    showTutorialIfNeeded();
+            }
+        }, 600);
+    }
+
+    private void showTutorialIfNeeded() {
+        ShowcaseConfig config = new ShowcaseConfig();
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, new Date().toString());
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(loginRegisterBtn,
+                getString(R.string.tip_text_home_register_button), getString(R.string.tip_button_text_next));
+
+        sequence.addSequenceItem(newOrderButton,
+                getString(R.string.tip_text_home_add_order_from_here), getString(R.string.tip_button_text_close));
+
+        sequence.start();
     }
 
     private void animateScreenStart(long duration, boolean animateFab) {

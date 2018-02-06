@@ -11,7 +11,8 @@ public class ProductItem {
     String title;
     short unitType;
     short unitMeasureType;
-    BigDecimal amount;
+    boolean hasSize;
+    BigDecimal size;
     String comment;
     File file;
 
@@ -39,12 +40,12 @@ public class ProductItem {
         this.unitMeasureType = measureUnit;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getSize() {
+        return size;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setSize(BigDecimal size) {
+        this.size = size;
     }
 
     public String getComment() {
@@ -61,5 +62,13 @@ public class ProductItem {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public boolean hasSize() {
+        return hasSize;
+    }
+
+    public void setHasSize(boolean hasSize) {
+        this.hasSize = hasSize;
     }
 }

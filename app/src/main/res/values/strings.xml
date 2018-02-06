@@ -1,31 +1,51 @@
 <resources>
-    <string name="weight_kg_long">Kilograms</string>
-    <string name="weight_gram_long">Grams</string>
-    <string name="volume_litre_long">Litre</string>
-    <string name="volume_millilitre_long">Millilitre</string>
-
     <string name="app_name" translatable="false">BoBo</string>
+
+    <string name="measure_unit_weight_kg">Kilograms</string>
+    <string name="measure_unit_weight_gram">Grams</string>
+    <string name="measure_unit_volume_litre">Litre</string>
+    <string name="measure_unit_volume_millilitre">Millilitre</string>
+
+    <string name="common_text_comment">Comment</string>
+
+    <string name="tip_text_home_register_button">Register or Log in from here</string>
+    <string name="tip_text_home_add_order_from_here">Add new order from here</string>
+    <string name="tip_text_new_order_add_product">Add new Product from here</string>
+    <string name="tip_text_new_order_order_description">Enter from where you want to get products</string>
+    <string name="tip_text_new_order_finish_product">Press to finish order</string>
+
+    <string name="tip_button_text_next">NEXT TIP</string>
+    <string name="tip_button_text_close">CLOSE TUTORIAL</string>
+
     <string name="button_text_retry">RETRY</string>
-    <string name="log_in_register">Log in / Register</string>
+    <string name="button_text_save">SAVE</string>
+    <string name="button_text_save_remember">SAVE</string>
+    <string name="button_text_cancel">CANCEL</string>
+    <string name="button_text_add">ADD</string>
+    <string name="button_text_add_picture">ADD PICTURE</string>
+    <string name="button_text_add_product">ADD PRODUCT</string>
+    <string name="button_text_change_picture">CHANGE PICTURE</string>
+
+    <string name="error_order_without_items">To continue, please add at least one product</string>
+    <string name="error_text_fill_all_input">Please fill all inputs</string>
+
+    <string name="hint_enter_order_description_here">From where do you want to get product?</string>
+
+    <string name="profile_bar_log_in_register">Log in / Register</string>
     <string name="profile_bar_balance">Balance: </string>
     <string name="profile_bar_clocked_balance">Blocked: </string>
-    <string name="new_product_comment">comment</string>
-    <string name="add_product">ADD PRODUCT</string>
-    <string name="new_order_error_now_items">To continue, please add at least one product</string>
+
     <string name="product_dialog_title_product_title">Product Name</string>
     <string name="product_dialog_title_details">Details</string>
     <string name="product_dialog_radio_weight_title">Weight</string>
     <string name="product_dialog_radio_volume_title">Volume</string>
-    <string name="product_comment_volume_title">Comment</string>
     <string name="product_dialog_radio_size_title">Size</string>
-    <string name="product_dialog_radio_other_title">Other (Ex.: Total 5 GEL)</string>
-    <string name="button_text_cancel">CANCEL</string>
-    <string name="button_text_add">ADD</string>
-    <string name="button_text_add_picture">ADD PICTURE</string>
+    <string name="product_dialog_specify_size">Specify sizeა</string>
+
     <string name="select_picture_gallery">Gallery</string>
     <string name="select_picture_camera">Camera</string>
     <string name="select_picture_remove">Remove photo</string>
-    <string name="button_text_save">SAVE</string>
-    <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
-    <string name="button_text_change_picture">CHANGE PICTURE</string>
+
+
+
 </resources>

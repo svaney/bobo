@@ -2,9 +2,12 @@ package com.bobo.gmargiani.bobo.app;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.NetApi;
@@ -13,6 +16,8 @@ import com.bobo.gmargiani.bobo.rest.RetrofitClient;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -71,9 +76,6 @@ public class App extends Application {
         return userInfo;
     }
 
-    public void logOut(boolean sessionExpired) {
-    }
-
     public void postActivityResultEvent(final int requestCode, final int resultCode, final Intent data) {
         switch (resultCode) {
             case RESULT_OK:
@@ -83,8 +85,31 @@ public class App extends Application {
                         ActivityResultEvent activityResultEvent = new ActivityResultEvent(requestCode, resultCode, data);
                         getEventBus().post(activityResultEvent);
                     }
-                }, 400);
+                }, 200);
                 break;
         }
+    }
+
+    public void postPermissionEvent(final int requestCode, String[] permissions, int[] grantResults) {
+        final ArrayList<String> grantedPermissions = new ArrayList<>();
+        final ArrayList<String> deniedPermissions = new ArrayList<>();
+
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                grantedPermissions.add(permissions[i]);
+            } else {
+                deniedPermissions.add(permissions[i]);
+            }
+        }
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getEventBus().post(new GrantedPermissionsEvent(grantedPermissions, requestCode));
+                getEventBus().post(new DeniedPermissionsEvent(deniedPermissions, requestCode));
+            }
+        }, 200);
+
     }
 }

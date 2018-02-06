@@ -29,9 +29,7 @@ public class RetrofitCallback<ContentType> implements Callback<ContentType> {
                 if (response.body() == null) {
                     mCallback.onFailure(new Throwable());
                 } else {
-                    if (((ApiResponse) response.body()).isInvalidSession() && !NetApi.SERVICE_IDENTITY_LOGOUT.equals(serviceId)) {
-                        App.getInstance().logOut(true);
-                    } else {
+                    if (!((ApiResponse) response.body()).isInvalidSession()) {
                         mCallback.onResponse(response.body());
                     }
                 }

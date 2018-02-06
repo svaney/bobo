@@ -71,7 +71,7 @@
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/log_in_register" />
+                    android:text="@string/profile_bar_log_in_register" />
 
             </LinearLayout>
 

@@ -90,6 +90,7 @@ public class ImageUtils {
 
     public static String handleCameraResult(Activity activity) {
         File f = getTemporaryFile(activity);
+        counter++;
         try {
             f = fixImage(f, null, -1, activity);
         } catch (Exception e) {
@@ -106,6 +107,7 @@ public class ImageUtils {
             if (cursor != null) {
                 int orientation = cursor.getInt(0);
                 File f = getTemporaryFile(activity);
+                counter++;
                 cursor.close();
                 file = fixImage(f, b, orientation, activity);
             }
@@ -179,8 +181,10 @@ public class ImageUtils {
         else return k;
     }
 
+    private static int counter = 0;
+
     public static File getTemporaryFile(Activity activity) {
-        return new File(activity.getExternalCacheDir() + "/photo.jpg");
+        return new File(activity.getExternalCacheDir() + "/photo" + counter + ".jpg");
     }
 
     //bmp is null if camera result
