@@ -3,6 +3,7 @@ package com.bobo.gmargiani.bobo.ui.dialogs;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +27,7 @@ import com.bobo.gmargiani.bobo.model.ProductItem;
 import com.bobo.gmargiani.bobo.ui.activites.NewOrderActivity;
 import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
+import com.bobo.gmargiani.bobo.ui.views.AmountIncrementView;
 import com.bobo.gmargiani.bobo.ui.views.DropDownChooser;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
@@ -58,7 +60,7 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
     private static final int LITRE_POSITION = 0;
     private static final int MILLILITRE_POSITION = 1;
 
-    private Button addButton, cancelButton, addPictureButton;
+    private Button addButton, cancelButton, addPictureButton, deleteButton;
     private EditText amountInputET, commentET, productTitleET;
     private RadioButton radioVolume, radioWeight;
     private TextView commentTitle, sizeTitle;
@@ -67,6 +69,7 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
     private RadioGroup radioGroup;
     private DropDownChooser dropDownChooser;
     private CheckBox sizeCheckBox;
+    private AmountIncrementView amountView;
 
     private File file;
     private int selectedMeasureTypePosition;
@@ -76,6 +79,8 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
     private ArrayList<String> volumes = new ArrayList<>();
 
     private ProductItem editItem;
+
+    private int editItemPosition;
 
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -92,6 +97,10 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
 
         return builder.create();
 
+    }
+
+    public void setEditItemPosition(int position) {
+        editItemPosition = position;
     }
 
     private void findViews(View v) {
@@ -126,6 +135,10 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
         sizeTitle = v.findViewById(R.id.size_title);
 
         sizeCheckBox = v.findViewById(R.id.size_check_box);
+
+        amountView = v.findViewById(R.id.amount_view);
+
+        deleteButton = v.findViewById(R.id.delete_button);
     }
 
     private void setUpInitialScreen() {
@@ -141,26 +154,33 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
         if (editItem != null) {
             editItem();
         }
+
+        deleteButton.setVisibility(editItem == null ? View.GONE : View.VISIBLE);
     }
+
 
     private void setUpViewClickListeners() {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(productTitleET.getText().toString().replace(" ", ""))) {
-                    AlertManager.showError((getActivity()), getString(R.string.error_text_fill_all_input));
+                    //  AlertManager.showError((getActivity()), getString(R.string.error_text_fill_all_input));
+
+                    productTitleET.setBackground(ViewUtils.getErrorRectangleBackground(getContext()));
                     ViewUtils.shakeView(productTitleET);
                     return;
                 }
-                switch (selectedUnitType) {
-                    case ModelConsts.PRODUCT_UNIT_TYPE_VOLUME:
-                    case ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT:
-                        if (TextUtils.isEmpty(amountInputET.getText().toString().replace(" ", ""))) {
-                            AlertManager.showError(getActivity(), getString(R.string.error_text_fill_all_input));
-                            ViewUtils.shakeView(amountInputET);
-                            return;
-                        }
-                        break;
+                if (sizeCheckBox.isChecked()) {
+                    switch (selectedUnitType) {
+                        case ModelConsts.PRODUCT_UNIT_TYPE_VOLUME:
+                        case ModelConsts.PRODUCT_UNIT_TYPE_WEIGHT:
+                            if (TextUtils.isEmpty(amountInputET.getText().toString().replace(" ", ""))) {
+                                amountInputET.setBackground(ViewUtils.getErrorRectangleBackground(getContext()));
+                                ViewUtils.shakeView(amountInputET);
+                                return;
+                            }
+                            break;
+                    }
                 }
                 createAndAddItem();
             }
@@ -213,6 +233,14 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
                 radioWeight.setChecked(true);
             }
         });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NewOrderActivity) getActivity()).onItemDelete(editItemPosition);
+                dismiss();
+            }
+        });
     }
 
     @OnClick(R.id.dismiss_button)
@@ -229,6 +257,8 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
         productTitleET.setText(editItem.getTitle());
 
         commentET.setText(editItem.getComment());
+
+        amountView.setAmount(editItem.getAmount());
 
         if (editItem.getSize() != null) {
             amountInputET.setText(String.valueOf(editItem.getSize()));
@@ -280,6 +310,7 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
         item.setFile(file);
         item.setHasSize(sizeCheckBox.isChecked());
         item.setComment(commentET.getText().toString());
+        item.setAmount(amountView.getAmount());
 
         if (item.hasSize()) {
             switch (selectedUnitType) {

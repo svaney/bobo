@@ -9,7 +9,6 @@ import android.widget.EditText;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.model.ProductItem;
 import com.bobo.gmargiani.bobo.ui.adapters.NewProductRecyclerAdapter;
-import com.bobo.gmargiani.bobo.ui.adapters.interfaces.NewProductAdapterListener;
 import com.bobo.gmargiani.bobo.ui.dialogs.NewProductDialogFragment;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
@@ -26,7 +25,7 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
  * Created by gmargiani on 1/31/2018.
  */
 
-public class NewOrderActivity extends RootDetailedActivity implements NewProductAdapterListener {
+public class NewOrderActivity extends RootDetailedActivity implements NewProductRecyclerAdapter.NewProductAdapterListener {
 
 
     @BindView(R.id.products_recycler)
@@ -60,7 +59,7 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     protected void onStart() {
         super.onStart();
 
-       // showTutorialIfNeeded();
+        // showTutorialIfNeeded();
     }
 
     private void showTutorialIfNeeded() {
@@ -95,6 +94,8 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
         if (orderItems.size() == 0) {
             AlertManager.showError(this, getString(R.string.error_order_without_items));
             ViewUtils.shakeView(newProductButton);
+        } else {
+
         }
     }
 
@@ -109,6 +110,7 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     public void onItemClick(int position) {
         NewProductDialogFragment fr = new NewProductDialogFragment();
         fr.setEditItem(orderItems.get(position));
+        fr.setEditItemPosition(position);
         fr.show(getSupportFragmentManager(), "DIALOG");
     }
 

@@ -1,6 +1,8 @@
 package com.bobo.gmargiani.bobo.utils;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -16,6 +18,16 @@ import com.bobo.gmargiani.bobo.R;
  */
 
 public class ViewUtils {
+
+    public static GradientDrawable getErrorRectangleBackground(Context context) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(AppUtils.convertDpToPixels(5, context));
+        bg.setStroke(AppUtils.convertDpToPixels(1, context), ContextCompat.getColor(context, android.R.color.holo_red_light));
+
+        return bg;
+    }
+
 
     public static void closeKeyboard(View focused) {
         InputMethodManager imm = (InputMethodManager) focused.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

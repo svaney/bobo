@@ -15,6 +15,7 @@ public class ProductItem {
     BigDecimal size;
     String comment;
     File file;
+    int amount;
 
     public String getTitle() {
         return title;
@@ -70,5 +71,13 @@ public class ProductItem {
 
     public void setHasSize(boolean hasSize) {
         this.hasSize = hasSize;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

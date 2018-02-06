@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.model.ProductItem;
-import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
-import com.bobo.gmargiani.bobo.ui.adapters.interfaces.NewProductAdapterListener;
+import com.bobo.gmargiani.bobo.ui.views.AmountIncrementView;
 import com.bobo.gmargiani.bobo.utils.ModelUtils;
 
 import java.util.ArrayList;
@@ -63,6 +62,7 @@ public class NewProductRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
                 itemHolder.title.setText(item.getTitle());
                 itemHolder.description.setText(ModelUtils.getNewProductDescription(item));
+                itemHolder.amountView.setAmount(item.getAmount());
                 break;
             case VIEW_HOLDER_TYPE_COMMENT:
 
@@ -77,30 +77,39 @@ public class NewProductRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    public class ProductItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ProductItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener, AmountIncrementView.AmountViewListener {
         public TextView title, description;
-        public View delete;
+        public AmountIncrementView amountView;
 
         public ProductItemHolder(View view) {
             super(view);
             title = view.findViewById(R.id.product_title);
             description = view.findViewById(R.id.product_description);
-            delete = view.findViewById(R.id.delete_product);
+            amountView = view.findViewById(R.id.amount_view);
+            amountView.showTitle(false);
+            amountView.setAmountListener(this);
 
             view.setOnClickListener(this);
-            delete.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (listener != null) {
-                if (view == delete) {
-                    listener.onItemDelete(getAdapterPosition());
-                }else {
-                    listener.onItemClick(getAdapterPosition());
-                }
+                listener.onItemClick(getAdapterPosition());
             }
+        }
+
+        @Override
+        public void onAmountChange() {
+            ProductItem item = items.get(getAdapterPosition());
+            item.setAmount(amountView.getAmount());
+            notifyDataSetChanged();
         }
     }
 
+    public interface NewProductAdapterListener {
+        void onItemClick(int position);
+
+        void onItemDelete(int position);
+    }
 }

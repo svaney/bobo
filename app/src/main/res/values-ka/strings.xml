@@ -5,6 +5,7 @@
     <string name="measure_unit_volume_millilitre">მილილიტრი</string>
 
     <string name="common_text_comment">კომენტარი</string>
+    <string name="common_text_amount">რაოდენობა</string>
 
     <string name="tip_text_home_register_button">დარეგისტრირდი ან გაიარე ავტორიზაცია აქედან</string>
     <string name="tip_text_home_add_order_from_here">შეუკვეთე აქედან</string>
@@ -23,6 +24,7 @@
     <string name="button_text_add_picture">სურათის ატვირთვა</string>
     <string name="button_text_add_product">პროდუქტის დამატება</string>
     <string name="button_text_change_picture">სურათის შეცვლა</string>
+    <string name="button_text_delete">წაშლა</string>
 
     <string name="error_order_without_items">გასაგრძლებლად, გთხოვთ დაამატოთ მინიმუმ ერთი პროდუქტი</string>
     <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
@@ -45,7 +47,6 @@
     <string name="select_picture_gallery">გალერეა</string>
     <string name="select_picture_camera">ფოტოკამერა</string>
     <string name="select_picture_remove">ფოტოს წაშლა</string>
-
 
 
 </resources>

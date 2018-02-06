@@ -7,6 +7,7 @@
     <string name="measure_unit_volume_millilitre">Millilitre</string>
 
     <string name="common_text_comment">Comment</string>
+    <string name="common_text_amount">Amount</string>
 
     <string name="tip_text_home_register_button">Register or Log in from here</string>
     <string name="tip_text_home_add_order_from_here">Add new order from here</string>
@@ -25,6 +26,7 @@
     <string name="button_text_add_picture">ADD PICTURE</string>
     <string name="button_text_add_product">ADD PRODUCT</string>
     <string name="button_text_change_picture">CHANGE PICTURE</string>
+    <string name="button_text_delete">DELETE</string>
 
     <string name="error_order_without_items">To continue, please add at least one product</string>
     <string name="error_text_fill_all_input">Please fill all inputs</string>
@@ -35,17 +37,16 @@
     <string name="profile_bar_balance">Balance: </string>
     <string name="profile_bar_clocked_balance">Blocked: </string>
 
-    <string name="product_dialog_title_product_title">Product Name</string>
+    <string name="product_dialog_title_product_title">Product name</string>
     <string name="product_dialog_title_details">Details</string>
     <string name="product_dialog_radio_weight_title">Weight</string>
     <string name="product_dialog_radio_volume_title">Volume</string>
     <string name="product_dialog_radio_size_title">Size</string>
-    <string name="product_dialog_specify_size">Specify sizeა</string>
+    <string name="product_dialog_specify_size">Specify size</string>
 
     <string name="select_picture_gallery">Gallery</string>
     <string name="select_picture_camera">Camera</string>
     <string name="select_picture_remove">Remove photo</string>
-
 
 
 </resources>
