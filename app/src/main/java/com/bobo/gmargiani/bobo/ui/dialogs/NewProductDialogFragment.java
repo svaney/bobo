@@ -3,13 +3,14 @@ package com.bobo.gmargiani.bobo.ui.dialogs;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,19 +18,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
-import com.bobo.gmargiani.bobo.model.ProductItem;
+import com.bobo.gmargiani.bobo.model.datamodels.ProductItem;
 import com.bobo.gmargiani.bobo.ui.activites.NewOrderActivity;
 import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.views.AmountIncrementView;
 import com.bobo.gmargiani.bobo.ui.views.DropDownChooser;
-import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ImageUtils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
@@ -70,6 +71,7 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
     private DropDownChooser dropDownChooser;
     private CheckBox sizeCheckBox;
     private AmountIncrementView amountView;
+    private ScrollView scrollView;
 
     private File file;
     private int selectedMeasureTypePosition;
@@ -139,6 +141,11 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
         amountView = v.findViewById(R.id.amount_view);
 
         deleteButton = v.findViewById(R.id.delete_button);
+
+        scrollView = v.findViewById(R.id.scroll_view);
+
+        commentET.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        commentET.setRawInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     private void setUpInitialScreen() {
@@ -231,6 +238,12 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
                 radioGroup.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                 inputContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
                 radioWeight.setChecked(true);
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
             }
         });
 

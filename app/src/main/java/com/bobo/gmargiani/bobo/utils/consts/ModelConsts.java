@@ -5,13 +5,13 @@ package com.bobo.gmargiani.bobo.utils.consts;
  */
 
 public class ModelConsts {
-    public static final short PRODUCT_UNIT_TYPE_WEIGHT = 10;
-    public static final short PRODUCT_UNIT_TYPE_VOLUME = 20;
+    public static final int PRODUCT_UNIT_TYPE_WEIGHT = 10;
+    public static final int PRODUCT_UNIT_TYPE_VOLUME = 20;
 
-    public static final short WEIGHT_UNIT_MEASURE_TYPE_KILOGRAM = 10;
-    public static final short WEIGHT_UNIT_MEASURE_TYPE_GRAM = 20;
+    public static final int WEIGHT_UNIT_MEASURE_TYPE_KILOGRAM = 10;
+    public static final int WEIGHT_UNIT_MEASURE_TYPE_GRAM = 20;
 
-    public static final short VOLUME_UNIT_MEASURE_TYPE_LITRE = 30;
-    public static final short VOLUME_UNIT_MEASURE_TYPE_MILLILITRE = 40;
+    public static final int VOLUME_UNIT_MEASURE_TYPE_LITRE = 30;
+    public static final int VOLUME_UNIT_MEASURE_TYPE_MILLILITRE = 40;
 
 }

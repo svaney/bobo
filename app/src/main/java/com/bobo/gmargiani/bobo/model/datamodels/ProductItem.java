@@ -1,4 +1,6 @@
-package com.bobo.gmargiani.bobo.model;
+package com.bobo.gmargiani.bobo.model.datamodels;
+
+import org.parceler.Parcel;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -7,10 +9,11 @@ import java.math.BigDecimal;
  * Created by gmargiani on 1/31/2018.
  */
 
+@Parcel
 public class ProductItem {
     String title;
-    short unitType;
-    short unitMeasureType;
+    int unitType;
+    int unitMeasureType;
     boolean hasSize;
     BigDecimal size;
     String comment;
@@ -25,19 +28,19 @@ public class ProductItem {
         this.title = title;
     }
 
-    public short getUnitType() {
+    public int getUnitType() {
         return unitType;
     }
 
-    public void setUnitType(short unitType) {
+    public void setUnitType(int unitType) {
         this.unitType = unitType;
     }
 
-    public short getMeasureUnitType() {
+    public int getMeasureUnitType() {
         return unitMeasureType;
     }
 
-    public void setUnitMeasureType(short measureUnit) {
+    public void setUnitMeasureType(int measureUnit) {
         this.unitMeasureType = measureUnit;
     }
 

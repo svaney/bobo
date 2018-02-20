@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
-import com.bobo.gmargiani.bobo.model.ProductItem;
+import com.bobo.gmargiani.bobo.model.datamodels.ProductItem;
 import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
 
 /**

@@ -2,7 +2,6 @@ package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,9 +14,7 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
-import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
-import com.bobo.gmargiani.bobo.model.datamodels.UserInfo;
+import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -60,7 +57,7 @@ public abstract class RootActivity extends AppCompatActivity {
         }
     }
 
-    private int getHeaderText() {
+    protected int getHeaderText() {
         return R.string.app_name;
     }
 

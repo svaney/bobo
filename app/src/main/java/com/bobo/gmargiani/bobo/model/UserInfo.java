@@ -1,8 +1,9 @@
-package com.bobo.gmargiani.bobo.model.datamodels;
+package com.bobo.gmargiani.bobo.model;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
+import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 

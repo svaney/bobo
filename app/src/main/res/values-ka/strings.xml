@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="activity_name_new_order">ახალი შეკვეთა</string>
+    <string name="activity_name_new_order_address">საკონტაქტო ინფორმაცია</string>
+
     <string name="measure_unit_weight_kg">კილოგრამი</string>
     <string name="measure_unit_weight_gram">გრამი</string>
     <string name="measure_unit_volume_litre">ლიტრი</string>
@@ -25,6 +29,7 @@
     <string name="button_text_add_product">პროდუქტის დამატება</string>
     <string name="button_text_change_picture">სურათის შეცვლა</string>
     <string name="button_text_delete">წაშლა</string>
+    <string name="button_text_map">რუკა</string>
 
     <string name="error_order_without_items">გასაგრძლებლად, გთხოვთ დაამატოთ მინიმუმ ერთი პროდუქტი</string>
     <string name="error_text_fill_all_input">გთხოვთ შეავსოთ ყველა ველი</string>
@@ -47,6 +52,10 @@
     <string name="select_picture_gallery">გალერეა</string>
     <string name="select_picture_camera">ფოტოკამერა</string>
     <string name="select_picture_remove">ფოტოს წაშლა</string>
+
+    <string name="address_title_address">მისამართი</string>
+    <string name="address_title_additional_info">დამატებითი ინფორმაცია</string>
+    <string name="address_title_phone_number">ტელეფონის ნომერი</string>
 
 
 </resources>

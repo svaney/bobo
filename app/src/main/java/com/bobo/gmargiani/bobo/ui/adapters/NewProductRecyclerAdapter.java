@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
-import com.bobo.gmargiani.bobo.model.ProductItem;
+import com.bobo.gmargiani.bobo.model.datamodels.ProductItem;
 import com.bobo.gmargiani.bobo.ui.views.AmountIncrementView;
 import com.bobo.gmargiani.bobo.utils.ModelUtils;
 

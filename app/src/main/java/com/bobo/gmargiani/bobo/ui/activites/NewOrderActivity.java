@@ -1,17 +1,25 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
 
 import com.bobo.gmargiani.bobo.R;
-import com.bobo.gmargiani.bobo.model.ProductItem;
+import com.bobo.gmargiani.bobo.model.datamodels.ProductItem;
 import com.bobo.gmargiani.bobo.ui.adapters.NewProductRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.dialogs.NewProductDialogFragment;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +48,8 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     @BindView(R.id.order_description_et)
     EditText orderDescriptionET;
 
+    @BindView(R.id.toolbar_text)
+    View toolbarText;
 
     private ArrayList<ProductItem> orderItems = new ArrayList<>();
     private NewProductRecyclerAdapter adapter;
@@ -89,13 +99,24 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     }
 
 
+    @SuppressLint("NewApi")
     @OnClick(R.id.next_step)
     protected void onNextStepClick() {
         if (orderItems.size() == 0) {
             AlertManager.showError(this, getString(R.string.error_order_without_items));
             ViewUtils.shakeView(newProductButton);
         } else {
+            Intent intent = new Intent(NewOrderActivity.this, NewOrderAddressActivity.class);
+            intent.putExtra(AppConsts.INTENT_PARAM_NEW_PRODUCT_LIST, Parcels.wrap(orderItems));
 
+            if (AppUtils.atLeastLollipop()) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
+                        Pair.create(toolbarText, "toolbar_text"),
+                        Pair.create(nextStepButton, "fab_button"));
+                startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
+            }
         }
     }
 
@@ -133,6 +154,10 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     @Override
     public boolean needEventBus() {
         return false;
+    }
+
+    protected int getHeaderText() {
+        return R.string.activity_name_new_order;
     }
 
 

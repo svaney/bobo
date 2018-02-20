@@ -46,6 +46,38 @@
                 android:maxLength="60"
                 android:maxLines="1" />
 
+            <include layout="@layout/component_horizontal_divider" />
+
+            <TextView
+                android:id="@+id/comment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/item_default_small_margin"
+                android:layout_marginLeft="@dimen/item_default_margin"
+                android:layout_marginTop="@dimen/item_default_margin"
+                android:text="@string/common_text_comment"
+                android:textColor="@color/colorAccent"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/other_comment_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/item_default_margin"
+                android:layout_marginLeft="@dimen/item_default_margin"
+                android:layout_marginRight="@dimen/item_default_margin"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:maxLength="500"
+                android:maxLines="4" />
+
+            <include layout="@layout/component_horizontal_divider" />
+
+            <com.bobo.gmargiani.bobo.ui.views.AmountIncrementView
+                android:id="@+id/amount_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/item_default_small_margin" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -141,39 +173,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-            <include layout="@layout/component_horizontal_divider" />
-
-            <TextView
-                android:id="@+id/comment_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/item_default_small_margin"
-                android:layout_marginLeft="@dimen/item_default_margin"
-                android:layout_marginTop="@dimen/item_default_margin"
-                android:text="@string/common_text_comment"
-                android:textColor="@color/colorAccent"
-                android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/other_comment_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/item_default_margin"
-                android:layout_marginLeft="@dimen/item_default_margin"
-                android:layout_marginRight="@dimen/item_default_margin"
-                android:imeOptions="actionDone"
-                android:inputType="text|textMultiLine|textCapSentences"
-                android:maxLength="500"
-                android:maxLines="4" />
-
-            <include layout="@layout/component_horizontal_divider" />
-
-            <com.bobo.gmargiani.bobo.ui.views.AmountIncrementView
-                android:id="@+id/amount_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_default_small_margin" />
 
             <include layout="@layout/component_horizontal_divider" />
 

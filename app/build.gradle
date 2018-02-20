@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     implementation 'com.tapadoo.android:alerter:2.0.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     testImplementation 'junit:junit:4.12'

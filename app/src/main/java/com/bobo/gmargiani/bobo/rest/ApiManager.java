@@ -1,7 +1,7 @@
 package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
-import com.bobo.gmargiani.bobo.model.datamodels.NetDataListener;
+import com.bobo.gmargiani.bobo.model.NetDataListener;
 
 /**
  * Created by gmargiani on 1/30/2018.

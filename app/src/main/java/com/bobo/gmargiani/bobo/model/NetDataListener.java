@@ -1,5 +1,6 @@
-package com.bobo.gmargiani.bobo.model.datamodels;
+package com.bobo.gmargiani.bobo.model;
 
+import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
 /**
