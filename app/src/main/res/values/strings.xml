@@ -55,6 +55,15 @@
     <string name="address_title_address">Address</string>
     <string name="address_title_additional_info">Additional information</string>
     <string name="address_title_phone_number">Phone number</string>
+    <string name="address_radio_title_full_amount">Pay full amount</string>
+    <string name="address_radio_title_delivery_amount">Pay product and delivery amounts separately</string>
+    <string name="address_title_amount">Amount</string>
+    <string name="address_title_product_estimate_amount">Product estimated price</string>
+    <string name="address_title_delivery_amount">Delivery amount</string>
+    <string name="address_title_asap">As soon as possible</string>
+    <string name="address_title_date_and_time">Select delivery date and time</string>
+    <string name="address_title_date">Date</string>
+    <string name="address_title_time">Time</string>
 
 
 </resources>

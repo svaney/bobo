@@ -11,15 +11,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.model.datamodels.Order;
 import com.bobo.gmargiani.bobo.model.datamodels.ProductItem;
 import com.bobo.gmargiani.bobo.ui.adapters.NewProductRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.dialogs.NewProductDialogFragment;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
-import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +32,6 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
  */
 
 public class NewOrderActivity extends RootDetailedActivity implements NewProductRecyclerAdapter.NewProductAdapterListener {
-
 
     @BindView(R.id.products_recycler)
     RecyclerView productsRecycler;
@@ -51,7 +48,7 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     @BindView(R.id.toolbar_text)
     View toolbarText;
 
-    private ArrayList<ProductItem> orderItems = new ArrayList<>();
+    private ArrayList<ProductItem> orderProducts = new ArrayList<>();
     private NewProductRecyclerAdapter adapter;
 
 
@@ -59,10 +56,21 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        productsRecycler.setLayoutManager(new LinearLayoutManager(productsRecycler.getContext()));
-        adapter = new NewProductRecyclerAdapter(orderItems, this, this);
-        productsRecycler.setAdapter(adapter);
+        Order order = userInfo.getCurrentOrder();
 
+        if (order != null) {
+            if (order.getProducts() != null) {
+                orderProducts = order.getProducts();
+            }
+
+            if (order.getOrderComment() != null) {
+                orderDescriptionET.setText(order.getOrderComment());
+            }
+        }
+
+        productsRecycler.setLayoutManager(new LinearLayoutManager(productsRecycler.getContext()));
+        adapter = new NewProductRecyclerAdapter(orderProducts, this, this);
+        productsRecycler.setAdapter(adapter);
     }
 
     @Override
@@ -102,13 +110,19 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     @SuppressLint("NewApi")
     @OnClick(R.id.next_step)
     protected void onNextStepClick() {
-        if (orderItems.size() == 0) {
+        if (orderProducts.size() == 0) {
             AlertManager.showError(this, getString(R.string.error_order_without_items));
             ViewUtils.shakeView(newProductButton);
         } else {
-            Intent intent = new Intent(NewOrderActivity.this, NewOrderAddressActivity.class);
-            intent.putExtra(AppConsts.INTENT_PARAM_NEW_PRODUCT_LIST, Parcels.wrap(orderItems));
+            Order order = userInfo.getCurrentOrder();
+            if (order == null) {
+                order = new Order();
+            }
+            order.setProducts(orderProducts);
+            order.setOrderComment(orderDescriptionET.getText().toString());
+            userInfo.setCurrentOrder(order);
 
+            Intent intent = new Intent(NewOrderActivity.this, NewOrderAddressActivity.class);
             if (AppUtils.atLeastLollipop()) {
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
                         Pair.create(toolbarText, "toolbar_text"),
@@ -121,7 +135,7 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     }
 
     public void addNewProduct(ProductItem productItem) {
-        orderItems.add(0, productItem);
+        orderProducts.add(0, productItem);
         adapter.notifyItemInserted(0);
         productsRecycler.smoothScrollToPosition(0);
     }
@@ -130,14 +144,14 @@ public class NewOrderActivity extends RootDetailedActivity implements NewProduct
     @Override
     public void onItemClick(int position) {
         NewProductDialogFragment fr = new NewProductDialogFragment();
-        fr.setEditItem(orderItems.get(position));
+        fr.setEditItem(orderProducts.get(position));
         fr.setEditItemPosition(position);
         fr.show(getSupportFragmentManager(), "DIALOG");
     }
 
     @Override
     public void onItemDelete(int position) {
-        orderItems.remove(position);
+        orderProducts.remove(position);
         adapter.notifyItemRemoved(position);
     }
 

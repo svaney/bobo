@@ -478,6 +478,13 @@ public class NewProductDialogFragment extends DialogFragment implements BasicRec
                     } else {
                         setPicture();
                     }
+
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
                 }
                 break;
         }

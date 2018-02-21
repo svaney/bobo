@@ -4,6 +4,7 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
 import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
+import com.bobo.gmargiani.bobo.model.datamodels.Order;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
@@ -14,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public class UserInfo implements NetDataListener {
+    private Order currentOrder;
     private ApiManager apiManager;
     private EventBus eventBus;
 
@@ -28,6 +30,14 @@ public class UserInfo implements NetDataListener {
 
     public void setApiManager(ApiManager apiManager) {
         this.apiManager = apiManager;
+    }
+
+    public Order getCurrentOrder() {
+        return currentOrder;
+    }
+
+    public void setCurrentOrder(Order currentOrder) {
+        this.currentOrder = currentOrder;
     }
 
     public void requestAuthorizedEvent() {
@@ -109,6 +119,4 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
-
-
 }

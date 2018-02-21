@@ -9,16 +9,15 @@ import java.math.BigDecimal;
  * Created by gmargiani on 1/31/2018.
  */
 
-@Parcel
 public class ProductItem {
-    String title;
-    int unitType;
-    int unitMeasureType;
-    boolean hasSize;
-    BigDecimal size;
-    String comment;
-    File file;
-    int amount;
+    private String title;
+    private int unitType;
+    private int unitMeasureType;
+    private boolean hasSize;
+    private BigDecimal size;
+    private String comment;
+    private File file;
+    private int amount;
 
     public String getTitle() {
         return title;

@@ -39,6 +39,7 @@ public abstract class RootActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         setSupportActionBar();
+        this.userInfo = App.getInstance().getUserInfo();
     }
 
     protected void setSupportActionBar() {
@@ -67,7 +68,6 @@ public abstract class RootActivity extends AppCompatActivity {
         if (needEventBus()) {
             App.getInstance().getEventBus().register(this);
         }
-        this.userInfo = App.getInstance().getUserInfo();
     }
 
     @Override

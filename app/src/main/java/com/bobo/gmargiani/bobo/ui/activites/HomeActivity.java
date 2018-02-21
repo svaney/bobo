@@ -173,6 +173,7 @@ public class HomeActivity extends RootActivity {
     @OnClick(R.id.new_order)
     protected void onNewOrderClick() {
 
+      //  userInfo.setCurrentOrder(null);
 
         if (AppUtils.atLeastLollipop()) {
             Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.profile_bar_hide_animation);

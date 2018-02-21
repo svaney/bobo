@@ -16,5 +16,4 @@ public class AppConsts {
     public final static int PERMISSION_EXTERNAL_STORAGE = 502;
 
 
-    public final static String INTENT_PARAM_NEW_PRODUCT_LIST = "INTENT_PARAM_NEW_PRODUCT_LIST";
 }

@@ -2,7 +2,9 @@ package com.bobo.gmargiani.bobo.utils;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -24,6 +26,7 @@ public class ViewUtils {
         bg.setShape(GradientDrawable.RECTANGLE);
         bg.setCornerRadius(AppUtils.convertDpToPixels(5, context));
         bg.setStroke(AppUtils.convertDpToPixels(1, context), ContextCompat.getColor(context, android.R.color.holo_red_light));
+        bg.setColor(ContextCompat.getColor(context, android.R.color.transparent));
 
         return bg;
     }
@@ -37,6 +40,15 @@ public class ViewUtils {
     public static void shakeView(View v) {
         Animation animation = AnimationUtils.loadAnimation(v.getContext(), R.anim.wiggle_anim);
         v.startAnimation(animation);
+    }
+
+    public static boolean validateEditText(TextInputEditText et, Context context){
+        if (TextUtils.isEmpty(et.getText())) {
+            et.setBackground(ViewUtils.getErrorRectangleBackground(context));
+            ViewUtils.shakeView(et);
+            return false;
+        }
+        return true;
     }
 
     public static void focusEditText(EditText editText) {

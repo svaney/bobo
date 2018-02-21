@@ -43,13 +43,13 @@
                             android:id="@+id/radio_full_amount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="თანხის სრულად გადახდა" />
+                            android:text="@string/address_radio_title_full_amount" />
 
                         <RadioButton
                             android:id="@+id/radio_amount_by_check"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="პროდუქტის და მოწოდების ღირებულებების ცალ-ცალკე გადახდა" />
+                            android:text="@string/address_radio_title_delivery_amount" />
 
                     </RadioGroup>
 
@@ -58,9 +58,10 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/item_default_margin"
                         android:orientation="horizontal"
-                        android:weightSum="3">
+                        android:weightSum="2">
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/amount_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -70,7 +71,6 @@
                                 android:id="@+id/amount"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="თანხა"
                                 android:imeOptions="actionNext"
                                 android:inputType="numberDecimal"
                                 android:lines="1"
@@ -83,13 +83,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight="2">
+                            android:layout_weight="1">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/delivery_amount"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="მოწოდების თანხა"
+                                android:hint="@string/address_title_delivery_amount"
                                 android:imeOptions="actionNext"
                                 android:inputType="numberDecimal"
                                 android:lines="1"
@@ -116,13 +116,13 @@
                             android:id="@+id/radio_fast"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="რაც შეიძლება მალე" />
+                            android:text="@string/address_title_asap" />
 
                         <RadioButton
                             android:id="@+id/radio_pick_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="მოწოდების დროის არჩევა" />
+                            android:text="@string/address_title_date_and_time" />
 
 
                     </RadioGroup>
@@ -149,7 +149,7 @@
                                 android:id="@+id/delivery_date"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="დღე"
+                                android:hint="@string/address_title_date"
                                 android:imeOptions="actionDone"
                                 android:lines="1"
                                 android:maxLength="6"
@@ -167,7 +167,7 @@
                                 android:id="@+id/delivery_time"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="საათი"
+                                android:hint="@string/address_title_time"
                                 android:imeOptions="actionDone"
                                 android:inputType="numberDecimal"
                                 android:lines="1"

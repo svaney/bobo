@@ -56,6 +56,15 @@
     <string name="address_title_address">მისამართი</string>
     <string name="address_title_additional_info">დამატებითი ინფორმაცია</string>
     <string name="address_title_phone_number">ტელეფონის ნომერი</string>
+    <string name="address_radio_title_full_amount">თანხის სრულად გადახდა</string>
+    <string name="address_radio_title_delivery_amount">პროდუქტის და მოწოდების ღირებულებების ცალ-ცალკე გადახდა</string>
+    <string name="address_title_amount">თანხა</string>
+    <string name="address_title_product_estimate_amount">პროდუქტის სავარაუდო ფასი</string>
+    <string name="address_title_delivery_amount">მოწოდების თანხა</string>
+    <string name="address_title_asap">რაც შეიძლება მალე</string>
+    <string name="address_title_date_and_time">მოწოდების დროის არჩევა</string>
+    <string name="address_title_date">დღე</string>
+    <string name="address_title_time">საათი</string>
 
 
 </resources>
