@@ -17,9 +17,15 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.bobo.gmargiani.bobo.BuildConfig;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,13 +36,67 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by gmargiani on 2/1/2018.
  */
 
 public class ImageUtils {
 
+// ImageUtils.manageGallery(getActivity());
+  //  ImageUtils.manageCamera(getActivity());
 
+
+ /*   @Subscribe
+    public void onPermissionsGranted(GrantedPermissionsEvent event) {
+        if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
+            ImageUtils.openCamera(getActivity());
+        } else if (event.getRequestCode() == AppConsts.PERMISSION_EXTERNAL_STORAGE) {
+            ImageUtils.openGallery(getActivity());
+        }
+    }
+
+    */
+
+
+  /*  @Subscribe
+    public void onActivityResult(ActivityResultEvent event) {
+        switch (event.getResultCode()) {
+            case RESULT_OK:
+
+                if (event.getRequestCode() == AppConsts.RC_CAMERA || event.getRequestCode() == AppConsts.RC_GALLERY) {
+                    String path = null;
+                    if (event.getRequestCode() == AppConsts.RC_CAMERA) {
+                        path = ImageUtils.handleCameraResult(getActivity());
+                    } else if (event.getRequestCode() == AppConsts.RC_GALLERY) {
+                        path = ImageUtils.handleGalleryResult(event.getData(), getActivity());
+                    }
+
+                    if (!TextUtils.isEmpty(path)) {
+                        File imgFile = new File(path);
+                        if (imgFile.exists()) {
+                            this.file = imgFile;
+                            setPicture();
+                        } else {
+                            setPicture();
+                        }
+                    } else {
+                        setPicture();
+                    }
+
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
+                }
+                break;
+        }
+    }
+
+    */
     @SuppressLint("NewApi")
     public static void manageCamera(Activity activity) {
         if (AppUtils.atLeastMarshmallow()) {
