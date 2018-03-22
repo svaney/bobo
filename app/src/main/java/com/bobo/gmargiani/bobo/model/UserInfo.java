@@ -1,8 +1,10 @@
 package com.bobo.gmargiani.bobo.model;
 
+import android.os.Handler;
+
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AuthorizedEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
 import com.bobo.gmargiani.bobo.model.datamodels.Order;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
@@ -15,13 +17,14 @@ import org.greenrobot.eventbus.EventBus;
  */
 
 public class UserInfo implements NetDataListener {
+    private Handler handler = new Handler();
     private Order currentOrder;
     private ApiManager apiManager;
     private EventBus eventBus;
 
     private AuthorizedEvent authorizedEvent;
 
-    private TestDataEvent testDataEvent;
+    private AppVersionEvent appVersionEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -49,54 +52,60 @@ public class UserInfo implements NetDataListener {
         eventBus.post(authorizedEvent);
     }
 
-    public void requestTestData(boolean forceRefresh, boolean update, String deviceType, String channel) {
+    public void requestAppVersion(boolean forceRefresh, boolean update, final String deviceType, final String channel) {
 
-        if (!forceRefresh && shouldNotRefresh(testDataEvent, update)) {
-            eventBus.post(testDataEvent);
+        if (!forceRefresh && shouldNotRefresh(appVersionEvent, update)) {
+            eventBus.post(appVersionEvent);
         } else {
 
-            boolean newEventNeeded = testDataEvent == null || forceRefresh;
+            boolean newEventNeeded = appVersionEvent == null || forceRefresh;
 
-            testDataEvent = newEventNeeded ? new TestDataEvent() : (TestDataEvent) testDataEvent.copyData();
+            appVersionEvent = newEventNeeded ? new AppVersionEvent() : (AppVersionEvent) appVersionEvent.copyData();
 
-            testDataEvent.setState(newEventNeeded ? RootEvent.STATE_LOADING : RootEvent.STATE_UPDATING);
+            appVersionEvent.setState(newEventNeeded ? RootEvent.STATE_LOADING : RootEvent.STATE_UPDATING);
 
-            eventBus.post(testDataEvent);
+            eventBus.post(appVersionEvent);
 
-            apiManager.getTestData(deviceType, channel);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getAppVersion(deviceType, channel);
+                }
+            }, 1000);
+
         }
     }
 
 
     @Override
-    public void onTestData(ApiResponse<AppVersion> response) {
+    public void onAppVersionEvent(ApiResponse<AppVersion> response) {
 
-        if (testDataEvent != null) {
+        if (appVersionEvent != null) {
 
-            testDataEvent = (TestDataEvent) testDataEvent.copyData();
+            appVersionEvent = (AppVersionEvent) appVersionEvent.copyData();
 
-            if (testDataEvent.isUpdating()) {
-                testDataEvent.setState(RootEvent.STATE_SUCCESS);
+            if (appVersionEvent.isUpdating()) {
+                appVersionEvent.setState(RootEvent.STATE_SUCCESS);
                 if (!response.isNetworkFailure() && response.isSuccess()) {
-                    testDataEvent.setAppVersion(response.getResult());
+                    appVersionEvent.setAppVersion(response.getResult());
                 }
-            } else if (testDataEvent.isLoading()) {
+            } else if (appVersionEvent.isLoading()) {
                 if (!response.isNetworkFailure()) {
                     if (response.isSuccess()) {
-                        testDataEvent.setState(RootEvent.STATE_SUCCESS);
-                        testDataEvent.setAppVersion(response.getResult());
+                        appVersionEvent.setState(RootEvent.STATE_SUCCESS);
+                        appVersionEvent.setAppVersion(response.getResult());
                     } else {
-                        testDataEvent.setState(RootEvent.STATE_DATA_ERROR);
-                        testDataEvent.setErrorText(response.getError());
-                        testDataEvent.setErrorCode(response.getCode());
+                        appVersionEvent.setState(RootEvent.STATE_DATA_ERROR);
+                        appVersionEvent.setErrorText(response.getError());
+                        appVersionEvent.setErrorCode(response.getCode());
                     }
 
                 } else {
-                    testDataEvent.setState(RootEvent.STATE_NETWORK_ERROR);
+                    appVersionEvent.setState(RootEvent.STATE_NETWORK_ERROR);
                 }
             }
 
-            eventBus.post(testDataEvent);
+            eventBus.post(appVersionEvent);
         }
     }
 

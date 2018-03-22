@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -13,7 +14,9 @@ import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.NetApi;
 import com.bobo.gmargiani.bobo.rest.RetrofitApi;
 import com.bobo.gmargiani.bobo.rest.RetrofitClient;
+import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
+import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -76,18 +79,19 @@ public class App extends Application {
         return userInfo;
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, AppConsts.KA));
+    }
+
     public void postActivityResultEvent(final int requestCode, final int resultCode, final Intent data) {
-        switch (resultCode) {
-            case RESULT_OK:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActivityResultEvent activityResultEvent = new ActivityResultEvent(requestCode, resultCode, data);
-                        getEventBus().post(activityResultEvent);
-                    }
-                }, 200);
-                break;
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ActivityResultEvent activityResultEvent = new ActivityResultEvent(requestCode, resultCode, data);
+                getEventBus().post(activityResultEvent);
+            }
+        }, 200);
     }
 
     public void postPermissionEvent(final int requestCode, String[] permissions, int[] grantResults) {

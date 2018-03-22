@@ -8,5 +8,5 @@ import com.bobo.gmargiani.bobo.rest.ApiResponse;
  */
 
 public interface NetDataListener {
-    void onTestData(ApiResponse<AppVersion> response);
+    void onAppVersionEvent(ApiResponse<AppVersion> response);
 }

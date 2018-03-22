@@ -30,7 +30,7 @@ public class AppUtils {
         return Build.VERSION.SDK_INT;
     }
 
-    public static  boolean isNetworkConnected() {
+    public static boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm != null && cm.getActiveNetworkInfo() != null;
@@ -108,6 +108,10 @@ public class AppUtils {
 
     public static boolean atLeastMarshmallow() {
         return getAndroidVersion() >= Build.VERSION_CODES.M;
+    }
+
+    public static boolean atLesatnNugat() {
+        return getAndroidVersion() >= Build.VERSION_CODES.N;
     }
 
     @TargetApi(Build.VERSION_CODES.M)

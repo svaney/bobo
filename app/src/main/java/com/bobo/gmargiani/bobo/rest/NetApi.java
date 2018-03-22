@@ -10,5 +10,5 @@ public abstract class NetApi {
     public final static String COMMON_GET_APP_CLIENT_STATUS = "COMMON_GET_APP_CLIENT_STATUS";
     public final static String SERVICE_IDENTITY_LOGOUT = "IDENTITY_LOGOUT";
 
-    public abstract void getTestData(String deviceType, String channel, RestCallback<ApiResponse<AppVersion>> callback);
+    public abstract void getAppVersion(String deviceType, String channel, RestCallback<ApiResponse<AppVersion>> callback);
 }

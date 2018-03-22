@@ -7,12 +7,12 @@ import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
  * Created by gmargiani on 1/30/2018.
  */
 
-public class TestDataEvent extends RootEvent {
+public class AppVersionEvent extends RootEvent {
     private AppVersion appVersion;
 
     @Override
     public Object copyData() {
-        TestDataEvent ts = new TestDataEvent();
+        AppVersionEvent ts = new AppVersionEvent();
 
         ts.setState(getState());
         ts.setErrorCode(getErrorCode());

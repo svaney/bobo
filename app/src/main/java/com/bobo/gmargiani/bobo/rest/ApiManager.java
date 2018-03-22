@@ -16,12 +16,12 @@ public class ApiManager {
         this.dataListener = dataListener;
     }
 
-    public void getTestData(String deviceType, String channel) {
-        netApi.getTestData(deviceType, channel, new RestCallback<ApiResponse<AppVersion>>() {
+    public void getAppVersion(String deviceType, String channel) {
+        netApi.getAppVersion(deviceType, channel, new RestCallback<ApiResponse<AppVersion>>() {
             @Override
             public void onResponse(ApiResponse<AppVersion> response) {
                 super.onResponse(response);
-                dataListener.onTestData(response);
+                dataListener.onAppVersionEvent(response);
             }
 
             @Override
@@ -30,7 +30,7 @@ public class ApiManager {
                 ApiResponse<AppVersion> response = new ApiResponse<>();
                 response.setNetworkFailure(true);
                 response.setNetworkFailure(t);
-                dataListener.onTestData(response);
+                dataListener.onAppVersionEvent(response);
             }
         });
     }

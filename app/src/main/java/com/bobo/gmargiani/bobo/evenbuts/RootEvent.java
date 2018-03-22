@@ -1,7 +1,5 @@
 package com.bobo.gmargiani.bobo.evenbuts;
 
-import com.bobo.gmargiani.bobo.evenbuts.events.TestDataEvent;
-
 /**
  * Created by gmargiani on 1/30/2018.
  */

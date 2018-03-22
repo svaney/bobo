@@ -12,7 +12,6 @@ import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
 public class PreferencesApiManager {
     public static final String PREF_DEFAULT_NAME = "BOBO_PREFS";
 
-
     private static final String SELECTED_LOCALE = "SELECTED_LOCALE";
 
 

@@ -14,7 +14,7 @@ public interface RetrofitService {
     String SERVICE_ID = "serviceId";
 
     @GET(".")
-    Call<ApiResponse<AppVersion>> getTestData(
+    Call<ApiResponse<AppVersion>> getAppVersion(
             @Query(SERVICE_ID) String serviceId,
             @Query("deviceType") String deviceType,
             @Query("channel") String channel

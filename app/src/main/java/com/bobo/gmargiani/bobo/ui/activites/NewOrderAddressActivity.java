@@ -196,6 +196,20 @@ public class NewOrderAddressActivity extends RootDetailedActivity {
                 }
             }
         });
+
+        deliveryDateET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        deliveryTimeET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
     }
 
     @OnClick(R.id.done)
