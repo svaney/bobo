@@ -1,4 +1,9 @@
 <resources>
 
     <string name="button_text_retry">თავიდან</string>
+
+    <string name="action_filter">ფილტრი</string>
+    <string name="action_favorite">ფავორიტები</string>
+    <string name="action_inbox">შეტყობინებები</string>
+    <string name="action_search">ძიება</string>
 </resources>

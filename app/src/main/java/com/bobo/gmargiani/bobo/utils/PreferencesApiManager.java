@@ -8,9 +8,7 @@ import android.content.SharedPreferences;
 
 public class PreferencesApiManager {
     public static final String PREF_DEFAULT_NAME = "BOBO_PREFS";
-
     private static final String SELECTED_LOCALE = "SELECTED_LOCALE";
-
 
     private static PreferencesApiManager instance;
 

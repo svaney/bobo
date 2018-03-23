@@ -6,6 +6,7 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,7 +28,6 @@ public class UserInfo implements NetDataListener {
     public void setApiManager(ApiManager apiManager) {
         this.apiManager = apiManager;
     }
-
 
     public void requestAppVersion(boolean update) {
 
@@ -66,6 +66,7 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+
     public boolean shouldNotRefresh(RootEvent event, boolean update) {
         if (event == null) {
             return false;
@@ -85,4 +86,5 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
+
 }
