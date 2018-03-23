@@ -16,13 +16,11 @@ import com.bobo.gmargiani.bobo.rest.RetrofitApi;
 import com.bobo.gmargiani.bobo.rest.RetrofitClient;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
-import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
+import com.bobo.gmargiani.bobo.utils.AppConsts;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by gmargiani on 1/30/2018.

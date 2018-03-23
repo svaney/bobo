@@ -2,6 +2,9 @@ package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.bobo.gmargiani.bobo.R;
 
 /**
  * Created by gmargiani on 2/1/2018.

@@ -2,9 +2,6 @@ package com.bobo.gmargiani.bobo.utils;
 
 import android.content.SharedPreferences;
 
-import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
-import com.bobo.gmargiani.bobo.utils.consts.ModelConsts;
-
 /**
  * Created by gmargiani on 1/30/2018.
  */

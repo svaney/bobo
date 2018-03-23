@@ -17,26 +17,14 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
-import android.text.TextUtils;
-import android.view.View;
 
 import com.bobo.gmargiani.bobo.BuildConfig;
-import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
-import com.bobo.gmargiani.bobo.utils.consts.AppConsts;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by gmargiani on 2/1/2018.

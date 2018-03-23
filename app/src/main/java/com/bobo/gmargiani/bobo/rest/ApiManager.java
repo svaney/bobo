@@ -1,6 +1,6 @@
 package com.bobo.gmargiani.bobo.rest;
 
-import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
+import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.NetDataListener;
 
 /**
@@ -28,8 +28,7 @@ public class ApiManager {
             public void onFailure(Throwable t) {
                 super.onFailure(t);
                 ApiResponse<AppVersion> response = new ApiResponse<>();
-                response.setNetworkFailure(true);
-                response.setNetworkFailure(t);
+                response.setCode("-1");
                 dataListener.onAppVersionEvent(response);
             }
         });

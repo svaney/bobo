@@ -1,4 +1,4 @@
-package com.bobo.gmargiani.bobo.utils.consts;
+package com.bobo.gmargiani.bobo.utils;
 
 /**
  * Created by gmargiani on 2/1/2018.

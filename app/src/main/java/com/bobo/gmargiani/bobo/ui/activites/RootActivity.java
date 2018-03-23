@@ -1,23 +1,22 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
-import com.bobo.gmargiani.bobo.ui.adapters.interfaces.BasicRecyclerItemClickListener;
-
-import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -26,9 +25,6 @@ import butterknife.ButterKnife;
  */
 
 public abstract class RootActivity extends AppCompatActivity {
-    protected Toolbar toolbar;
-    protected TextView toolbarTV;
-
     protected UserInfo userInfo;
 
     protected Handler handler = new Handler();
@@ -38,24 +34,10 @@ public abstract class RootActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         ButterKnife.bind(this);
-        setSupportActionBar();
         this.userInfo = App.getInstance().getUserInfo();
-    }
 
-    protected void setSupportActionBar() {
-        toolbar = findViewById(R.id.toolbar);
-
-        if (toolbar != null) {
-            toolbar.setContentInsetsAbsolute(0, 0);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        toolbarTV = findViewById(R.id.toolbar_text);
-
-        if (toolbarTV != null) {
-            toolbarTV.setText(getHeaderText());
-        }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     protected int getHeaderText() {
@@ -115,32 +97,6 @@ public abstract class RootActivity extends AppCompatActivity {
         if (content != null) {
             content.setVisibility(show ? View.VISIBLE : View.GONE);
         }
-    }
-
-    public void showTextListDialog(String title, ArrayList<String> texts, final int listType, final BasicRecyclerItemClickListener listener) {
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-        builderSingle.setTitle(title);
-
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item);
-        arrayAdapter.addAll(texts);
-
-        builderSingle.setNegativeButton(getString(R.string.button_text_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (listener != null) {
-                    listener.onItemClick(which, listType);
-                }
-            }
-        });
-
-        builderSingle.show();
     }
 
     @Override

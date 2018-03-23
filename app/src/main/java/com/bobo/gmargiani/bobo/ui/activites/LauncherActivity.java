@@ -23,13 +23,12 @@ public class LauncherActivity extends RootActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.toolbar).setVisibility(View.GONE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        userInfo.requestAppVersion(false, false, "ANDROID", "MOBILE");
+        userInfo.requestAppVersion(false);
     }
 
     @Subscribe
@@ -38,16 +37,12 @@ public class LauncherActivity extends RootActivity {
             appVersionEvent = event;
             switch (appVersionEvent.getState()) {
                 case RootEvent.STATE_LOADING:
-                case RootEvent.STATE_UPDATING:
                     showFullLoading();
                     break;
                 case RootEvent.STATE_SUCCESS:
-                    startActivity(new Intent(this, HomeActivity.class));
+                    startActivity(new Intent(this, MainActivity.class));
                     break;
-                case RootEvent.STATE_DATA_ERROR:
-                    showFullError();
-                    break;
-                case RootEvent.STATE_NETWORK_ERROR:
+                case RootEvent.STATE_ERROR:
                     showFullError();
                     break;
             }
@@ -57,7 +52,7 @@ public class LauncherActivity extends RootActivity {
 
     @OnClick(R.id.full_retry)
     public void onRetry() {
-        userInfo.requestAppVersion(false, false, "ANDROID", "MOBILE-EXT");
+        userInfo.requestAppVersion(true);
     }
 
     @Override

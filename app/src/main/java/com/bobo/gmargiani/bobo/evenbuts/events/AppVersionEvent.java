@@ -1,7 +1,7 @@
 package com.bobo.gmargiani.bobo.evenbuts.events;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
-import com.bobo.gmargiani.bobo.model.datamodels.AppVersion;
+import com.bobo.gmargiani.bobo.model.AppVersion;
 
 /**
  * Created by gmargiani on 1/30/2018.
@@ -15,8 +15,6 @@ public class AppVersionEvent extends RootEvent {
         AppVersionEvent ts = new AppVersionEvent();
 
         ts.setState(getState());
-        ts.setErrorCode(getErrorCode());
-        ts.setErrorText(getErrorText());
         ts.setAppVersion(getAppVersion());
 
         return ts;
