@@ -20,7 +20,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
     implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
     implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibrariesVersion"
@@ -40,10 +39,10 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout-solver:1.0.2'
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     implementation 'com.tapadoo.android:alerter:2.0.4'
+    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+    testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
-
 }

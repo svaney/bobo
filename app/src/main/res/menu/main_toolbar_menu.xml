@@ -5,7 +5,8 @@
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
         android:title="@string/action_search"
-        app:showAsAction="always" />
+        app:actionLayout="@layout/search_view_layout"
+        app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/action_filter"
@@ -24,5 +25,6 @@
         android:icon="@drawable/ic_mail"
         android:title="@string/action_inbox"
         app:showAsAction="always" />
+
 
 </menu>
