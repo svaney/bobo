@@ -40,10 +40,9 @@ public class LauncherActivity extends RootActivity {
                     showFullLoading();
                     break;
                 case RootEvent.STATE_SUCCESS:
-                    startActivity(new Intent(this, MainActivity.class));
-                    break;
                 case RootEvent.STATE_ERROR:
-                    showFullError();
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
                     break;
             }
         }

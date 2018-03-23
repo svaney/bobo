@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/circular_progress" />
+    <at.grabner.circleprogress.CircleProgressView
+        android:id="@+id/loader"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        app:cpv_barWidth="10dp"
+        app:cpv_innerContourColor="@android:color/transparent"
+        app:cpv_outerContourColor="@android:color/transparent"
+        app:cpv_rimColor="@color/color_accent_light"
+        app:cpv_rimWidth="10dp"
+        app:cpv_spin="true"
+        app:cpv_spinBarLength="100"
+        app:cpv_spinColor="@color/colorAccent" />
 </FrameLayout>

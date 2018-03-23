@@ -21,7 +21,6 @@
 
 
     <include
-        android:id="@+id/full_loader"
         layout="@layout/component_circular_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

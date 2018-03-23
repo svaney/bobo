@@ -18,6 +18,7 @@ import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 
+import at.grabner.circleprogress.CircleProgressView;
 import butterknife.ButterKnife;
 
 /**
@@ -79,9 +80,17 @@ public abstract class RootActivity extends AppCompatActivity {
     }
 
     private void showLoader(boolean show) {
-        View loader = findViewById(R.id.full_loader);
-        if (loader != null) {
-            loader.setVisibility(show ? View.VISIBLE : View.GONE);
+        View v = findViewById(R.id.full_loader);
+        if (v != null) {
+            v.setVisibility(show ? View.VISIBLE : View.GONE);
+            CircleProgressView loader = v.findViewById(R.id.loader);
+            if (loader != null) {
+                if (show) {
+                    loader.spin();
+                } else {
+                    loader.stopSpinning();
+                }
+            }
         }
     }
 

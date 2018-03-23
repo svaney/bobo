@@ -5,4 +5,6 @@
     <color name="colorAccent">#10B1F1</color>
 
     <color name="error_red_color">#ffff4444</color>
+
+    <color name="color_accent_light">#cff1ff</color>
 </resources>
