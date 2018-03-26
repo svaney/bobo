@@ -18,6 +18,7 @@ public abstract class RootDetailedActivity extends RootActivity {
     }
 
     protected void initBackButton() {
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }

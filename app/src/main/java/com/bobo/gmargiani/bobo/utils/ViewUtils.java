@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -109,5 +110,19 @@ public class ViewUtils {
         a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
         return a;
+    }
+
+    public static int getAccentColor(Context context){
+        return getAttributeColor(context, R.attr.colorAccent, false);
+    }
+
+    public static int getAttributeColor(Context context, int attrId, boolean returnId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attrId, typedValue, true);
+        int colorResId = typedValue.resourceId;
+
+        if (returnId) return colorResId;
+
+        return ContextCompat.getColor(context, colorResId);
     }
 }
