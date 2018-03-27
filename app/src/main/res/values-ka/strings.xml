@@ -6,4 +6,22 @@
     <string name="action_favorite">ფავორიტები</string>
     <string name="action_inbox">შეტყობინებები</string>
     <string name="action_search">ძიება</string>
+
+    <string name="nav_title_filter">გაფილტვრა</string>
+    <string name="nav_title_favorites">ფავორიტები</string>
+    <string name="nav_title_manage_subscriptions">გამოწერების მართვა</string>
+    <string name="nav_title_my_statements">ჩემი განცხადებები</string>
+    <string name="nav_title_inbox">შეტყობინებები</string>
+    <string name="nav_title_new_statement">განცხადების დამატება</string>
+    <string name="nav_title_settings">პარამეტრები</string>
+    <string name="nav_title_terms">მომხმარებლის პირობები</string>
+    <string name="nav_title_about">აპლიკაციის შესახებ</string>
+    <string name="nav_title_help">დახმარება</string>
+    <string name="nav_title_language">English</string>
+    <string name="nav_title_authorization">ავტორიზაცია</string>
+    <string name="alert_info_loading_data">მიმდინარეობს მონაცემების ჩატვირთვა</string>
+    <string name="common_text_email">ელექტორნული ფოსტა</string>
+    <string name="common_text_password">Password</string>
+    <string name="common_text_log_in">შესვლა</string>
+    <string name="common_text_register">რეგისტრაცია</string>
 </resources>

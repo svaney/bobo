@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
+import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 
 import at.grabner.circleprogress.CircleProgressView;
 import butterknife.ButterKnife;
@@ -119,6 +122,22 @@ public abstract class RootActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         App.getInstance().postPermissionEvent(requestCode, permissions, grantResults);
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base));
+    }
+
+    public void restartApp() {
+        Intent i = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
+
+    public void showAuthorizationDialog(){
+        new AuthorizationDialog(this).show();
     }
 
     public abstract int getLayoutId();

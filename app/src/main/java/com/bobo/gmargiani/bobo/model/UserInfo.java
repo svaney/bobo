@@ -4,9 +4,10 @@ import android.os.Handler;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
-import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
+import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,6 +21,7 @@ public class UserInfo implements NetDataListener {
     private EventBus eventBus;
 
     private AppVersionEvent appVersionEvent;
+    private TokenAuthorizationEvent tokenAuthorizationEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -27,6 +29,35 @@ public class UserInfo implements NetDataListener {
 
     public void setApiManager(ApiManager apiManager) {
         this.apiManager = apiManager;
+    }
+
+    public void requestTokenAuthorizationEvent(String token) {
+        if (shouldNotRefresh(tokenAuthorizationEvent) && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
+            eventBus.post(tokenAuthorizationEvent);
+        } else {
+            tokenAuthorizationEvent = new TokenAuthorizationEvent();
+            tokenAuthorizationEvent.setToken(token);
+            tokenAuthorizationEvent.setState(RootEvent.STATE_LOADING);
+
+            eventBus.post(tokenAuthorizationEvent);
+
+            apiManager.authorizeByToken(token);
+        }
+    }
+
+    @Override
+    public void onAuthorizeByTokenEvent(ApiResponse<Boolean> response, String token) {
+        if (tokenAuthorizationEvent != null && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
+            tokenAuthorizationEvent = (TokenAuthorizationEvent) tokenAuthorizationEvent.copyData();
+
+            if (response.isSuccess()) {
+                tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
+                tokenAuthorizationEvent.setAuthorized(response.getResult());
+            } else {
+                tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
+            }
+            eventBus.post(tokenAuthorizationEvent);
+        }
     }
 
     public void requestAppVersion(boolean update) {
@@ -61,6 +92,13 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+    public boolean shouldNotRefresh(RootEvent event) {
+        return shouldNotRefresh(event, false);
+    }
+
+    public boolean isAuthorized() {
+        return tokenAuthorizationEvent == null ? false : tokenAuthorizationEvent.isAuthorized();
+    }
 
     public boolean shouldNotRefresh(RootEvent event, boolean update) {
         if (event == null) {
@@ -81,5 +119,6 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
+
 
 }

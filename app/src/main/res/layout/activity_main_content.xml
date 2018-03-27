@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bobo.gmargiani.bobo.ui.activites.MainActivity"
-    tools:showIn="@layout/activity_main_toolbar">
+    tools:showIn="@layout/activity_main_toolbar_and_screen">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
         <include
+            android:id="@+id/full_loader"
             layout="@layout/component_circular_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

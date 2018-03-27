@@ -28,4 +28,15 @@ public class AlertManager {
                     .show();
         }
     }
+
+    public static void showInfo(Activity activity, String text) {
+        if (activity != null) {
+            Alerter.create(activity)
+                    .setText(text)
+                    .setBackgroundColorInt(ContextCompat.getColor(activity, (R.color.colorAccent)))
+                    .enableSwipeToDismiss()
+                    .setDuration(SHORT)
+                    .show();
+        }
+    }
 }

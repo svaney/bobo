@@ -17,6 +17,14 @@ public class LocaleHelper {
 
     private static final String SELECTED_LOCALE = "SELECTED_LOCALE";
 
+    public static void changeLanguage(Context context){
+        if (AppConsts.KA.equals(getLanguage(context))){
+            setLocale(context, AppConsts.EN);
+        } else {
+            setLocale(context, AppConsts.KA);
+        }
+    }
+
     public static Context onAttach(Context context) {
         String lang = getPersistedData(context, Locale.getDefault().getLanguage());
         return setLocale(context, lang);

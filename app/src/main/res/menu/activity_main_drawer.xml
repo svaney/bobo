@@ -3,36 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/top">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_filter"
+            android:icon="@drawable/ic_filter"
+            android:title="@string/nav_title_filter" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/nav_title_favorites" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+    <group android:id="@+id/middle">
+
+        <item
+            android:id="@+id/nav_subscriptions"
+            android:icon="@drawable/ic_check_box"
+            android:title="@string/nav_title_manage_subscriptions" />
+        <item
+            android:id="@+id/nav_my_statements"
+            android:icon="@drawable/ic_statements"
+            android:title="@string/nav_title_my_statements" />
+        <item
+            android:id="@+id/nav_inbox"
+            android:icon="@drawable/ic_mail"
+            android:title="@string/nav_title_inbox" />
+        <item
+            android:id="@+id/nav_new_statement"
+            android:icon="@drawable/ic_add_circle"
+            android:title="@string/nav_title_new_statement" />
+    </group>
+
+    <group android:id="@+id/bottom">
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/nav_title_settings" />
+        <item
+            android:id="@+id/nav_terms_and_conditions"
+            android:icon="@drawable/ic_terms_and_conditions"
+            android:title="@string/nav_title_terms" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info"
+            android:title="@string/nav_title_about" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help"
+            android:title="@string/nav_title_help" />
+    </group>
 
 </menu>

@@ -1,6 +1,8 @@
 package com.bobo.gmargiani.bobo.rest;
 
+import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
+import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
@@ -92,7 +94,7 @@ public class RetrofitClient {
                         .addQueryParameter("os", "ANDROID")
                         .addQueryParameter("osVersion", String.valueOf(AppUtils.getAndroidVersion()))
                         .addQueryParameter("appVersion", String.valueOf(appVersion))
-                        .addQueryParameter("langCode", PreferencesApiManager.getInstance().getCurrentLanguage());
+                        .addQueryParameter("langCode", LocaleHelper.getLanguage(App.getInstance()));
 
                 HttpUrl url = builder.build();
 

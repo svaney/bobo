@@ -11,5 +11,7 @@
     <color name="divider_color">#1F000000</color>
 
     <color name="border_grey_color">#61000000</color>
+    <color name="content_search_background">#99000000</color>
+    <color name="color_transparent">#00000000</color>
 
 </resources>

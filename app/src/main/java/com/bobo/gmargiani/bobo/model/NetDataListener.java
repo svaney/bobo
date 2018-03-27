@@ -8,4 +8,6 @@ import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
 public interface NetDataListener {
     void onAppVersionEvent(ApiResponse<AppVersion> response);
+
+    void onAuthorizeByTokenEvent(ApiResponse<Boolean> response, String token);
 }

@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 
 public class PreferencesApiManager {
     public static final String PREF_DEFAULT_NAME = "BOBO_PREFS";
-    private static final String SELECTED_LOCALE = "SELECTED_LOCALE";
+
+    private static final String USERNAME = "USERNAME";
+    private static final String AUTH_TOKEN = "AUTH_TOKEN";
 
     private static PreferencesApiManager instance;
 
@@ -25,14 +27,13 @@ public class PreferencesApiManager {
         return instance;
     }
 
-    public String getCurrentLanguage() {
-        String locale = getLocale();
-        String language = locale.equalsIgnoreCase(AppConsts.KA) ? AppConsts.KA : AppConsts.EN;
-        return language;
+    public void saveToken(String token) {
+        mEditor.putString(AUTH_TOKEN, token);
+        mEditor.commit();
     }
 
-    public String getLocale() {
-        String locale = mSharedPreferences.getString(SELECTED_LOCALE, AppConsts.KA);
-        return locale;
+    public String getToken() {
+        return mSharedPreferences.getString(AUTH_TOKEN, "");
     }
+
 }

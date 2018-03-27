@@ -23,19 +23,25 @@
             android:id="@+id/toolbar_filter"
             android:layout_width="@dimen/toolbar_ic_size"
             android:layout_height="@dimen/toolbar_ic_size"
-            android:layout_marginRight="@dimen/item_default_margin" />
+            android:layout_marginRight="@dimen/item_default_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true" />
 
         <ImageView
             android:id="@+id/toolbar_favorite"
             android:layout_width="@dimen/toolbar_ic_size"
             android:layout_height="@dimen/toolbar_ic_size"
-            android:layout_marginRight="@dimen/item_default_margin" />
+            android:layout_marginRight="@dimen/item_default_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true" />
 
         <ImageView
             android:id="@+id/toolbar_inbox"
             android:layout_width="@dimen/toolbar_ic_size"
             android:layout_height="@dimen/toolbar_ic_size"
-            android:layout_marginRight="@dimen/item_default_margin" />
+            android:layout_marginRight="@dimen/item_default_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true" />
 
     </LinearLayout>
 
@@ -53,6 +59,8 @@
             android:layout_height="28dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="@dimen/item_default_small_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:scaleType="fitXY"
             android:src="@drawable/ic_search" />
 

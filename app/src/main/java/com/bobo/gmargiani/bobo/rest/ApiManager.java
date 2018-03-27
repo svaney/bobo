@@ -3,6 +3,9 @@ package com.bobo.gmargiani.bobo.rest;
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.NetDataListener;
 
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+
 /**
  * Created by gmargiani on 1/30/2018.
  */
@@ -32,5 +35,19 @@ public class ApiManager {
                 dataListener.onAppVersionEvent(response);
             }
         });
+    }
+
+    public void authorizeByToken(final String token) {
+        android.os.Handler h = new android.os.Handler();
+
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ApiResponse<Boolean> resp = new ApiResponse<>();
+                resp.setCode("0");
+                resp.setResult(false);
+                dataListener.onAuthorizeByTokenEvent(resp, token);
+            }
+        }, 1000);
     }
 }
