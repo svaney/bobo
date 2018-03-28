@@ -38,16 +38,9 @@ public class ApiManager {
     }
 
     public void authorizeByToken(final String token) {
-        android.os.Handler h = new android.os.Handler();
-
-        h.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ApiResponse<Boolean> resp = new ApiResponse<>();
-                resp.setCode("0");
-                resp.setResult(false);
-                dataListener.onAuthorizeByTokenEvent(resp, token);
-            }
-        }, 1000);
+        ApiResponse<Boolean> resp = new ApiResponse<>();
+        resp.setCode("0");
+        resp.setResult(false);
+        dataListener.onAuthorizeByTokenEvent(resp, token);
     }
 }

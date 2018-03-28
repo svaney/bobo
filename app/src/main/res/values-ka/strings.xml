@@ -1,5 +1,12 @@
 <resources>
 
+    <string name="activity_name_favorites">ფავორიტები</string>
+
+    <string name="common_text_email">ელექტორნული ფოსტა</string>
+    <string name="common_text_password">Password</string>
+    <string name="common_text_log_in">შესვლა</string>
+    <string name="common_text_register">რეგისტრაცია</string>
+
     <string name="button_text_retry">თავიდან</string>
 
     <string name="action_filter">ფილტრი</string>
@@ -19,9 +26,5 @@
     <string name="nav_title_help">დახმარება</string>
     <string name="nav_title_language">English</string>
     <string name="nav_title_authorization">ავტორიზაცია</string>
-    <string name="alert_info_loading_data">მიმდინარეობს მონაცემების ჩატვირთვა</string>
-    <string name="common_text_email">ელექტორნული ფოსტა</string>
-    <string name="common_text_password">Password</string>
-    <string name="common_text_log_in">შესვლა</string>
-    <string name="common_text_register">რეგისტრაცია</string>
+
 </resources>

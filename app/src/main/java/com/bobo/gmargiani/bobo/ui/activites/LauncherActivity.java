@@ -7,6 +7,7 @@ import android.view.View;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -29,6 +30,7 @@ public class LauncherActivity extends RootActivity {
     protected void onStart() {
         super.onStart();
         userInfo.requestAppVersion(false);
+        userInfo.requestTokenAuthorizationEvent();
     }
 
     @Subscribe
@@ -47,11 +49,6 @@ public class LauncherActivity extends RootActivity {
             }
         }
 
-    }
-
-    @OnClick(R.id.full_retry)
-    public void onRetry() {
-        userInfo.requestAppVersion(true);
     }
 
     @Override

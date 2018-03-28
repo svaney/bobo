@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,18 +16,18 @@ import android.widget.ImageView;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
+import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
-import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
-import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ToolbarWidget.ToolbarWidgetListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -37,8 +38,8 @@ public class MainActivity extends RootActivity
     @BindView(R.id.toolbar_widget)
     protected ToolbarWidget toolbarWidget;
 
-    @BindView(R.id.content_wrapper)
-    protected View contentWrapper;
+    @BindView(R.id.search_background)
+    protected View searchBackground;
 
     @BindView(R.id.nav_view)
     protected NavigationView navView;
@@ -47,20 +48,24 @@ public class MainActivity extends RootActivity
     protected ImageView languageImage;
     protected View userAvatarWrapper;
     protected View languageChangebtn;
+    protected View authorizeText;
 
     private ActionBarDrawerToggle drawerToggle;
 
-    private boolean searchExpanded;
+    private boolean drawerListenerAdded;
 
-
-    private TokenAuthorizationEvent tokenAuthEvent;
+    private TokenAuthorizationEvent tokenAuthorizationEvent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setUpDrawer();
-        setUpClickListeners();
+
+        toolbarWidget.setOnViewClickListener(this);
+        userAvatarWrapper.setOnClickListener(this);
+        languageChangebtn.setOnClickListener(this);
+        authorizeText.setOnClickListener(this);
     }
 
     private void setUpDrawer() {
@@ -75,74 +80,60 @@ public class MainActivity extends RootActivity
         userAvatarWrapper = navView.getHeaderView(0).findViewById(R.id.use_profile_picture_wrapper);
         languageChangebtn = navView.getHeaderView(0).findViewById(R.id.language_change);
         languageImage = navView.getHeaderView(0).findViewById(R.id.language_image);
+        authorizeText = navView.getHeaderView(0).findViewById(R.id.nav_login_register);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
         bg.setColor(ContextCompat.getColor(this, R.color.color_accent_light));
 
         userAvatarWrapper.setBackground(bg);
+
+        ImageLoader.loadImage(userAvatar, R.drawable.ic_avatar_default, true, false);
     }
 
-    private void setUpClickListeners() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        userInfo.requestTokenAuthorizationEvent();
+    }
 
-        toolbarWidget.setOnViewClickListener(this);
-        userAvatarWrapper.setOnClickListener(this);
-        languageChangebtn.setOnClickListener(this);
+    @Subscribe
+    public void onTokenAuthorizationEvent(TokenAuthorizationEvent event) {
+        if (tokenAuthorizationEvent != event) {
+            tokenAuthorizationEvent = event;
+
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    showFullLoading();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    showContent();
+                    break;
+                case RootEvent.STATE_ERROR:
+                    showFullError();
+                    break;
+            }
+        }
+    }
+
+    @OnClick(R.id.full_retry_button)
+    public void onFullRetryClick() {
+        userInfo.requestTokenAuthorizationEvent();
     }
 
     @Override
     public void onClick(View v) {
-        if (v == null) {
-            showBurgerMenuIcon(false);
-        } else {
+        if (v != null) {
+            if (v == userAvatarWrapper || v == authorizeText) {
+                if (userInfo.isAuthorized()) {
 
-            switch (v.getId()) {
-
-                case R.id.use_profile_picture_wrapper:
-                    if (isAuthorizationLoaded()) {
-                        if (userInfo.isAuthorized()) {
-
-                        } else {
-                            drawer.closeDrawer(GravityCompat.START);
-                            showAuthorizationDialog();
-                        }
-                    } else {
-                        AlertManager.showInfo(this, getString(R.string.alert_info_loading_data));
-                    }
-                    break;
-
-
-                case R.id.language_change:
-                    LocaleHelper.changeLanguage(MainActivity.this);
-                    restartApp();
-                    break;
-
-                case R.id.toolbar_inbox:
-                    if (isAuthorizationLoaded()) {
-                        if (userInfo.isAuthorized()) {
-
-                        } else {
-                            showAuthorizationDialog();
-                        }
-                    } else {
-                        AlertManager.showInfo(this, getString(R.string.alert_info_loading_data));
-                    }
-                    break;
-
-                case R.id.toolbar_favorite:
-                    if (isAuthorizationLoaded()) {
-                        if (userInfo.isAuthorized()) {
-
-                        } else {
-                            showAuthorizationDialog();
-                        }
-                    } else {
-                        AlertManager.showInfo(this, getString(R.string.alert_info_loading_data));
-                    }
-                    break;
-
-                case R.id.toolbar_filter:
-                    break;
+                } else {
+                    showAuthorizationDialog();
+                }
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (v == languageChangebtn) {
+                LocaleHelper.changeLanguage(MainActivity.this);
+                restartApp();
             }
         }
     }
@@ -152,53 +143,21 @@ public class MainActivity extends RootActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             drawerToggle.setDrawerIndicatorEnabled(true);
             drawerToggle.setToolbarNavigationClickListener(null);
-            searchExpanded = false;
-            contentWrapper.setBackgroundColor(ContextCompat.getColor(this, R.color.color_transparent));
+            drawerListenerAdded = false;
+            searchBackground.setVisibility(View.GONE);
         } else {
-            contentWrapper.setBackgroundColor(ContextCompat.getColor(this, R.color.content_search_background));
+            searchBackground.setVisibility(View.VISIBLE);
             drawerToggle.setDrawerIndicatorEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            if (!searchExpanded) {
+            if (!drawerListenerAdded) {
                 drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toolbarWidget.closeSearch();
-                        showBurgerMenuIcon(true);
+                        toolbarWidget.collapseSearch();
                     }
                 });
-                searchExpanded = true;
+                drawerListenerAdded = true;
             }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        userInfo.requestTokenAuthorizationEvent(PreferencesApiManager.getInstance().getToken());
-    }
-
-    @Subscribe
-    public void onTokenAuthorizationEvent(TokenAuthorizationEvent event) {
-        if (tokenAuthEvent != event) {
-            this.tokenAuthEvent = event;
-            switch (event.getState()) {
-                case RootEvent.STATE_LOADING:
-                    showFullLoading();
-                    break;
-                case RootEvent.STATE_ERROR:
-                case RootEvent.STATE_SUCCESS:
-                    showContent();
-                    setUpScreenData();
-                    break;
-            }
-        }
-    }
-
-    private void setUpScreenData() {
-        if (userInfo.isAuthorized()) {
-
-        } else {
-            ImageLoader.loadImage(userAvatar, R.drawable.ic_avatar_default, true, false);
         }
     }
 
@@ -235,6 +194,33 @@ public class MainActivity extends RootActivity
         return true;
     }
 
+    @Override
+    public void onSearchViewExpand() {
+        showBurgerMenuIcon(false);
+    }
+
+    @Override
+    public void onSearchViewCollapse() {
+        showBurgerMenuIcon(true);
+    }
+
+    @Override
+    public void onMenuIconClick(int iconResId) {
+        switch (iconResId) {
+            case R.id.toolbar_favorite:
+                startActivity(new Intent(this, FavoritesActivity.class));
+                break;
+            case R.id.toolbar_filter:
+                break;
+            case R.id.toolbar_inbox:
+                break;
+        }
+    }
+
+    @Override
+    public void onSearchString(String query) {
+
+    }
 
     @Override
     public int getLayoutId() {
@@ -249,17 +235,12 @@ public class MainActivity extends RootActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (searchExpanded) {
-            toolbarWidget.closeSearch();
-            showBurgerMenuIcon(true);
+        if (toolbarWidget != null && toolbarWidget.isSearchViewExpanded()) {
+            toolbarWidget.collapseSearch();
         } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-    }
-
-    private boolean isAuthorizationLoaded() {
-        return !(tokenAuthEvent == null || tokenAuthEvent.getState() == RootEvent.STATE_LOADING);
     }
 }

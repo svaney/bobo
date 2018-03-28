@@ -1,15 +1,23 @@
 <resources>
     <string name="app_name" translatable="false">BoBo</string>
-    <string name="button_text_retry">RETRY</string>
-    <string name="title_activity_main">MainActivity</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="activity_name_favorites">Favorites</string>
+
+    <string name="common_text_email">E-mail</string>
+    <string name="common_text_password">Password</string>
+    <string name="common_text_log_in">Log in</string>
+    <string name="common_text_register">Register</string>
+
+    <string name="button_text_retry">RETRY</string>
 
     <string name="action_filter">Filter</string>
     <string name="action_favorite">Favorites</string>
     <string name="action_inbox">Inbox</string>
     <string name="action_search">Search</string>
+
     <string name="nav_title_filter">Filter Statements</string>
     <string name="nav_title_favorites">Favorites</string>
     <string name="nav_title_manage_subscriptions">Manage Subscriptions</string>
@@ -22,9 +30,7 @@
     <string name="nav_title_help">Help</string>
     <string name="nav_title_language">ქართული</string>
     <string name="nav_title_authorization">Authorization</string>
-    <string name="alert_info_loading_data">Data is loading</string>
-    <string name="common_text_email">E-mail</string>
-    <string name="common_text_password">Password</string>
-    <string name="common_text_log_in">Log in</string>
-    <string name="common_text_register">Register</string>
+
+
+
 </resources>

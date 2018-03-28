@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
+import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
 import at.grabner.circleprogress.CircleProgressView;
 import butterknife.ButterKnife;
@@ -86,12 +88,12 @@ public abstract class RootActivity extends AppCompatActivity {
         View v = findViewById(R.id.full_loader);
         if (v != null) {
             v.setVisibility(show ? View.VISIBLE : View.GONE);
-            CircleProgressView loader = v.findViewById(R.id.loader);
+            View loader = ViewUtils.findViewInChildren(v, R.id.loader);
             if (loader != null) {
                 if (show) {
-                    loader.spin();
+                    ((CircleProgressView) loader).spin();
                 } else {
-                    loader.stopSpinning();
+                    ((CircleProgressView) loader).stopSpinning();
                 }
             }
         }
@@ -136,8 +138,17 @@ public abstract class RootActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void showAuthorizationDialog(){
-        new AuthorizationDialog(this).show();
+    public void showAuthorizationDialog() {
+        showAuthorizationDialog(null);
+    }
+
+    public void showAuthorizationDialog(DialogInterface.OnCancelListener onCancelListener) {
+        AuthorizationDialog dialog = new AuthorizationDialog(this);
+        if (onCancelListener != null) {
+            dialog.setOnCancelListener(onCancelListener);
+        }
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     public abstract int getLayoutId();

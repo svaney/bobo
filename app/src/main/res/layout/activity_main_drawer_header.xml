@@ -27,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:clickable="true"
                 android:padding="1dp">
 
                 <ImageView
@@ -44,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/item_default_margin"
+                android:clickable="true"
                 android:text="@string/nav_title_authorization"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />

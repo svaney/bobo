@@ -8,19 +8,55 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/activity_main_toolbar_and_screen"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/activity_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/full_retry"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_transparent_background"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/component_retry_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/full_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_transparent_background"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/component_circular_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </FrameLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/colorPrimaryDark"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/activity_main_drawer_header"
-        android:background="@color/colorPrimaryDark"
         app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

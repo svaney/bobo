@@ -6,14 +6,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
@@ -24,15 +28,19 @@ import com.bobo.gmargiani.bobo.utils.ViewUtils;
  * Created by gmargiani on 3/26/2018.
  */
 
-public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeListener {
+public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeListener, View.OnClickListener, TextView.OnEditorActionListener {
     private static int EXPAND_COLLAPSE_ANIM_DURATION = 400;
+
     private View iconWrapper;
-    private ImageView inbox;
-    private ImageView favorite;
-    private ImageView filter;
-    private ImageView rightIcon;
+
+    private ImageView iconInbox;
+    private ImageView iconFavorites;
+    private ImageView iconFilter;
+    private ImageView iconSearch;
+
     private EditText editText;
-    private OnClickListener onClickListener;
+
+    private ToolbarWidgetListener toolbarWidgetListener;
 
     public ToolbarWidget(@NonNull Context context) {
         this(context, null);
@@ -42,26 +50,26 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
         this(context, attrs, -1);
     }
 
-
     public ToolbarWidget(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setClipChildren(false);
         inflate(context, R.layout.component_toolbar_widget, this);
+
         findViews();
     }
 
     private void findViews() {
-        inbox = findViewById(R.id.toolbar_inbox);
-        favorite = findViewById(R.id.toolbar_favorite);
-        filter = findViewById(R.id.toolbar_filter);
+        iconInbox = findViewById(R.id.toolbar_inbox);
+        iconFavorites = findViewById(R.id.toolbar_favorite);
+        iconFilter = findViewById(R.id.toolbar_filter);
         editText = findViewById(R.id.toolbar_et);
         iconWrapper = findViewById(R.id.toolbar_icons);
-        rightIcon = findViewById(R.id.edit_text_right_picture);
+        iconSearch = findViewById(R.id.toolbar_search);
 
-        ImageLoader.loadImage(inbox, R.drawable.ic_mail, false, true);
-        ImageLoader.loadImage(favorite, R.drawable.ic_favorite_filled, false, true);
-        ImageLoader.loadImage(filter, R.drawable.ic_filter, false, true);
-        ImageLoader.loadImage(rightIcon, R.drawable.ic_search, false, true);
+        ImageLoader.loadImage(iconInbox, R.drawable.ic_mail, false, true);
+        ImageLoader.loadImage(iconFavorites, R.drawable.ic_favorite_filled, false, true);
+        ImageLoader.loadImage(iconFilter, R.drawable.ic_filter, false, true);
+        ImageLoader.loadImage(iconSearch, R.drawable.ic_search, false, true);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);
@@ -70,41 +78,35 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
 
         editText.setBackground(bg);
         editText.setOnFocusChangeListener(this);
+        editText.setOnEditorActionListener(this);
 
-        showSearchIcon(true);
-
-        setUpOnClickListeners();
+        iconInbox.setOnClickListener(this);
+        iconFavorites.setOnClickListener(this);
+        iconFilter.setOnClickListener(this);
+        iconSearch.setOnClickListener(this);
     }
 
-    public void setOnViewClickListener(OnClickListener listener) {
-        this.onClickListener = listener;
-        setUpOnClickListeners();
-    }
-
-    private void setUpOnClickListeners() {
-        inbox.setOnClickListener(onClickListener);
-        favorite.setOnClickListener(onClickListener);
-        filter.setOnClickListener(onClickListener);
+    public void setOnViewClickListener(ToolbarWidgetListener listener) {
+        this.toolbarWidgetListener = listener;
     }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            fadeOutIcons();
+            expandSearchView();
         } else {
             editText.setText("");
-            fadeInIcons();
+            collapseSearchView();
         }
     }
 
-    private void fadeOutIcons() {
+    private void expandSearchView() {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator());
         fadeOut.setDuration(EXPAND_COLLAPSE_ANIM_DURATION);
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -114,19 +116,22 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
                     TransitionManager.beginDelayedTransition(ToolbarWidget.this);
                 } catch (Exception ignored) {
                 }
+
+                if (toolbarWidgetListener != null) {
+                    toolbarWidgetListener.onSearchViewExpand();
+                }
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
 
         iconWrapper.startAnimation(fadeOut);
-        showSearchIcon(false);
+
     }
 
-    private void fadeInIcons() {
+    private void collapseSearchView() {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new AccelerateInterpolator());
         fadeIn.setDuration(EXPAND_COLLAPSE_ANIM_DURATION);
@@ -142,36 +147,60 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                if (toolbarWidgetListener != null) {
+                    toolbarWidgetListener.onSearchViewCollapse();
+                }
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
 
         iconWrapper.startAnimation(fadeIn);
-        showSearchIcon(true);
     }
 
-
-    private void showSearchIcon(boolean show) {
-        rightIcon.setVisibility(show ? VISIBLE : GONE);
-
-        if (!show) {
-            if (onClickListener != null) {
-                onClickListener.onClick(null);
-            }
-        }
-    }
-
-    public boolean isInSearchMode() {
-        return rightIcon.getVisibility() == GONE;
-    }
-
-    public void closeSearch() {
+    public void collapseSearch() {
         editText.setText("");
         editText.clearFocus();
         ViewUtils.closeKeyboard(editText);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            onClick(iconSearch);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.toolbar_search) {
+            if (!isSearchViewExpanded()) {
+                ViewUtils.focusEditText(editText);
+            } else {
+                if (toolbarWidgetListener != null && !TextUtils.isEmpty(editText.getText())) {
+                    toolbarWidgetListener.onSearchString(editText.getText().toString());
+                }
+            }
+        } else if (toolbarWidgetListener != null) {
+            toolbarWidgetListener.onMenuIconClick(v.getId());
+        }
+    }
+
+    public boolean isSearchViewExpanded() {
+        return iconWrapper.getVisibility() == GONE;
+    }
+
+    public interface ToolbarWidgetListener {
+        void onSearchViewExpand();
+
+        void onSearchViewCollapse();
+
+        void onSearchString(String query);
+
+        void onMenuIconClick(int iconResId);
     }
 }

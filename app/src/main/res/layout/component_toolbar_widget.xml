@@ -53,8 +53,20 @@
         android:layout_marginRight="@dimen/item_default_margin"
         android:layout_toLeftOf="@id/toolbar_icons">
 
+        <EditText
+            android:id="@+id/toolbar_et"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingBottom="2dp"
+            android:paddingLeft="@dimen/item_default_small_margin"
+            android:paddingRight="38dp"
+            android:paddingTop="2dp" />
+
         <ImageView
-            android:id="@+id/edit_text_right_picture"
+            android:id="@+id/toolbar_search"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_gravity="right|center_vertical"
@@ -64,15 +76,6 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_search" />
 
-        <EditText
-            android:id="@+id/toolbar_et"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingBottom="0dp"
-            android:paddingLeft="@dimen/item_default_margin"
-            android:paddingTop="0dp" />
 
     </FrameLayout>
 

@@ -7,6 +7,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,7 +32,15 @@ public class UserInfo implements NetDataListener {
         this.apiManager = apiManager;
     }
 
-    public void requestTokenAuthorizationEvent(String token) {
+    public void requestTokenAuthorizationEvent() {
+        if (shouldNotRefresh(tokenAuthorizationEvent)) {
+            eventBus.post(tokenAuthorizationEvent);
+        } else {
+            requestTokenAuthorizationEvent(PreferencesApiManager.getInstance().getToken());
+        }
+    }
+
+    private void requestTokenAuthorizationEvent(final String token) {
         if (shouldNotRefresh(tokenAuthorizationEvent) && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
             eventBus.post(tokenAuthorizationEvent);
         } else {
@@ -41,7 +50,13 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(tokenAuthorizationEvent);
 
-            apiManager.authorizeByToken(token);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.authorizeByToken(token);
+                }
+            }, 2000);
+
         }
     }
 
