@@ -11,6 +11,7 @@ public class PreferencesApiManager {
 
     private static final String USERNAME = "USERNAME";
     private static final String AUTH_TOKEN = "AUTH_TOKEN";
+    private static final String LIST_GRID = "LIST_GRID";
 
     private static PreferencesApiManager instance;
 
@@ -36,4 +37,12 @@ public class PreferencesApiManager {
         return mSharedPreferences.getString(AUTH_TOKEN, "");
     }
 
+    public boolean listIsGrid() {
+        return mSharedPreferences.getBoolean(LIST_GRID, false);
+    }
+
+    public void setListGrid(boolean grid) {
+        mEditor.putBoolean(LIST_GRID, grid);
+        mEditor.commit();
+    }
 }

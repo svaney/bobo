@@ -11,6 +11,8 @@ public class ApiResponse<ContentType> {
 
     private String code;
 
+    private String message;
+
     public boolean isSuccess() {
         return SUCCESSFUL_RESPONSE_CODE.equals(code);
     }
@@ -29,5 +31,13 @@ public class ApiResponse<ContentType> {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

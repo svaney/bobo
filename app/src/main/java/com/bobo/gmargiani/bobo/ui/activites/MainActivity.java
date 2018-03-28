@@ -8,6 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +19,12 @@ import android.widget.ImageView;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
-import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -44,6 +49,9 @@ public class MainActivity extends RootActivity
     @BindView(R.id.nav_view)
     protected NavigationView navView;
 
+    @BindView(R.id.recycler_view)
+    protected RecyclerView recyclerView;
+
     protected ImageView userAvatar;
     protected ImageView languageImage;
     protected View userAvatarWrapper;
@@ -55,6 +63,8 @@ public class MainActivity extends RootActivity
     private boolean drawerListenerAdded;
 
     private TokenAuthorizationEvent tokenAuthorizationEvent;
+
+    private StatementRecyclerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +98,11 @@ public class MainActivity extends RootActivity
 
         userAvatarWrapper.setBackground(bg);
 
-        ImageLoader.loadImage(userAvatar, R.drawable.ic_avatar_default, true, false);
+        ImageLoader.load(userAvatar)
+                .setRes(R.drawable.ic_avatar_default)
+                .setOval(true)
+                .build();
+
     }
 
     @Override
@@ -108,6 +122,7 @@ public class MainActivity extends RootActivity
                     break;
                 case RootEvent.STATE_SUCCESS:
                     showContent();
+                    setUpRecyclerView();
                     break;
                 case RootEvent.STATE_ERROR:
                     showFullError();
@@ -116,9 +131,16 @@ public class MainActivity extends RootActivity
         }
     }
 
-    @OnClick(R.id.full_retry_button)
-    public void onFullRetryClick() {
-        userInfo.requestTokenAuthorizationEvent();
+    private void setUpRecyclerView() {
+        boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
+        if (isGrid) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, AppUtils.calculateNoOfColumns(this, R.dimen.statement_item_grid_width)));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        }
+
+        adapter = new StatementRecyclerAdapter(this, isGrid);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -159,6 +181,26 @@ public class MainActivity extends RootActivity
                 drawerListenerAdded = true;
             }
         }
+    }
+
+    @Override
+    public void onMenuIconClick(int iconResId) {
+        switch (iconResId) {
+            case R.id.toolbar_favorite:
+                startActivity(new Intent(this, FavoritesActivity.class));
+                break;
+            case R.id.toolbar_filter:
+                PreferencesApiManager.getInstance().setListGrid(!PreferencesApiManager.getInstance().listIsGrid());
+                setUpRecyclerView();
+                break;
+            case R.id.toolbar_inbox:
+                break;
+        }
+    }
+
+    @Override
+    public void onSearchString(String query) {
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -204,22 +246,9 @@ public class MainActivity extends RootActivity
         showBurgerMenuIcon(true);
     }
 
-    @Override
-    public void onMenuIconClick(int iconResId) {
-        switch (iconResId) {
-            case R.id.toolbar_favorite:
-                startActivity(new Intent(this, FavoritesActivity.class));
-                break;
-            case R.id.toolbar_filter:
-                break;
-            case R.id.toolbar_inbox:
-                break;
-        }
-    }
-
-    @Override
-    public void onSearchString(String query) {
-
+    @OnClick(R.id.full_retry_button)
+    public void onFullRetryClick() {
+        userInfo.requestTokenAuthorizationEvent();
     }
 
     @Override
@@ -243,4 +272,6 @@ public class MainActivity extends RootActivity
             super.onBackPressed();
         }
     }
+
+
 }

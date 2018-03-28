@@ -66,10 +66,25 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
         iconWrapper = findViewById(R.id.toolbar_icons);
         iconSearch = findViewById(R.id.toolbar_search);
 
-        ImageLoader.loadImage(iconInbox, R.drawable.ic_mail, false, true);
-        ImageLoader.loadImage(iconFavorites, R.drawable.ic_favorite_filled, false, true);
-        ImageLoader.loadImage(iconFilter, R.drawable.ic_filter, false, true);
-        ImageLoader.loadImage(iconSearch, R.drawable.ic_search, false, true);
+        ImageLoader.load(iconInbox)
+                .setRes(R.drawable.ic_mail)
+                .applyTint(true)
+                .build();
+
+        ImageLoader.load(iconFavorites)
+                .setRes(R.drawable.ic_favorite_filled)
+                .applyTint(true)
+                .build();
+
+        ImageLoader.load(iconFilter)
+                .setRes(R.drawable.ic_filter)
+                .applyTint(true)
+                .build();
+
+        ImageLoader.load(iconSearch)
+                .setRes(R.drawable.ic_search)
+                .applyTint(true)
+                .build();
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);

@@ -6,6 +6,8 @@ import android.os.Build;
 
 import com.bobo.gmargiani.bobo.app.App;
 
+import java.math.BigDecimal;
+
 /**
  * Created by gmargiani on 1/30/2018.
  */
@@ -15,4 +17,6 @@ public class Utils {
     public static boolean equals(Object a, Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
+
 }
+
