@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/statement_item_grid_width"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/statement_item_grid_height"
     android:layout_margin="@dimen/item_default_small_margin">
 

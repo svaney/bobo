@@ -13,6 +13,5 @@
     <dimen name="one_dp">1dp</dimen>
     <dimen name="half_dp">0.5dp</dimen>
     <dimen name="statement_item_height">120dp</dimen>
-    <dimen name="statement_item_grid_width">120dp</dimen>
-    <dimen name="statement_item_grid_height">160dp</dimen>
+    <dimen name="statement_item_grid_height">180dp</dimen>
 </resources>

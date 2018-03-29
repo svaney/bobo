@@ -128,11 +128,5 @@ public class AppUtils {
         return getDimen(dimenId, App.getInstance());
     }
 
-    public static int calculateNoOfColumns(Context context, int widthResId) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-       // float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns =  (displayMetrics.widthPixels / getDimen(widthResId));
-        return noOfColumns;
-    }
 
 }

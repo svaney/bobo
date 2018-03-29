@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/statement_item_grid_width"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="right"
     android:padding="@dimen/item_default_margin">

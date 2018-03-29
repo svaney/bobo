@@ -18,7 +18,9 @@ import android.widget.ImageView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
+import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
@@ -28,11 +30,13 @@ import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ToolbarWidget.ToolbarWidgetListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -63,6 +67,7 @@ public class MainActivity extends RootActivity
     private boolean drawerListenerAdded;
 
     private TokenAuthorizationEvent tokenAuthorizationEvent;
+    private StatementsEvent statementsEvent;
 
     private StatementRecyclerAdapter adapter;
 
@@ -109,6 +114,10 @@ public class MainActivity extends RootActivity
     protected void onStart() {
         super.onStart();
         userInfo.requestTokenAuthorizationEvent();
+        try {
+            adapter.checkLoader(recyclerView);
+        } catch (Exception ignored) {
+        }
     }
 
     @Subscribe
@@ -134,13 +143,46 @@ public class MainActivity extends RootActivity
     private void setUpRecyclerView() {
         boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
         if (isGrid) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, AppUtils.calculateNoOfColumns(this, R.dimen.statement_item_grid_width)));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-        adapter = new StatementRecyclerAdapter(this, isGrid);
+        adapter = new StatementRecyclerAdapter(this, isGrid, this);
+        adapter.setIsLoading(true);
+        statementsEvent = null;
+        adapter.setData(new ArrayList<StatementItem>());
         recyclerView.setAdapter(adapter);
+    }
+
+    @Subscribe
+    public void onStatementItems(StatementsEvent event) {
+        if (statementsEvent != event) {
+            statementsEvent = event;
+
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    adapter.setIsLoading(true);
+                    break;
+                case RootEvent.STATE_ERROR:
+                    adapter.setError();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    adapter.setData(event.getStatements());
+                    adapter.setIsLoading(event.canLoadMore());
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onLastItemIsVisible() {
+        userInfo.requestStatements(adapter.getItemCount() - 1, false);
+    }
+
+    @Override
+    public void onLazyLoaderErrorClick() {
+        userInfo.requestStatements(adapter.getItemCount() - 1, false);
     }
 
     @Override

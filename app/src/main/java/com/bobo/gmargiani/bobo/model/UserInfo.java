@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
@@ -12,17 +13,21 @@ import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+
 /**
  * Created by gmargiani on 1/30/2018.
  */
 
 public class UserInfo implements NetDataListener {
+    private static final int LAZY_LOADER_COUNT = 10;
     private Handler handler = new Handler();
     private ApiManager apiManager;
     private EventBus eventBus;
 
     private AppVersionEvent appVersionEvent;
     private TokenAuthorizationEvent tokenAuthorizationEvent;
+    private StatementsEvent statementsEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -107,6 +112,47 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+
+    public void requestStatements(final int from, boolean update) {
+        if (shouldNotRefresh(statementsEvent, update) && statementsEvent.getFrom() >= from) {
+            eventBus.post(statementsEvent);
+        } else {
+            statementsEvent = statementsEvent == null ? new StatementsEvent() : (StatementsEvent) statementsEvent.copyData();
+
+            statementsEvent.setState(RootEvent.STATE_LOADING);
+            statementsEvent.setFrom(from);
+
+            eventBus.post(statementsEvent);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getStatements(from, LAZY_LOADER_COUNT);
+                }
+            }, 1000);
+
+        }
+    }
+
+    @Override
+    public void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response, int count) {
+        if (statementsEvent != null) {
+            statementsEvent = (StatementsEvent) statementsEvent.copyData();
+
+            if (response.isSuccess()) {
+                statementsEvent.setState(RootEvent.STATE_SUCCESS);
+                statementsEvent.addStatements(response.getResult());
+                if (response.getResult() != null && response.getResult().size() < count) {
+                    statementsEvent.setCanLoadMore(false);
+                }
+            } else {
+                statementsEvent.setState(RootEvent.STATE_ERROR);
+            }
+
+            eventBus.post(statementsEvent);
+        }
+    }
+
     public boolean shouldNotRefresh(RootEvent event) {
         return shouldNotRefresh(event, false);
     }
@@ -134,6 +180,5 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
-
 
 }
