@@ -92,7 +92,12 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(appVersionEvent);
 
-            apiManager.getAppVersion("ANDROID", "MOBILE-EXT");
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getAppVersion("ANDROID", "MOBILE-EXT");
+                }
+            }, 1000);
 
         }
     }

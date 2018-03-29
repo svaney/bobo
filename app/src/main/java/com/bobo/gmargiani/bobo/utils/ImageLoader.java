@@ -20,7 +20,7 @@ import java.io.File;
 
 public class ImageLoader {
 
-    public static ImageLoader.I load(ImageView imageView){
+    public static ImageLoader.I load(ImageView imageView) {
         return new ImageLoader.I(imageView);
     }
 
@@ -38,6 +38,10 @@ public class ImageLoader {
 
         private boolean isOval;
         private boolean applyTint;
+        private boolean isBitmap;
+        private boolean isUrl;
+        private boolean isUri;
+        private boolean isFile;
 
         public I(ImageView imageView) {
             this.imageView = imageView;
@@ -48,21 +52,25 @@ public class ImageLoader {
 
         public ImageLoader.I setBitmap(Bitmap bitmap) {
             this.bitmap = bitmap;
+            this.isBitmap = true;
             return this;
         }
 
         public ImageLoader.I setUrl(String url) {
             this.imageUrl = url;
+            this.isUrl = true;
             return this;
         }
 
         public ImageLoader.I setUri(Uri uri) {
             this.uri = uri;
+            this.isUri = true;
             return this;
         }
 
         public ImageLoader.I setFile(File file) {
             this.file = file;
+            this.isFile = true;
             return this;
         }
 
@@ -91,33 +99,28 @@ public class ImageLoader {
             return this;
         }
 
-        public void build(){
+        public void build() {
             try {
                 Context context = imageView.getContext();
 
                 RequestManager requestManager = Glide.with(context);
 
                 RequestBuilder<Drawable> drawableTypeRequest;
-                if (imageUrl != null) {
+                if (isUrl) {
                     drawableTypeRequest = requestManager.load(imageUrl);
-                } else if (uri != null) {
+                } else if (isUri) {
                     drawableTypeRequest = requestManager.load(uri);
-                } else if (file != null) {
+                } else if (isFile) {
                     drawableTypeRequest = requestManager.load(file);
-                } else if (bitmap != null) {
+                } else if (isBitmap) {
                     drawableTypeRequest = requestManager.load(bitmap);
                 } else {
-                    if (resId == -1) {
-                        resId = placeHolderId;
-                    }
                     drawableTypeRequest = requestManager.load(resId);
                 }
 
                 RequestOptions options = new RequestOptions();
-                if (placeHolderId > -1)
-                    options.placeholder(placeHolderId);
-                if (errorId > -1)
-                    options.error(errorId);
+                options.placeholder(placeHolderId);
+                options.error(errorId);
 
                 if (isOval) {
                     if (!applyTint) {

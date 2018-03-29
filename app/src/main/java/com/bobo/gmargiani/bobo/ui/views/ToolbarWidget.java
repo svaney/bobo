@@ -88,6 +88,7 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
 
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setColor(ContextCompat.getColor(getContext(), R.color.color_transparent));
         bg.setCornerRadius(AppUtils.getDimen(R.dimen.et_default_corner_radius));
         bg.setStroke(AppUtils.getDimen(R.dimen.one_dp), ContextCompat.getColor(getContext(), R.color.border_grey_color));
 
