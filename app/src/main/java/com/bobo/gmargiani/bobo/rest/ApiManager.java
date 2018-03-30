@@ -36,16 +36,15 @@ public class ApiManager {
                 dataListener.onAppVersionEvent(response);
             }
         });
+
     }
 
     public void authorizeByToken(final String token) {
-
         dataListener.onAuthorizeByTokenEvent(ModelGenerator.generateTokeResponse(), token);
     }
 
 
     public void getStatements(int from, int count) {
-
         dataListener.onStatementsEvent(ModelGenerator.generateStatements(count), count);
     }
 }

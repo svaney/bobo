@@ -62,13 +62,14 @@
             android:maxLines="1"
             android:paddingBottom="2dp"
             android:paddingLeft="@dimen/item_default_small_margin"
-            android:paddingRight="38dp"
-            android:paddingTop="2dp" />
+            android:paddingRight="36dp"
+            android:paddingTop="2dp"
+            android:textSize="@dimen/text_size_medium" />
 
         <ImageView
             android:id="@+id/toolbar_search"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/toolbar_ic_size"
+            android:layout_height="@dimen/toolbar_ic_size"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="@dimen/item_default_small_margin"
             android:background="?attr/selectableItemBackgroundBorderless"

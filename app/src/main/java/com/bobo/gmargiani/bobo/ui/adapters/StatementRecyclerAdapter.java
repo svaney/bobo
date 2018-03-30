@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.utils.DummyRecyclerViewHolder;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
+import com.bobo.gmargiani.bobo.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -125,7 +127,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         if (viewType == HOLDER_TYPE_ERROR) {
-            View view = LayoutInflater.from(context).inflate(R.layout.component_retry_view, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_error_wrapper, parent, false);
             return new ErrorHolder(view);
         }
 
@@ -139,12 +141,14 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             StatementHolder holder = (StatementHolder) h;
             StatementItem item = items.get(position);
             holder.title.setText(item.getTitle());
-            holder.price.setText(String.valueOf(item.getPrice()));
+            holder.price.setText(Utils.getAmountWithGel(item.getPrice()));
 
             ImageLoader.load(holder.image)
                     .setUrl(item.getMainImage())
                     .setErroPlaceHolder(R.drawable.statement_image_place_holder)
                     .build();
+
+            holder.favoritesIc.setVisibility(View.VISIBLE);
 
         }
     }
@@ -177,12 +181,30 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         TextView title;
         TextView price;
         ImageView image;
+        ImageView favoritesIc;
+        ImageView favoritesIcFilled;
 
         public StatementHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.statement_title);
             price = itemView.findViewById(R.id.statement_price);
             image = itemView.findViewById(R.id.statement_image);
+            favoritesIc = itemView.findViewById(R.id.item_favorites_ic);
+            favoritesIcFilled = itemView.findViewById(R.id.item_favorites_ic_filled);
+
+            if (favoritesIc != null) {
+                ImageLoader.load(favoritesIc)
+                        .setRes(R.drawable.ic_favorite)
+                        .applyTint(isGrid ? R.color.color_white : R.color.ic_grey_color)
+                        .build();
+            }
+
+            if (favoritesIcFilled != null) {
+                ImageLoader.load(favoritesIcFilled)
+                        .setRes(R.drawable.ic_favorite_filled)
+                        .applyTint(true)
+                        .build();
+            }
 
             itemView.setOnClickListener(this);
         }

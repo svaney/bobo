@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ModelGenerator {
+    final static Random generator = new Random();
+
     public static ApiResponse<Boolean> generateTokeResponse() {
         ApiResponse<Boolean> resp = new ApiResponse<>();
         resp.setCode("0");
@@ -18,7 +20,7 @@ public class ModelGenerator {
     static int itemCount;
 
     private static ArrayList<String> imageUrls = new ArrayList<String>() {{
-        add("https://vignette.wikia.nocookie.net/blogclan-2/images/4/45/Random-turtle.gif/revision/latest?cb=20160706220110");
+        add("https://thehoovercardinal.org/wp-content/uploads/2018/02/Kendrick.jpg");
         add("https://wallpaperbrowse.com/media/images/_89716241_thinkstockphotos-523060154.jpg");
         add("https://vignette.wikia.nocookie.net/dragonballfanon/images/7/70/Random.png/revision/latest?cb=20161221030547");
         add(null);
@@ -32,12 +34,14 @@ public class ModelGenerator {
 
     public static ApiResponse<ArrayList<StatementItem>> generateStatements(int count) {
         ArrayList<StatementItem> items = new ArrayList<>();
-        final Random generator = new Random();
+
         for (int i = 0; i < count; i++) {
             StatementItem item = new StatementItem();
             item.setDescription("aq aris agcerili ranairia da ravaria simon es saqoneli");
             item.setTitle("Nivti: " + itemCount++);
-            item.setPrice(new BigDecimal(2.5));
+            int price = generator.nextInt(9990);
+
+            item.setPrice(new BigDecimal(price).divide(new BigDecimal(100)));
             item.setImages(new ArrayList<String>() {{
                 add(imageUrls.get(generator.nextInt(imageUrls.size())));
             }});

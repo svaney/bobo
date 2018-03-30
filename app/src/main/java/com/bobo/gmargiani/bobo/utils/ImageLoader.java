@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import com.bobo.gmargiani.bobo.R;
@@ -30,6 +32,7 @@ public class ImageLoader {
         private int resId;
         private int placeHolderId;
         private int errorId;
+        private int tintColorId;
 
         private Bitmap bitmap;
         private String imageUrl;
@@ -82,6 +85,13 @@ public class ImageLoader {
 
         public ImageLoader.I applyTint(boolean apply) {
             this.applyTint = apply;
+            this.tintColorId = R.color.colorAccent;
+            return this;
+        }
+
+        public ImageLoader.I applyTint(@ColorRes int colorId) {
+            this.tintColorId = colorId;
+            this.applyTint = true;
             return this;
         }
 
@@ -132,11 +142,11 @@ public class ImageLoader {
                     if (!applyTint) {
                         options.circleCrop();
                     } else {
-                        options.transforms(new ColorFilterTransformation(ViewUtils.getAccentColor(App.getInstance())), new CircleCrop());
+                        options.transforms(new ColorFilterTransformation(ContextCompat.getColor(context, tintColorId)), new CircleCrop());
                     }
                 } else {
                     if (applyTint) {
-                        options.transform(new ColorFilterTransformation(ViewUtils.getAccentColor(context)));
+                        options.transform(new ColorFilterTransformation(ContextCompat.getColor(context, tintColorId)));
                     }
                 }
 
