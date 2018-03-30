@@ -123,6 +123,9 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                if (toolbarWidgetListener != null) {
+                    toolbarWidgetListener.onSearchViewExpand();
+                }
             }
 
             @Override
@@ -131,10 +134,6 @@ public class ToolbarWidget extends RelativeLayout implements View.OnFocusChangeL
                 try {
                     TransitionManager.beginDelayedTransition(ToolbarWidget.this);
                 } catch (Exception ignored) {
-                }
-
-                if (toolbarWidgetListener != null) {
-                    toolbarWidgetListener.onSearchViewExpand();
                 }
             }
 

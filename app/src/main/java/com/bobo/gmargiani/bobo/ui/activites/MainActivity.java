@@ -29,6 +29,9 @@ import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -114,6 +117,20 @@ public class MainActivity extends RootActivity
 
         setUpDrawer();
         setUpViews();
+
+        KeyboardVisibilityEvent.setEventListener(
+                this,
+                new KeyboardVisibilityEventListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isOpen) {
+                        try {
+                            if (!isOpen) {
+                                toolbarWidget.collapseSearch();
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                });
 
     }
 
@@ -352,11 +369,13 @@ public class MainActivity extends RootActivity
     @Override
     public void onSearchViewExpand() {
         showBurgerMenuIcon(false);
+        floatingButton.setVisibility(View.GONE);
     }
 
     @Override
     public void onSearchViewCollapse() {
         showBurgerMenuIcon(true);
+        floatingButton.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.full_retry_button)
