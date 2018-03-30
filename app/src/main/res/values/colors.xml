@@ -16,5 +16,7 @@
     <color name="statement_black_transparent_background">#5a000000</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_white">#ffffff</color>
+    <color name="floating_button_background_color">#3aa9fd</color>
+
 
 </resources>

@@ -19,4 +19,6 @@
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_small">10sp</dimen>
     <dimen name="statement_favorite_ic_size">28dp</dimen>
+    <dimen name="floating_button_height">38dp</dimen>
+    <dimen name="floating_button_ic_size">26dp</dimen>
 </resources>

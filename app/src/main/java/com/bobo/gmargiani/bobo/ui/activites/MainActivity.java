@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bobo.gmargiani.bobo.R;
@@ -23,6 +24,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
@@ -55,6 +57,9 @@ public class MainActivity extends RootActivity
     @BindView(R.id.recycler_view)
     protected RecyclerView recyclerView;
 
+    @BindView(R.id.floating_component)
+    protected ViewGroup floatingButton;
+
     protected ImageView userAvatar;
     protected ImageView languageImage;
     protected View userAvatarWrapper;
@@ -70,16 +75,73 @@ public class MainActivity extends RootActivity
 
     private StatementRecyclerAdapter adapter;
 
+    private int floatingButtonLocation;
+    private boolean floatingButtonIsMoving;
+
+    private RecyclerView.OnScrollListener floatingButtonListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (dy > 0) {
+                if (!floatingButtonIsMoving) {
+                    floatingButtonIsMoving = true;
+                    floatingButton.animate().y(AppUtils.getDisplayHeight(MainActivity.this))
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    floatingButtonIsMoving = false;
+                                }
+                            });
+                }
+            } else if (dy < 0) {
+                if (!floatingButtonIsMoving) {
+                    floatingButtonIsMoving = true;
+                    floatingButton.animate().y(floatingButtonLocation)
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    floatingButtonIsMoving = false;
+                                }
+                            });
+                }
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setUpDrawer();
+        setUpViews();
 
+    }
+
+    private void setUpViews() {
         toolbarWidget.setOnViewClickListener(this);
         userAvatarWrapper.setOnClickListener(this);
         languageChangebtn.setOnClickListener(this);
         authorizeText.setOnClickListener(this);
+
+        ImageLoader.load((ImageView) floatingButton.findViewById(R.id.icon))
+                .setRes(R.drawable.ic_camera)
+                .applyTint(R.color.color_white)
+                .build();
+
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(ContextCompat.getColor(this, R.color.floating_button_background_color));
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(AppUtils.getDimen(R.dimen.floating_button_height) / 2);
+
+        floatingButton.setBackground(bg);
+
+        floatingButton.post(new Runnable() {
+            @Override
+            public void run() {
+                floatingButtonLocation = (int) floatingButton.getY();
+                recyclerView.addOnScrollListener(floatingButtonListener);
+            }
+        });
     }
 
     private void setUpDrawer() {
@@ -323,6 +385,4 @@ public class MainActivity extends RootActivity
             super.onBackPressed();
         }
     }
-
-
 }
