@@ -35,8 +35,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center"
-                    android:paddingTop="@dimen/nav_header_vertical_spacing"
-                    android:scaleType="fitCenter" />
+                    android:paddingTop="@dimen/nav_header_vertical_spacing" />
             </FrameLayout>
 
             <TextView
@@ -47,7 +46,7 @@
                 android:layout_marginTop="@dimen/item_default_margin"
                 android:clickable="true"
                 android:text="@string/nav_title_authorization"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_white"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -75,7 +74,7 @@
                 android:layout_marginTop="@dimen/item_default_small_margin"
                 android:text="@string/nav_title_language"
                 android:textAllCaps="true"
-                android:textColor="@android:color/white"
+                android:textColor="@color/color_white"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>

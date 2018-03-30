@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/color_white"
     android:padding="@dimen/item_default_margin">
 
     <ImageView
@@ -37,7 +37,6 @@
                         android:layout_height="48dp"
                         android:layout_margin="@dimen/item_default_margin"
                         android:elevation="3dp"
-                        android:scaleType="fitCenter"
                         android:src="@mipmap/ic_launcher_round" />
 
                     <ImageView
@@ -45,7 +44,6 @@
                         android:layout_height="48dp"
                         android:layout_margin="@dimen/item_default_margin"
                         android:elevation="3dp"
-                        android:scaleType="fitCenter"
                         android:src="@mipmap/ic_launcher_round" />
 
                     <ImageView
@@ -53,7 +51,6 @@
                         android:layout_height="48dp"
                         android:layout_margin="@dimen/item_default_margin"
                         android:elevation="3dp"
-                        android:scaleType="fitCenter"
                         android:src="@mipmap/ic_launcher_round" />
 
                 </LinearLayout>

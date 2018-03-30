@@ -2,7 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.NetDataListener;
-import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.utils.ModelGenerator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,27 +39,13 @@ public class ApiManager {
     }
 
     public void authorizeByToken(final String token) {
-        ApiResponse<Boolean> resp = new ApiResponse<>();
-        resp.setCode("0");
-        resp.setResult(false);
-        dataListener.onAuthorizeByTokenEvent(resp, token);
+
+        dataListener.onAuthorizeByTokenEvent(ModelGenerator.generateTokeResponse(), token);
     }
 
-    private int itemCount;
 
     public void getStatements(int from, int count) {
-        ArrayList<StatementItem> items = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            StatementItem item = new StatementItem();
-            item.setDescription("aq aris agcerili ranairia da ravaria simons es saqoneli");
-            item.setTitle("Nivti: " + itemCount++);
-            item.setPrice(new BigDecimal(2.5));
-            items.add(item);
-        }
 
-        ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
-        response.setCode("0");
-        response.setResult(items);
-        dataListener.onStatementsEvent(response, count);
+        dataListener.onStatementsEvent(ModelGenerator.generateStatements(count), count);
     }
 }

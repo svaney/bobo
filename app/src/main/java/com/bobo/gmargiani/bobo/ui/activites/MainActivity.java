@@ -23,7 +23,6 @@ import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
-import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
@@ -143,7 +142,17 @@ public class MainActivity extends RootActivity
     private void setUpRecyclerView() {
         boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
         if (isGrid) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (recyclerView.getAdapter().getItemViewType(position) == StatementRecyclerAdapter.HOLDER_TYPE_ITEM) {
+                        return 1;
+                    }
+                    return 2;
+                }
+            });
+            recyclerView.setLayoutManager(gridLayoutManager);
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
@@ -156,7 +165,7 @@ public class MainActivity extends RootActivity
     }
 
     @Subscribe
-    public void onStatementItems(StatementsEvent event) {
+    public void onStatementItems(final StatementsEvent event) {
         if (statementsEvent != event) {
             statementsEvent = event;
 

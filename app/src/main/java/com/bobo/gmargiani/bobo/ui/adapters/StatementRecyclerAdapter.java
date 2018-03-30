@@ -18,9 +18,9 @@ import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import java.util.ArrayList;
 
 public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static int HOLDER_TYPE_LOADER = 10;
-    private static int HOLDER_TYPE_ITEM = 20;
-    private static int HOLDER_TYPE_ERROR = 30;
+    public static int HOLDER_TYPE_LOADER = 10;
+    public static int HOLDER_TYPE_ITEM = 20;
+    public static int HOLDER_TYPE_ERROR = 30;
 
     private Context context;
     private LazyLoaderListener lazyLoaderListener;
@@ -129,7 +129,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             return new ErrorHolder(view);
         }
 
-        View view = LayoutInflater.from(context).inflate(isGrid ? R.layout.recycler_item_loader_grid : R.layout.recycler_item_loader, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_loader, parent, false);
         return new DummyRecyclerViewHolder(view);
     }
 
@@ -143,9 +143,9 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
             ImageLoader.load(holder.image)
                     .setUrl(item.getMainImage())
-                    .setPlaceHolderId(R.drawable.image_error_place_holder)
-                    .setErroPlaceHolder(R.drawable.image_error_place_holder)
+                    .setErroPlaceHolder(R.drawable.statement_image_place_holder)
                     .build();
+
         }
     }
 

@@ -42,6 +42,7 @@ public class ImageLoader {
         private boolean isUrl;
         private boolean isUri;
         private boolean isFile;
+        private boolean hasPlaceHolder;
 
         public I(ImageView imageView) {
             this.imageView = imageView;
@@ -91,6 +92,7 @@ public class ImageLoader {
 
         public ImageLoader.I setPlaceHolderId(@DrawableRes int resId) {
             this.placeHolderId = resId;
+            this.hasPlaceHolder = true;
             return this;
         }
 
@@ -119,8 +121,12 @@ public class ImageLoader {
                 }
 
                 RequestOptions options = new RequestOptions();
-                options.placeholder(placeHolderId);
                 options.error(errorId);
+
+                if (hasPlaceHolder) {
+                    options.placeholder(placeHolderId);
+                }
+
 
                 if (isOval) {
                     if (!applyTint) {
@@ -135,6 +141,9 @@ public class ImageLoader {
                 }
 
                 drawableTypeRequest.apply(options).transition(DrawableTransitionOptions.withCrossFade()).into(imageView);
+
+                //  Ion.with(imageView).load(item.getMainImage());
+
             } catch (Exception ignored) {
             }
         }

@@ -73,7 +73,6 @@
             android:layout_marginRight="@dimen/item_default_small_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:scaleType="centerInside"
             android:src="@drawable/ic_search" />
 
 
