@@ -49,7 +49,11 @@ public abstract class AuthorizedActivity extends RootDetailedActivity implements
         onAuthorizationDialogCancel();
     }
 
+    public void onAuthorizationDialogCancel() {
+        finish();
+    }
+
     public abstract void userIsAuthorized();
 
-    public abstract void onAuthorizationDialogCancel();
+
 }

@@ -296,9 +296,7 @@ public class MainActivity extends RootActivity
             drawerToggle.setDrawerIndicatorEnabled(true);
             drawerToggle.setToolbarNavigationClickListener(null);
             drawerListenerAdded = false;
-            searchBackground.setVisibility(View.GONE);
         } else {
-            searchBackground.setVisibility(View.VISIBLE);
             drawerToggle.setDrawerIndicatorEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             if (!drawerListenerAdded) {
@@ -320,10 +318,10 @@ public class MainActivity extends RootActivity
                 startActivity(new Intent(this, FavoritesActivity.class));
                 break;
             case R.id.toolbar_filter:
-                PreferencesApiManager.getInstance().setListGrid(!PreferencesApiManager.getInstance().listIsGrid());
-                setUpRecyclerView();
+                startActivity(new Intent(this, FilterActivity.class));
                 break;
             case R.id.toolbar_inbox:
+                startActivity(new Intent(this, InboxActivity.class));
                 break;
         }
     }
@@ -339,30 +337,32 @@ public class MainActivity extends RootActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_filter) {
-            // Handle the camera action
-        } else if (id == R.id.nav_favorites) {
-
-        } else if (id == R.id.nav_subscriptions) {
-
-        } else if (id == R.id.nav_my_statements) {
-
-        } else if (id == R.id.nav_inbox) {
-
-        } else if (id == R.id.nav_new_statement) {
-
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_terms_and_conditions) {
-
-        } else if (id == R.id.nav_about) {
-
-        } else if (id == R.id.nav_help) {
-
-        }
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        if (id == R.id.nav_filter) {
+            startActivity(new Intent(this, FilterActivity.class));
+        } else if (id == R.id.nav_favorites) {
+            startActivity(new Intent(this, FavoritesActivity.class));
+        } else if (id == R.id.nav_subscriptions) {
+            startActivity(new Intent(this, ManageSubscriptionsActivity.class));
+        } else if (id == R.id.nav_my_statements) {
+            startActivity(new Intent(this, MyStatementsActivity.class));
+        } else if (id == R.id.nav_inbox) {
+            startActivity(new Intent(this, InboxActivity.class));
+        } else if (id == R.id.nav_new_statement) {
+            startActivity(new Intent(this, NewStatementActivity.class));
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else if (id == R.id.nav_terms_and_conditions) {
+            startActivity(new Intent(this, TermsActivity.class));
+        } else if (id == R.id.nav_about) {
+            startActivity(new Intent(this, AboutActivity.class));
+        } else if (id == R.id.nav_help) {
+            startActivity(new Intent(this, HelpActivity.class));
+        }
+
         return true;
     }
 
@@ -370,12 +370,28 @@ public class MainActivity extends RootActivity
     public void onSearchViewExpand() {
         showBurgerMenuIcon(false);
         floatingButton.setVisibility(View.GONE);
+        searchBackground.setVisibility(View.VISIBLE);
+        try {
+            searchBackground.animate().alpha(1);
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
     public void onSearchViewCollapse() {
         showBurgerMenuIcon(true);
         floatingButton.setVisibility(View.VISIBLE);
+        try {
+            searchBackground.animate().alpha(0).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    searchBackground.setVisibility(View.GONE);
+                }
+            });
+        } catch (Exception e) {
+            searchBackground.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.full_retry_button)

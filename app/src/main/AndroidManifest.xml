@@ -40,15 +40,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activites.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activites.FavoritesActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.activites.FilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
+        <activity
+            android:name=".ui.activites.InboxActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.ManageSubscriptionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.MyStatementsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.NewStatementActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.TermsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activites.HelpActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

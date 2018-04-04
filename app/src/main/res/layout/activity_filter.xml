@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/button_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/item_default_small_margin">
+
+                <Button
+                    android:id="@+id/filter_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_text_filter"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/item_default_margin"
+                    android:text="@string/button_text_cancel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/button_wrapper"
+                android:layout_alignParentTop="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/item_default_margin">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/item_default_small_margin"
+                        android:paddingTop="@dimen/item_default_small_margin">
+
+                        <RadioGroup
+                            android:id="@+id/statement_type_radio_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:orientation="vertical">
+
+                            <RadioButton
+                                android:id="@+id/radio_sell"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/filter_title_sell" />
+
+                            <RadioButton
+                                android:id="@+id/radio_rent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_title_rent" />
+
+                        </RadioGroup>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@id/statement_type_radio_group"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/filter_title_statement_type"
+                            android:textColor="@color/color_black"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/half_dp"
+                        android:background="@color/divider_color" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/item_default_margin"
+                        android:paddingTop="@dimen/item_default_margin"
+                        android:weightSum="11">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5">
+
+                            <EditText
+                                android:id="@+id/price_from"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="ფასი (-დან)" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5">
+
+                            <EditText
+                                android:id="@+id/price_to"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="ფასი (-მდე)" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/half_dp"
+                        android:background="@color/divider_color" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <com.bobo.gmargiani.bobo.ui.views.TopShadow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/button_wrapper" />
+
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/full_retry"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_transparent_background"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/component_retry_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/full_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_transparent_background"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/component_circular_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -5,6 +5,15 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="activity_name_favorites">Favorites</string>
+    <string name="activity_name_filter">Filter</string>
+    <string name="activity_name_inbox">Inbox</string>
+    <string name="activity_name_manage_subscriptions">Manage Subscriptions</string>
+    <string name="activity_name_my_statements">My Statements</string>
+    <string name="activity_name_new_statement">New Statement</string>
+    <string name="activity_name_settings">Settings</string>
+    <string name="activity_name_terms"><![CDATA[Terms & Conditions]]></string>
+    <string name="activity_name_about">About App</string>
+    <string name="activity_name_help">Help</string>
 
     <string name="common_text_email">E-mail</string>
     <string name="common_text_password">Password</string>
@@ -12,8 +21,9 @@
     <string name="common_text_register">Register</string>
     <string name="common_text_sell">SELL</string>
 
-
     <string name="button_text_retry">RETRY</string>
+    <string name="button_text_cancel">CANCEL</string>
+    <string name="button_text_filter">FILTER</string>
 
     <string name="action_filter">Filter</string>
     <string name="action_favorite">Favorites</string>
@@ -27,11 +37,14 @@
     <string name="nav_title_inbox">Inbox</string>
     <string name="nav_title_new_statement">Add Statement</string>
     <string name="nav_title_settings">Settings</string>
-    <string name="nav_title_terms">Terms and Conditions</string>
+    <string name="nav_title_terms"><![CDATA[Terms & Conditions]]></string>
     <string name="nav_title_about">About App</string>
     <string name="nav_title_help">Help</string>
     <string name="nav_title_language">ქართული</string>
     <string name="nav_title_authorization">Authorization</string>
 
+    <string name="filter_title_statement_type">Statement type</string>
+    <string name="filter_title_sell">Sell</string>
+    <string name="filter_title_rent">Rent</string>
 
 </resources>
