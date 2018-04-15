@@ -39,9 +39,19 @@
     <string name="nav_title_language">English</string>
     <string name="nav_title_authorization">ავტორიზაცია</string>
 
+    <string name="filter_option_price">ფასის მიხედვით</string>
+    <string name="filter_option_last_week">ბოლო კვირა</string>
+
     <string name="filter_title_statement_type">განცხადების ტიპი</string>
     <string name="filter_title_sell">გაყიდვა</string>
     <string name="filter_title_rent">გაქირავება</string>
+    <string name="filter_title_price_from">ფასი (-დან)</string>
+    <string name="filter_title_price_to">ფასი (-მდე)</string>
+    <string name="filter_title_category">კატეგორია</string>
+    <string name="filter_title_location">მდებარეობა</string>
+    <string name="filter_title_order">დალაგება</string>
+    <string name="filter_title_show">ჩვენება</string>
+    <string name="filter_title_list_type">სიის ჩვენების ტიპი</string>
 
 
 </resources>

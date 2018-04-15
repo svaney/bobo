@@ -19,11 +19,13 @@ import android.widget.ImageView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
+import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
@@ -40,7 +42,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -159,6 +162,13 @@ public class MainActivity extends RootActivity
                 recyclerView.addOnScrollListener(floatingButtonListener);
             }
         });
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, NewStatementActivity.class));
+            }
+        });
     }
 
     private void setUpDrawer() {
@@ -193,28 +203,11 @@ public class MainActivity extends RootActivity
         super.onStart();
         userInfo.requestTokenAuthorizationEvent();
         try {
+            if (PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()){
+                setUpRecyclerView();
+            }
             adapter.checkLoader(recyclerView);
         } catch (Exception ignored) {
-        }
-    }
-
-    @Subscribe
-    public void onTokenAuthorizationEvent(TokenAuthorizationEvent event) {
-        if (tokenAuthorizationEvent != event) {
-            tokenAuthorizationEvent = event;
-
-            switch (event.getState()) {
-                case RootEvent.STATE_LOADING:
-                    showFullLoading();
-                    break;
-                case RootEvent.STATE_SUCCESS:
-                    showContent();
-                    setUpRecyclerView();
-                    break;
-                case RootEvent.STATE_ERROR:
-                    showFullError();
-                    break;
-            }
         }
     }
 
@@ -243,53 +236,6 @@ public class MainActivity extends RootActivity
         recyclerView.setAdapter(adapter);
     }
 
-    @Subscribe
-    public void onStatementItems(final StatementsEvent event) {
-        if (statementsEvent != event) {
-            statementsEvent = event;
-
-            switch (event.getState()) {
-                case RootEvent.STATE_LOADING:
-                    adapter.setIsLoading(true);
-                    break;
-                case RootEvent.STATE_ERROR:
-                    adapter.setError();
-                    break;
-                case RootEvent.STATE_SUCCESS:
-                    adapter.setData(event.getStatements());
-                    adapter.setIsLoading(event.canLoadMore());
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onLastItemIsVisible() {
-        userInfo.requestStatements(adapter.getItemCount() - 1, false);
-    }
-
-    @Override
-    public void onLazyLoaderErrorClick() {
-        userInfo.requestStatements(adapter.getItemCount() - 1, false);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v != null) {
-            if (v == userAvatarWrapper || v == authorizeText) {
-                if (userInfo.isAuthorized()) {
-
-                } else {
-                    showAuthorizationDialog();
-                }
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (v == languageChangebtn) {
-                LocaleHelper.changeLanguage(MainActivity.this);
-                restartApp();
-            }
-        }
-    }
-
     private void showBurgerMenuIcon(boolean show) {
         if (show) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -312,23 +258,102 @@ public class MainActivity extends RootActivity
     }
 
     @Override
-    public void onMenuIconClick(int iconResId) {
-        switch (iconResId) {
-            case R.id.toolbar_favorite:
-                startActivity(new Intent(this, FavoritesActivity.class));
-                break;
-            case R.id.toolbar_filter:
-                startActivity(new Intent(this, FilterActivity.class));
-                break;
-            case R.id.toolbar_inbox:
-                startActivity(new Intent(this, InboxActivity.class));
-                break;
+    public void onLastItemIsVisible() {
+        userInfo.requestStatements(adapter.getItemCount() - 1, false);
+    }
+
+    @Override
+    public void onLazyLoaderErrorClick() {
+        userInfo.requestStatements(adapter.getItemCount() - 1, false);
+    }
+
+    @Subscribe
+    public void onTokenAuthorizationEvent(TokenAuthorizationEvent event) {
+        if (tokenAuthorizationEvent != event) {
+            tokenAuthorizationEvent = event;
+
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    showFullLoading();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    showContent();
+                    setUpRecyclerView();
+                    break;
+                case RootEvent.STATE_ERROR:
+                    showFullError();
+                    break;
+            }
+        }
+    }
+
+    @Subscribe
+    public void onStatementItems(final StatementsEvent event) {
+        if (statementsEvent != event) {
+            statementsEvent = event;
+
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    adapter.setIsLoading(true);
+                    break;
+                case RootEvent.STATE_ERROR:
+                    adapter.setError();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    adapter.setData(event.getStatements());
+                    adapter.setIsLoading(event.canLoadMore());
+                    break;
+            }
         }
     }
 
     @Override
     public void onSearchString(String query) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v != null) {
+            if (v == userAvatarWrapper || v == authorizeText) {
+                if (userInfo.isAuthorized()) {
+
+                } else {
+                    showAuthorizationDialog();
+                }
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (v == languageChangebtn) {
+                LocaleHelper.changeLanguage(MainActivity.this);
+                restartApp();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResultEvent(ActivityResultEvent event) {
+        if (event.getResultCode() == RESULT_OK) {
+            switch (event.getRequestCode()) {
+                case AppConsts.RC_FILTER:
+
+                    break;
+            }
+        }
+
+    }
+
+    @Override
+    public void onMenuIconClick(int iconResId) {
+        switch (iconResId) {
+            case R.id.toolbar_favorite:
+                startActivity(new Intent(this, FavoritesActivity.class));
+                break;
+            case R.id.toolbar_filter:
+                startActivityForResult(new Intent(this, FilterActivity.class), AppConsts.RC_FILTER);
+                break;
+            case R.id.toolbar_inbox:
+                startActivity(new Intent(this, InboxActivity.class));
+                break;
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -342,7 +367,7 @@ public class MainActivity extends RootActivity
         drawer.closeDrawer(GravityCompat.START);
 
         if (id == R.id.nav_filter) {
-            startActivity(new Intent(this, FilterActivity.class));
+            startActivityForResult(new Intent(this, FilterActivity.class), AppConsts.RC_FILTER);
         } else if (id == R.id.nav_favorites) {
             startActivity(new Intent(this, FavoritesActivity.class));
         } else if (id == R.id.nav_subscriptions) {
@@ -374,6 +399,7 @@ public class MainActivity extends RootActivity
         try {
             searchBackground.animate().alpha(1);
         } catch (Exception e) {
+            searchBackground.setAlpha(1);
         }
 
     }
@@ -390,6 +416,7 @@ public class MainActivity extends RootActivity
                 }
             });
         } catch (Exception e) {
+            searchBackground.setAlpha(0);
             searchBackground.setVisibility(View.GONE);
         }
     }

@@ -18,10 +18,13 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import at.grabner.circleprogress.CircleProgressView;
 import butterknife.ButterKnife;
@@ -123,6 +126,12 @@ public abstract class RootActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         App.getInstance().postPermissionEvent(requestCode, permissions, grantResults);
+
+    }
+
+
+    @Subscribe
+    public void onActivityResultEvent(ActivityResultEvent event) {
 
     }
 

@@ -10,6 +10,7 @@ public class AppConsts {
 
     public final static int RC_CAMERA = 101;
     public final static int RC_GALLERY = 102;
+    public final static int RC_FILTER = 103;
 
 
     public final static int PERMISSION_CAMERA = 501;

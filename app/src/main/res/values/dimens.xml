@@ -16,10 +16,14 @@
     <dimen name="statement_item_image_size">140dp</dimen>
     <dimen name="statement_item_grid_height">220dp</dimen>
     <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_button">18sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_small">10sp</dimen>
+    <dimen name="text_size_titles">14sp</dimen>
+    <dimen name="text_size_descriptions">12sp</dimen>
     <dimen name="statement_favorite_ic_size">28dp</dimen>
     <dimen name="floating_button_height">38dp</dimen>
     <dimen name="floating_button_ic_size">26dp</dimen>
     <dimen name="top_shadow_height">4dp</dimen>
+    <dimen name="filter_ic_size">24dp</dimen>
 </resources>

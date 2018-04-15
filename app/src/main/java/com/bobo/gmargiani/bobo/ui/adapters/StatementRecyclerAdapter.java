@@ -58,6 +58,10 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     };
 
+    public boolean isGrid() {
+        return isGrid;
+    }
+
     public StatementRecyclerAdapter(Context context, boolean isGrid, LazyLoaderListener listener) {
         this.context = context;
         this.isGrid = isGrid;

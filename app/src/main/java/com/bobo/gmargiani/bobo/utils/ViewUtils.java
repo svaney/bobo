@@ -115,20 +115,6 @@ public class ViewUtils {
         return a;
     }
 
-    public static int getAccentColor(Context context){
-        return getAttributeColor(context, R.attr.colorAccent, false);
-    }
-
-    public static int getAttributeColor(Context context, int attrId, boolean returnId) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attrId, typedValue, true);
-        int colorResId = typedValue.resourceId;
-
-        if (returnId) return colorResId;
-
-        return ContextCompat.getColor(context, colorResId);
-    }
-
     public static View findViewInChildren(View parent, int resId){
         for (View v : getAllChildren(parent)){
             if (v.getId() == resId){

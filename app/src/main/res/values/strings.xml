@@ -43,8 +43,18 @@
     <string name="nav_title_language">ქართული</string>
     <string name="nav_title_authorization">Authorization</string>
 
+    <string name="filter_option_last_week">Last week</string>
+    <string name="filter_option_price">Price</string>
+
     <string name="filter_title_statement_type">Statement type</string>
     <string name="filter_title_sell">Sell</string>
     <string name="filter_title_rent">Rent</string>
+    <string name="filter_title_price_from">Price (from)</string>
+    <string name="filter_title_price_to">Price (to)</string>
+    <string name="filter_title_category">Category</string>
+    <string name="filter_title_location">Location</string>
+    <string name="filter_title_order">Order by</string>
+    <string name="filter_title_show">Show</string>
+    <string name="filter_title_list_type">List Type</string>
 
 </resources>
