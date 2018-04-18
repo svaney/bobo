@@ -1,14 +1,23 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
+import com.bobo.gmargiani.bobo.utils.ModelGenerator;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,6 +43,13 @@ public class FilterActivity extends RootDetailedActivity {
 
     @BindView(R.id.list_type)
     ImageView icListType;
+
+
+    @BindView(R.id.order_by_value)
+    TextView orderByValue;
+
+    @BindView(R.id.period_value)
+    TextView periodValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +92,7 @@ public class FilterActivity extends RootDetailedActivity {
     public void onPeriodClick() {
 
     }
+
 
     @OnClick(R.id.list_type_grid)
     public void onGridClick() {

@@ -20,6 +20,7 @@
     <string name="common_text_log_in">Log in</string>
     <string name="common_text_register">Register</string>
     <string name="common_text_sell">SELL</string>
+    <string name="common_text_all">All</string>
 
     <string name="button_text_retry">RETRY</string>
     <string name="button_text_cancel">CANCEL</string>

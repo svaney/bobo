@@ -40,8 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/button_text_filter"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                    android:textSize="@dimen/text_size_button" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
                 <Button
                     android:id="@+id/cancel_button"
@@ -49,8 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/item_default_margin"
                     android:text="@string/button_text_cancel"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                    android:textSize="@dimen/text_size_button" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
             </LinearLayout>
 
@@ -69,16 +67,13 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/item_default_margin"
-                        android:paddingTop="@dimen/item_default_margin">
+                        android:layout_marginBottom="@dimen/item_default_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:ellipsize="end"
-                            android:maxLines="1"
                             android:text="@string/filter_title_list_type"
                             android:textColor="@color/color_black"
                             android:textSize="@dimen/text_size_titles"
@@ -110,42 +105,16 @@
                         android:layout_height="@dimen/one_dp"
                         android:background="@color/divider_color" />
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/item_default_small_margin"
-                        android:paddingTop="@dimen/item_default_small_margin">
-
-                        <RadioGroup
-                            android:id="@+id/statement_type_radio_group"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/radio_sell"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"
-                                android:text="@string/filter_title_sell"
-                                android:textSize="@dimen/text_size_descriptions" />
-
-                            <RadioButton
-                                android:id="@+id/radio_rent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_title_rent"
-                                android:textSize="@dimen/text_size_descriptions" />
-
-                        </RadioGroup>
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/item_default_margin"
+                        android:paddingTop="@dimen/item_default_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@id/statement_type_radio_group"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/filter_title_statement_type"
@@ -153,7 +122,38 @@
                             android:textSize="@dimen/text_size_titles"
                             android:textStyle="bold" />
 
-                    </RelativeLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/item_default_small_margin"
+                            android:orientation="horizontal">
+
+                            <RadioGroup
+                                android:id="@+id/statement_type_radio_group"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/radio_sell"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="true"
+                                    android:text="@string/filter_title_sell"
+                                    android:textSize="@dimen/text_size_descriptions" />
+
+                                <RadioButton
+                                    android:id="@+id/radio_rent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_title_rent"
+                                    android:textSize="@dimen/text_size_descriptions" />
+
+                            </RadioGroup>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -166,6 +166,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/item_default_margin"
                         android:paddingTop="@dimen/item_default_margin">
@@ -176,14 +177,29 @@
                             android:layout_height="@dimen/filter_ic_size"
                             android:src="@drawable/ic_blue_category" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/item_default_margin"
-                            android:text="@string/filter_title_category"
-                            android:textColor="@color/color_black"
-                            android:textSize="@dimen/text_size_titles"
-                            android:textStyle="bold" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_title_category"
+                                android:textColor="@color/color_black"
+                                android:textSize="@dimen/text_size_titles"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/category_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/item_default_small_margin"
+                                android:text="@string/common_text_all"
+                                android:textColor="@color/color_black"
+                                android:textSize="@dimen/text_size_descriptions" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -198,6 +214,7 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/item_default_margin"
                         android:paddingTop="@dimen/item_default_margin">
@@ -207,14 +224,29 @@
                             android:layout_height="@dimen/filter_ic_size"
                             android:src="@drawable/ic_blue_location" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/item_default_margin"
-                            android:text="@string/filter_title_location"
-                            android:textColor="@color/color_black"
-                            android:textSize="@dimen/text_size_titles"
-                            android:textStyle="bold" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_title_location"
+                                android:textColor="@color/color_black"
+                                android:textSize="@dimen/text_size_titles"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/location_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/item_default_small_margin"
+                                android:text="@string/common_text_all"
+                                android:textColor="@color/color_black"
+                                android:textSize="@dimen/text_size_descriptions" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -311,6 +343,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/order_by_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/item_default_small_margin"
@@ -344,6 +377,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/period_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/item_default_small_margin"

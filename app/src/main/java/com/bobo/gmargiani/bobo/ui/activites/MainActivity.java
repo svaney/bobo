@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
@@ -65,6 +66,7 @@ public class MainActivity extends RootActivity
 
     @BindView(R.id.floating_component)
     protected ViewGroup floatingButton;
+
 
     protected ImageView userAvatar;
     protected ImageView languageImage;

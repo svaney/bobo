@@ -53,4 +53,31 @@ public class ModelGenerator {
         response.setResult(items);
         return response;
     }
+
+    public static ArrayList<String> getLocations(){
+        ArrayList<String> values = new ArrayList<>();
+
+        values.add("Tbilisi");
+        values.add("Gori");
+        values.add("Batumi");
+        values.add("Kutaisi");
+        values.add("Mestia");
+
+        return values;
+
+    }
+
+    public static ArrayList<String> getCategories(){
+        ArrayList<String> values = new ArrayList<>();
+
+        values.add("Auto/Moto");
+        values.add("Computers");
+        values.add("Parfume");
+        values.add("Clothing");
+        values.add("Music");
+
+        return values;
+
+    }
+
 }
