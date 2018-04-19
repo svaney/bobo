@@ -44,8 +44,8 @@
     <string name="nav_title_language">ქართული</string>
     <string name="nav_title_authorization">Authorization</string>
 
-    <string name="filter_option_last_week">Last week</string>
     <string name="filter_option_price">Price</string>
+    <string name="filter_option_time">Upload Date</string>
 
     <string name="filter_title_statement_type">Statement type</string>
     <string name="filter_title_sell">Sell</string>

@@ -5,7 +5,6 @@ import com.bobo.gmargiani.bobo.model.NetDataListener;
 import com.bobo.gmargiani.bobo.utils.ModelGenerator;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 /**
  * Created by gmargiani on 1/30/2018.
@@ -44,7 +43,22 @@ public class ApiManager {
     }
 
 
-    public void getStatements(int from, int count) {
-        dataListener.onStatementsEvent(ModelGenerator.generateStatements(count), count);
+    public void getStatements(int from, int count, boolean sell, boolean rent,
+                              String category, String location, BigDecimal priceFrom,
+                              BigDecimal priceTo, String orderBy) {
+
+        System.out.println("request statements - from: " + from + "; count: " + count + "; sell: " + sell
+                + "; rent: " + rent + "; category: " + category + "; location: " + location + "; priceFrom: " + priceFrom
+                + "; priceTo: " + priceTo + "; orderBy: " + orderBy);
+        dataListener.onStatementsEvent(ModelGenerator.generateStatements(count), from, count,
+                sell, rent, category, location, priceFrom, priceTo, orderBy);
+    }
+
+    public void getLocations() {
+        dataListener.onLocationsResponse(ModelGenerator.getLocations());
+    }
+
+    public void getCategories() {
+        dataListener.onCategoriesResponse(ModelGenerator.getCategories());
     }
 }

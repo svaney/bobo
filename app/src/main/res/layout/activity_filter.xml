@@ -128,28 +128,20 @@
                             android:layout_marginTop="@dimen/item_default_small_margin"
                             android:orientation="horizontal">
 
-                            <RadioGroup
-                                android:id="@+id/statement_type_radio_group"
+                            <CheckBox
+                                android:id="@+id/check_sell"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:text="@string/filter_title_sell"
+                                android:textSize="@dimen/text_size_descriptions" />
 
-                                <RadioButton
-                                    android:id="@+id/radio_sell"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    android:text="@string/filter_title_sell"
-                                    android:textSize="@dimen/text_size_descriptions" />
-
-                                <RadioButton
-                                    android:id="@+id/radio_rent"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/filter_title_rent"
-                                    android:textSize="@dimen/text_size_descriptions" />
-
-                            </RadioGroup>
+                            <CheckBox
+                                android:id="@+id/check_rent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/item_default_small_margin"
+                                android:text="@string/filter_title_rent"
+                                android:textSize="@dimen/text_size_descriptions" />
 
                         </LinearLayout>
 
@@ -191,14 +183,14 @@
                                 android:textSize="@dimen/text_size_titles"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/category_value"
+                            <LinearLayout
+                                android:id="@+id/category_values_wrapper"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/item_default_small_margin"
-                                android:text="@string/common_text_all"
-                                android:textColor="@color/color_black"
-                                android:textSize="@dimen/text_size_descriptions" />
+                                android:orientation="horizontal">
+
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -238,14 +230,15 @@
                                 android:textSize="@dimen/text_size_titles"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/location_value"
+                            <LinearLayout
+                                android:id="@+id/location_values_wrapper"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/item_default_small_margin"
-                                android:text="@string/common_text_all"
-                                android:textColor="@color/color_black"
-                                android:textSize="@dimen/text_size_descriptions" />
+                                android:orientation="horizontal">
+
+                            </LinearLayout>
+
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -342,48 +335,14 @@
                             android:textSize="@dimen/text_size_titles"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/order_by_value"
+
+                        <LinearLayout
+                            android:id="@+id/order_by_values_wrapper"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/item_default_small_margin"
-                            android:text="@string/filter_option_price"
-                            android:textColor="@color/color_black"
-                            android:textSize="@dimen/text_size_descriptions" />
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/one_dp"
-                        android:background="@color/divider_color" />
-
-                    <LinearLayout
-                        android:id="@+id/show_period"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/item_default_margin"
-                        android:paddingTop="@dimen/item_default_margin">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_title_show"
-                            android:textColor="@color/color_black"
-                            android:textSize="@dimen/text_size_titles"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/period_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/item_default_small_margin"
-                            android:text="@string/filter_option_last_week"
-                            android:textColor="@color/color_black"
-                            android:textSize="@dimen/text_size_descriptions" />
+                        </LinearLayout>
 
                     </LinearLayout>
 

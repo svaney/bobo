@@ -4,6 +4,8 @@ import android.os.Handler;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
@@ -13,6 +15,7 @@ import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +31,8 @@ public class UserInfo implements NetDataListener {
     private AppVersionEvent appVersionEvent;
     private TokenAuthorizationEvent tokenAuthorizationEvent;
     private StatementsEvent statementsEvent;
+    private LocationsEvent locationsEvent;
+    private CategoriesEvent categoriesEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -118,11 +123,19 @@ public class UserInfo implements NetDataListener {
     }
 
 
-    public void requestStatements(final int from, boolean update) {
-        if (shouldNotRefresh(statementsEvent, update) && statementsEvent.getFrom() >= from) {
+    public void requestStatements(final int from, boolean update,
+                                  final boolean sell, final boolean rent, final String category, final String location,
+                                  final BigDecimal priceFrom, final BigDecimal priceTo, final String orderBy) {
+
+        if (shouldNotRefresh(statementsEvent, update)
+                && statementsEvent.getFrom() >= from
+                && statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)) {
+
             eventBus.post(statementsEvent);
         } else {
-            statementsEvent = statementsEvent == null ? new StatementsEvent() : (StatementsEvent) statementsEvent.copyData();
+
+            statementsEvent = statementsEvent == null || !statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)
+                    ? new StatementsEvent(sell, rent, category, location, priceFrom, priceTo, orderBy) : (StatementsEvent) statementsEvent.copyData();
 
             statementsEvent.setState(RootEvent.STATE_LOADING);
             statementsEvent.setFrom(from);
@@ -132,7 +145,7 @@ public class UserInfo implements NetDataListener {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    apiManager.getStatements(from, LAZY_LOADER_COUNT);
+                    apiManager.getStatements(from, LAZY_LOADER_COUNT, sell, rent, category, location, priceFrom, priceTo, orderBy);
                 }
             }, 1000);
 
@@ -140,10 +153,14 @@ public class UserInfo implements NetDataListener {
     }
 
     @Override
-    public void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response, int count) {
-        if (statementsEvent != null) {
-            statementsEvent = (StatementsEvent) statementsEvent.copyData();
+    public void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response,
+                                  int from, int count, boolean sell, boolean rent, String category,
+                                  String location, BigDecimal priceFrom, BigDecimal priceTo, String orderBy) {
 
+        if (statementsEvent != null && statementsEvent.getFrom() == from
+                && statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)) {
+
+            statementsEvent = (StatementsEvent) statementsEvent.copyData();
             if (response.isSuccess()) {
                 statementsEvent.setState(RootEvent.STATE_SUCCESS);
                 statementsEvent.addStatements(response.getResult());
@@ -157,6 +174,68 @@ public class UserInfo implements NetDataListener {
             eventBus.post(statementsEvent);
         }
     }
+
+    public void requestLocations() {
+        if (shouldNotRefresh(locationsEvent)) {
+            eventBus.post(locationsEvent);
+        } else {
+            locationsEvent = new LocationsEvent();
+            locationsEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(locationsEvent);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getLocations();
+                }
+            }, 1000);
+
+        }
+    }
+
+    @Override
+    public void onLocationsResponse(ApiResponse<ArrayList<KeyValue>> response) {
+        locationsEvent = new LocationsEvent();
+        if (response.isSuccess()) {
+            locationsEvent.setState(RootEvent.STATE_SUCCESS);
+            locationsEvent.setLocations(response.getResult());
+        } else {
+            locationsEvent.setState(RootEvent.STATE_ERROR);
+        }
+        eventBus.post(locationsEvent);
+    }
+
+    public void requestCategories() {
+        if (shouldNotRefresh(categoriesEvent)) {
+            eventBus.post(categoriesEvent);
+        } else {
+            categoriesEvent = new CategoriesEvent();
+            categoriesEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(categoriesEvent);
+            apiManager.getCategories();
+        }
+    }
+
+    @Override
+    public void onCategoriesResponse(ApiResponse<ArrayList<KeyValue>> response) {
+        categoriesEvent = new CategoriesEvent();
+        if (response.isSuccess()) {
+            categoriesEvent.setState(RootEvent.STATE_SUCCESS);
+            categoriesEvent.setCategories(response.getResult());
+        } else {
+            categoriesEvent.setState(RootEvent.STATE_ERROR);
+        }
+        eventBus.post(categoriesEvent);
+    }
+
+
+    public CategoriesEvent getCategoriesEvent() {
+        return categoriesEvent;
+    }
+
+    public LocationsEvent getLocationsEvent() {
+        return locationsEvent;
+    }
+
 
     public boolean shouldNotRefresh(RootEvent event) {
         return shouldNotRefresh(event, false);

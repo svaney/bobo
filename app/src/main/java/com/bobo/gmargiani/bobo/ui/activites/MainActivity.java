@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,9 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.parceler.Parcels;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -86,6 +89,8 @@ public class MainActivity extends RootActivity
     private int floatingButtonLocation;
     private boolean floatingButtonIsMoving;
 
+    private ArrayList<String> filterValues;
+
     private RecyclerView.OnScrollListener floatingButtonListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -120,6 +125,12 @@ public class MainActivity extends RootActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        filterValues = new ArrayList<>();
+
+        for (int i = 0; i < FilterActivity.FILTER_PARAMS_SIZE; i++) {
+            filterValues.add("");
+        }
+
         setUpDrawer();
         setUpViews();
 
@@ -136,6 +147,7 @@ public class MainActivity extends RootActivity
                         }
                     }
                 });
+
 
     }
 
@@ -205,7 +217,7 @@ public class MainActivity extends RootActivity
         super.onStart();
         userInfo.requestTokenAuthorizationEvent();
         try {
-            if (PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()){
+            if (PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()) {
                 setUpRecyclerView();
             }
             adapter.checkLoader(recyclerView);
@@ -261,12 +273,27 @@ public class MainActivity extends RootActivity
 
     @Override
     public void onLastItemIsVisible() {
-        userInfo.requestStatements(adapter.getItemCount() - 1, false);
+
+        boolean sell = !"N".equals(filterValues.get(FilterActivity.FILTER_PARAM_POS_SELL));
+        boolean rent = !"N".equals(filterValues.get(FilterActivity.FILTER_PARAM_POS_RENT));
+
+        BigDecimal priceFrom = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
+                null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM));
+
+        BigDecimal priceTo = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
+                null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_TO));
+
+        String category = filterValues.get(FilterActivity.FILTER_PARAM_POS_CATEGORY);
+        String location = filterValues.get(FilterActivity.FILTER_PARAM_POS_LOCATION);
+        String orderBy = filterValues.get(FilterActivity.FILTER_PARAM_POS_ORDER_BY);
+
+        userInfo.requestStatements(adapter.getItemCount() - 1, false,
+                sell, rent, category, location, priceFrom, priceTo, orderBy);
     }
 
     @Override
     public void onLazyLoaderErrorClick() {
-        userInfo.requestStatements(adapter.getItemCount() - 1, false);
+        onLastItemIsVisible();
     }
 
     @Subscribe
@@ -336,7 +363,9 @@ public class MainActivity extends RootActivity
         if (event.getResultCode() == RESULT_OK) {
             switch (event.getRequestCode()) {
                 case AppConsts.RC_FILTER:
-
+                    filterValues = Parcels.unwrap(event.getData().getParcelableExtra(AppConsts.PARAM_FILTER_PARAMS));
+                    statementsEvent = new StatementsEvent();
+                    adapter.setData(new ArrayList<StatementItem>());
                     break;
             }
         }
@@ -350,7 +379,9 @@ public class MainActivity extends RootActivity
                 startActivity(new Intent(this, FavoritesActivity.class));
                 break;
             case R.id.toolbar_filter:
-                startActivityForResult(new Intent(this, FilterActivity.class), AppConsts.RC_FILTER);
+                Intent intent = new Intent(this, FilterActivity.class);
+                intent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
+                startActivityForResult(intent, AppConsts.RC_FILTER);
                 break;
             case R.id.toolbar_inbox:
                 startActivity(new Intent(this, InboxActivity.class));
@@ -369,7 +400,9 @@ public class MainActivity extends RootActivity
         drawer.closeDrawer(GravityCompat.START);
 
         if (id == R.id.nav_filter) {
-            startActivityForResult(new Intent(this, FilterActivity.class), AppConsts.RC_FILTER);
+            Intent intent = new Intent(this, FilterActivity.class);
+            intent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
+            startActivityForResult(intent, AppConsts.RC_FILTER);
         } else if (id == R.id.nav_favorites) {
             startActivity(new Intent(this, FavoritesActivity.class));
         } else if (id == R.id.nav_subscriptions) {

@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.utils;
 
+import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
@@ -54,29 +55,34 @@ public class ModelGenerator {
         return response;
     }
 
-    public static ArrayList<String> getLocations(){
-        ArrayList<String> values = new ArrayList<>();
+    public static ApiResponse<ArrayList<KeyValue>> getLocations() {
+        ArrayList<KeyValue> values = new ArrayList<>();
 
-        values.add("Tbilisi");
-        values.add("Gori");
-        values.add("Batumi");
-        values.add("Kutaisi");
-        values.add("Mestia");
+        values.add(new KeyValue("TB", "Tbilisi"));
+        values.add(new KeyValue("GR", "Gori"));
+        values.add(new KeyValue("BT", "Batumi"));
+        values.add(new KeyValue("KT", "Kutaisi"));
+        values.add(new KeyValue("MS", "Mestia"));
 
-        return values;
-
+        ApiResponse<ArrayList<KeyValue>>  response = new ApiResponse<ArrayList<KeyValue>>();
+        response.setCode("0");
+        response.setResult(values);
+        return response;
     }
 
-    public static ArrayList<String> getCategories(){
-        ArrayList<String> values = new ArrayList<>();
+    public static ApiResponse<ArrayList<KeyValue>> getCategories() {
+        ArrayList<KeyValue> values = new ArrayList<>();
 
-        values.add("Auto/Moto");
-        values.add("Computers");
-        values.add("Parfume");
-        values.add("Clothing");
-        values.add("Music");
+        values.add(new KeyValue("AM", "Auto/Moto"));
+        values.add(new KeyValue("CM", "Computers"));
+        values.add(new KeyValue("PR", "Parfume"));
+        values.add(new KeyValue("CL", "Clothing"));
+        values.add(new KeyValue("MS", "Music"));
 
-        return values;
+        ApiResponse<ArrayList<KeyValue>>  response = new ApiResponse<ArrayList<KeyValue>>();
+        response.setCode("0");
+        response.setResult(values);
+        return response;
 
     }
 
