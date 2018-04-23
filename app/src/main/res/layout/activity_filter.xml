@@ -160,8 +160,8 @@
                         android:clickable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingBottom="@dimen/item_default_margin"
-                        android:paddingTop="@dimen/item_default_margin">
+                        android:paddingBottom="@dimen/item_default_small_margin"
+                        android:paddingTop="@dimen/item_default_small_margin">
 
 
                         <ImageView
@@ -172,24 +172,28 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/item_default_margin"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/item_default_margin"
                                 android:text="@string/filter_title_category"
                                 android:textColor="@color/color_black"
                                 android:textSize="@dimen/text_size_titles"
                                 android:textStyle="bold" />
 
-                            <LinearLayout
-                                android:id="@+id/category_values_wrapper"
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:scrollbars="none">
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/category_values_wrapper"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal" />
+                            </HorizontalScrollView>
 
                         </LinearLayout>
 
@@ -208,8 +212,8 @@
                         android:clickable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingBottom="@dimen/item_default_margin"
-                        android:paddingTop="@dimen/item_default_margin">
+                        android:paddingBottom="@dimen/item_default_small_margin"
+                        android:paddingTop="@dimen/item_default_small_margin">
 
                         <ImageView
                             android:layout_width="@dimen/filter_ic_size"
@@ -219,24 +223,30 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/item_default_margin"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/item_default_margin"
                                 android:text="@string/filter_title_location"
                                 android:textColor="@color/color_black"
                                 android:textSize="@dimen/text_size_titles"
                                 android:textStyle="bold" />
 
-                            <LinearLayout
-                                android:id="@+id/location_values_wrapper"
+
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:scrollbars="none">
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/location_values_wrapper"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal" />
+
+                            </HorizontalScrollView>
 
 
                         </LinearLayout>
@@ -280,6 +290,7 @@
                                     android:hint="@string/filter_title_price_from"
                                     android:imeOptions="actionNext"
                                     android:inputType="number"
+                                    android:maxLength="7"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_medium" />
 
@@ -302,6 +313,7 @@
                                     android:hint="@string/filter_title_price_to"
                                     android:imeOptions="actionDone"
                                     android:inputType="number"
+                                    android:maxLength="7"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_medium" />
 
@@ -324,8 +336,8 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/item_default_margin"
-                        android:paddingTop="@dimen/item_default_margin">
+                        android:paddingBottom="@dimen/item_default_small_margin"
+                        android:paddingTop="@dimen/item_default_small_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -336,13 +348,17 @@
                             android:textStyle="bold" />
 
 
-                        <LinearLayout
-                            android:id="@+id/order_by_values_wrapper"
+                        <HorizontalScrollView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:scrollbars="none">
 
-                        </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/order_by_values_wrapper"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+                        </HorizontalScrollView>
 
                     </LinearLayout>
 

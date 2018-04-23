@@ -62,4 +62,13 @@ public class FilterTextView extends LinearLayout {
     public void setText(String text) {
         textView.setText(text);
     }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener listener) {
+        itemWrapper.setOnClickListener(listener);
+    }
+
+    public void setOnCloseClickListener(OnClickListener onClickListener) {
+        imageView.setOnClickListener(onClickListener);
+    }
 }

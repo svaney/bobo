@@ -1,7 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.dialogs;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,20 +23,24 @@ public class ListDialog extends BaseDialog {
     private RecyclerView recyclerView;
 
     private DialogListAdapter adapter;
-    private ArrayList<Pair<String, Boolean>> data;
+    private ArrayList<DialogPair> data;
 
-    public ListDialog(Context context) {
-        this(context, DIALOG_LIST_TYPE_SINGLE);
+    private ListDialogItemsSelectedListener listener;
+
+    public ListDialog(Context context, ListDialogItemsSelectedListener listener) {
+        this(context, DIALOG_LIST_TYPE_SINGLE, listener);
     }
 
-    public ListDialog(Context context, int type) {
+    public ListDialog(Context context, int type, ListDialogItemsSelectedListener listener) {
         super(context);
-        listType = type;
+        this.listType = type;
+        this.listener = listener;
+
         findViews();
 
-        adapter = new DialogListAdapter(getContext(), data, type);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
+        this.adapter = new DialogListAdapter(getContext(), data, listType);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        this.recyclerView.setAdapter(adapter);
     }
 
     private void findViews() {
@@ -45,8 +48,6 @@ public class ListDialog extends BaseDialog {
         okButton = findViewById(R.id.ok_button);
         cancelButton = findViewById(R.id.cancel_button);
         recyclerView = findViewById(R.id.recycler_view);
-
-        buttonContainer.setVisibility(listType == DIALOG_LIST_TYPE_MULTIPLE ? View.VISIBLE : View.GONE);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,12 +59,15 @@ public class ListDialog extends BaseDialog {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (listener != null && adapter != null) {
+                    listener.onItemsSelected(adapter.getSelectedPositions());
+                }
                 dismiss();
             }
         });
     }
 
-    public void setList(ArrayList<Pair<String, Boolean>> data) {
+    public void setList(ArrayList<DialogPair> data) {
         this.data = data;
         if (adapter != null) {
             adapter.setData(data);
@@ -74,4 +78,9 @@ public class ListDialog extends BaseDialog {
     protected int layoutId() {
         return R.layout.dialog_list;
     }
+
+    public interface ListDialogItemsSelectedListener {
+        void onItemsSelected(ArrayList<Integer> itemPositions);
+    }
+
 }

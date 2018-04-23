@@ -31,7 +31,7 @@ public class StatementsEvent extends RootEvent {
         setRent(rent);
         setCategory(category);
         setLocation(location);
-        setPriceTo(priceFrom);
+        setPriceFrom(priceFrom);
         setPriceTo(priceTo);
         setOrderBy(orderBy);
     }

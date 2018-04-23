@@ -1,7 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.adapters;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -13,10 +13,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
 import com.bobo.gmargiani.bobo.ui.dialogs.ListDialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HOLDER_TYPE_SINGLE = 10;
@@ -24,19 +24,19 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private int listType;
     private Context context;
-    private ArrayList<Pair<String, Boolean>> data;
+    private ArrayList<DialogPair> data;
 
-    public DialogListAdapter(Context context, ArrayList<Pair<String, Boolean>> data) {
+    public DialogListAdapter(Context context, ArrayList<DialogPair> data) {
         this(context, data, ListDialog.DIALOG_LIST_TYPE_SINGLE);
     }
 
-    public DialogListAdapter(Context context, ArrayList<Pair<String, Boolean>> data, int type) {
+    public DialogListAdapter(Context context, ArrayList<DialogPair> data, int type) {
         this.listType = type;
         this.context = context;
         this.data = data;
     }
 
-    public void setData(ArrayList<Pair<String, Boolean>> data){
+    public void setData(ArrayList<DialogPair> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -65,19 +65,29 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (holder.getItemViewType()) {
             case HOLDER_TYPE_MULTIPLE:
                 MultiItemHolder h = (MultiItemHolder) holder;
-                h.itemText.setText(data.get(position).first);
-                h.itemCheck.setOnCheckedChangeListener(null);
-                h.itemCheck.setChecked(data.get(position).second);
-                h.itemCheck.setOnCheckedChangeListener(h);
+                h.itemText.setText(data.get(position).getKey());
+                h.itemCheck.setChecked(data.get(position).getValue());
                 break;
             default:
                 SingleItemHolder h1 = (SingleItemHolder) holder;
-                h1.itemText.setText(data.get(position).first);
-                h1.itemRadio.setOnCheckedChangeListener(null);
-                h1.itemRadio.setChecked(data.get(position).second);
-                h1.itemRadio.setOnCheckedChangeListener(h1);
+                h1.itemText.setText(data.get(position).getKey());
+                h1.itemRadio.setChecked(data.get(position).getValue());
                 break;
         }
+    }
+
+    public ArrayList<Integer> getSelectedPositions() {
+        ArrayList<Integer> positions = new ArrayList<>();
+
+        if (data != null) {
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i).getValue()) {
+                    positions.add(new Integer(i));
+                }
+            }
+        }
+
+        return positions;
     }
 
     @Override
@@ -108,7 +118,9 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+            if (data != null) {
+                data.get(getAdapterPosition()).setValue(b);
+            }
         }
     }
 
@@ -136,7 +148,13 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            if (data != null) {
+                for (DialogPair p : data) {
+                    p.setValue(false);
+                }
+                data.get(getAdapterPosition()).setValue(b);
 
+            }
         }
     }
 }

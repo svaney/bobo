@@ -3,20 +3,21 @@ package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
+import android.support.transition.TransitionManager;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
 import com.bobo.gmargiani.bobo.ui.dialogs.ListDialog;
 import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
@@ -26,6 +27,7 @@ import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import org.parceler.Parcels;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -130,9 +132,10 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         priceTo.setText("");
         try {
             priceFrom.setText(String.valueOf(new BigDecimal(filterValues.get(FILTER_PARAM_POS_PRICE_FROM))));
-            priceFrom.setText(String.valueOf(new BigDecimal(filterValues.get(FILTER_PARAM_POS_PRICE_TO))));
+            priceTo.setText(String.valueOf(new BigDecimal(filterValues.get(FILTER_PARAM_POS_PRICE_TO))));
         } catch (Exception ignored) {
         }
+
     }
 
     private void setOrderByValue() {
@@ -162,13 +165,34 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         String allValues = filterValues.get(FILTER_PARAM_POS_CATEGORY);
 
         if (!TextUtils.isEmpty(allValues) && allValues.split(";").length > 0) {
-            ArrayList<String> values = new ArrayList<>(Arrays.asList(allValues.split(";")));
+            ArrayList<String> keys = new ArrayList<>(Arrays.asList(allValues.split(";")));
 
-            for (String v : values) {
-                FilterTextView txt = new FilterTextView(this);
-                txt.setText(v);
+            for (final String currKey : keys) {
+                final FilterTextView txt = new FilterTextView(this);
+                txt.setText(categoriesEvent.getValueByKey(currKey));
                 txt.showCloseButton(true);
                 categoryValuesWrapper.addView(txt);
+
+                txt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onCategoryClick();
+                    }
+                });
+
+                txt.setOnCloseClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newVal = filterValues.get(FILTER_PARAM_POS_CATEGORY);
+                        filterValues.set(FILTER_PARAM_POS_CATEGORY, newVal.replace(currKey + ";", ""));
+                        setCategoryValues();
+
+                        try {
+                            TransitionManager.beginDelayedTransition(categoryValuesWrapper);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
             }
 
         } else {
@@ -190,18 +214,45 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         String allValues = filterValues.get(FILTER_PARAM_POS_LOCATION);
 
         if (!TextUtils.isEmpty(allValues) && allValues.split(";").length > 0) {
-            ArrayList<String> values = new ArrayList<>(Arrays.asList(allValues.split(";")));
+            ArrayList<String> keys = new ArrayList<>(Arrays.asList(allValues.split(";")));
 
-            for (String v : values) {
-                FilterTextView txt = new FilterTextView(this);
-                txt.setText(v);
+            for (final String currKey : keys) {
+                final FilterTextView txt = new FilterTextView(this);
+                txt.setText(locationsEvent.getValueByKey(currKey));
                 txt.showCloseButton(true);
                 locationValuesWrapper.addView(txt);
+
+                txt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onLocationClick();
+                    }
+                });
+
+                txt.setOnCloseClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newVal = filterValues.get(FILTER_PARAM_POS_LOCATION);
+                        filterValues.set(FILTER_PARAM_POS_LOCATION, newVal.replace(currKey + ";", ""));
+                        setLocationValues();
+
+                        try {
+                            TransitionManager.beginDelayedTransition(locationValuesWrapper);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
             }
 
         } else {
             FilterTextView txt = new FilterTextView(this);
             txt.setText(getString(R.string.common_text_all));
+            txt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onLocationClick();
+                }
+            });
             locationValuesWrapper.addView(txt);
         }
     }
@@ -209,6 +260,15 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
     @OnClick(R.id.filter_button)
     public void onFilterClick() {
         Intent resultIntent = new Intent();
+
+        try {
+            filterValues.set(FILTER_PARAM_POS_PRICE_FROM, String.valueOf(new BigDecimal(priceFrom.getText().toString())));
+        }catch (Exception e){}
+
+        try {
+            filterValues.set(FILTER_PARAM_POS_PRICE_TO, String.valueOf(new BigDecimal(priceTo.getText().toString())));
+        }catch (Exception e){}
+
         resultIntent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
         setResult(RESULT_OK, resultIntent);
         finish();
@@ -222,11 +282,24 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     @OnClick(R.id.category)
     public void onCategoryClick() {
-        ListDialog categoryDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE);
-        ArrayList<Pair<String, Boolean>> data = new ArrayList<>();
+        ListDialog categoryDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
+            @Override
+            public void onItemsSelected(ArrayList<Integer> itemPositions) {
+                if (itemPositions != null && itemPositions.size() > 0) {
+                    String newCategories = "";
+                    for (Integer i : itemPositions) {
+                        newCategories += categoriesEvent.getCategories().get(i).getKey() + ";";
+                    }
+                    filterValues.set(FILTER_PARAM_POS_CATEGORY, newCategories);
+                    setCategoryValues();
+                }
+            }
+        });
+
+        ArrayList<DialogPair> data = new ArrayList<>();
 
         for (KeyValue kv : categoriesEvent.getCategories()) {
-            data.add(new Pair<>(kv.getValue(), filterValues.get(FILTER_PARAM_POS_CATEGORY).contains(kv.getValue() + ";")));
+            data.add(new DialogPair(kv.getValue(), filterValues.get(FILTER_PARAM_POS_CATEGORY).contains(kv.getKey() + ";")));
         }
 
         categoryDialog.setList(data);
@@ -235,6 +308,28 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     @OnClick(R.id.location)
     public void onLocationClick() {
+        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
+            @Override
+            public void onItemsSelected(ArrayList<Integer> itemPositions) {
+                if (itemPositions != null) {
+                    String newLocations = "";
+                    for (Integer i : itemPositions) {
+                        newLocations += locationsEvent.getLocations().get(i).getKey() + ";";
+                    }
+                    filterValues.set(FILTER_PARAM_POS_LOCATION, newLocations);
+                    setLocationValues();
+                }
+            }
+        });
+
+        ArrayList<DialogPair> data = new ArrayList<>();
+
+        for (KeyValue kv : locationsEvent.getLocations()) {
+            data.add(new DialogPair(kv.getValue(), filterValues.get(FILTER_PARAM_POS_LOCATION).contains(kv.getKey() + ";")));
+        }
+
+        locationDialog.setList(data);
+        locationDialog.show();
 
     }
 

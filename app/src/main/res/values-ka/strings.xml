@@ -17,6 +17,7 @@
     <string name="common_text_register">რეგისტრაცია</string>
     <string name="common_text_sell">გაყიდე</string>
     <string name="common_text_all">ყველა</string>
+    <string name="common_text_select">არჩევა</string>
 
     <string name="button_text_retry">თავიდან</string>
     <string name="button_text_cancel">გაუქმება</string>
@@ -53,7 +54,5 @@
     <string name="filter_title_order">დალაგება</string>
     <string name="filter_title_show">ჩვენება</string>
     <string name="filter_title_list_type">სიის ჩვენების ტიპი</string>
-
-
 
 </resources>

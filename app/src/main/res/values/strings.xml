@@ -21,6 +21,7 @@
     <string name="common_text_register">Register</string>
     <string name="common_text_sell">SELL</string>
     <string name="common_text_all">All</string>
+    <string name="common_text_select">Select</string>
 
     <string name="button_text_retry">RETRY</string>
     <string name="button_text_cancel">CANCEL</string>
@@ -57,5 +58,6 @@
     <string name="filter_title_order">Order by</string>
     <string name="filter_title_show">Show</string>
     <string name="filter_title_list_type">List Type</string>
+
 
 </resources>

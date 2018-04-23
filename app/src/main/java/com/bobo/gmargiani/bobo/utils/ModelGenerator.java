@@ -79,6 +79,7 @@ public class ModelGenerator {
         values.add(new KeyValue("CL", "Clothing"));
         values.add(new KeyValue("MS", "Music"));
 
+
         ApiResponse<ArrayList<KeyValue>>  response = new ApiResponse<ArrayList<KeyValue>>();
         response.setCode("0");
         response.setResult(values);

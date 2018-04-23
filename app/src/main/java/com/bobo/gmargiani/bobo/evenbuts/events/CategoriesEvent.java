@@ -25,4 +25,17 @@ public class CategoriesEvent extends RootEvent {
     public Object copyData() {
         return null;
     }
+
+    public String getValueByKey(String key){
+
+        if (categories != null && key != null){
+            for (KeyValue k : categories){
+                if (key.equals(k.getKey())){
+                    return k.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
 }

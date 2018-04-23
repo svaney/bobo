@@ -24,4 +24,17 @@ public class LocationsEvent extends RootEvent {
     public Object copyData() {
         return null;
     }
+
+    public String getValueByKey(String key){
+
+        if (locations != null && key != null){
+            for (KeyValue k : locations){
+                if (key.equals(k.getKey())){
+                    return k.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
 }
