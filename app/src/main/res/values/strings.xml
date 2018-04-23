@@ -14,6 +14,7 @@
     <string name="activity_name_terms"><![CDATA[Terms & Conditions]]></string>
     <string name="activity_name_about">About App</string>
     <string name="activity_name_help">Help</string>
+    <string name="activity_name_registration">რეგისტრაცია</string>
 
     <string name="common_text_email">E-mail</string>
     <string name="common_text_password">Password</string>

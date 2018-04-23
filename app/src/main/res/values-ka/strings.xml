@@ -10,6 +10,7 @@
     <string name="activity_name_terms">მომხმარებლის პირობები</string>
     <string name="activity_name_about">აპლიკაციის შესახებ</string>
     <string name="activity_name_help">დახმარება</string>
+    <string name="activity_name_registration">რეგისტრაცია</string>
 
     <string name="common_text_email">ელექტორნული ფოსტა</string>
     <string name="common_text_password">Password</string>

@@ -107,11 +107,12 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
             <Button
+                android:id="@+id/register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/common_text_register"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
         </LinearLayout>
 
