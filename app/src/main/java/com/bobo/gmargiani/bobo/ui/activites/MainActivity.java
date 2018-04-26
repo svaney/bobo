@@ -280,7 +280,7 @@ public class MainActivity extends RootActivity
         BigDecimal priceFrom = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
                 null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM));
 
-        BigDecimal priceTo = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
+        BigDecimal priceTo = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_TO)) ?
                 null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_TO));
 
         String category = filterValues.get(FilterActivity.FILTER_PARAM_POS_CATEGORY);

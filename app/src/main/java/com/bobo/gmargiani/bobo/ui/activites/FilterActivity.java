@@ -130,11 +130,19 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
     private void setPriceValues() {
         priceFrom.setText("");
         priceTo.setText("");
+
         try {
             priceFrom.setText(String.valueOf(new BigDecimal(filterValues.get(FILTER_PARAM_POS_PRICE_FROM))));
+        } catch (Exception ignored) {
+            filterValues.set(FILTER_PARAM_POS_PRICE_FROM, "");
+        }
+
+        try {
             priceTo.setText(String.valueOf(new BigDecimal(filterValues.get(FILTER_PARAM_POS_PRICE_TO))));
         } catch (Exception ignored) {
+            filterValues.set(FILTER_PARAM_POS_PRICE_TO, "");
         }
+
 
     }
 
@@ -263,11 +271,15 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
         try {
             filterValues.set(FILTER_PARAM_POS_PRICE_FROM, String.valueOf(new BigDecimal(priceFrom.getText().toString())));
-        }catch (Exception e){}
+        }catch (Exception e){
+            filterValues.set(FILTER_PARAM_POS_PRICE_FROM,"");
+        }
 
         try {
             filterValues.set(FILTER_PARAM_POS_PRICE_TO, String.valueOf(new BigDecimal(priceTo.getText().toString())));
-        }catch (Exception e){}
+        }catch (Exception e){
+            filterValues.set(FILTER_PARAM_POS_PRICE_TO,"");
+        }
 
         resultIntent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
         setResult(RESULT_OK, resultIntent);
