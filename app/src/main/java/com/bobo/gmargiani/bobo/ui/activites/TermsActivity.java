@@ -14,7 +14,7 @@ public class TermsActivity extends RootDetailedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_terms;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_terms);
     }
 }

@@ -17,6 +17,8 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 
@@ -33,6 +35,7 @@ public class ImageLoader {
         private int placeHolderId;
         private int errorId;
         private int tintColorId;
+        private boolean asBitmap;
 
         private Bitmap bitmap;
         private String imageUrl;
@@ -63,6 +66,13 @@ public class ImageLoader {
         public ImageLoader.I setUrl(String url) {
             this.imageUrl = url;
             this.isUrl = true;
+            return this;
+        }
+
+        public ImageLoader.I setUrl(String url, boolean asBitmap) {
+            this.imageUrl = url;
+            this.isUrl = true;
+            this.asBitmap = asBitmap;
             return this;
         }
 
@@ -111,13 +121,25 @@ public class ImageLoader {
             return this;
         }
 
+
         public void build() {
             try {
+
                 Context context = imageView.getContext();
 
-                RequestManager requestManager = Glide.with(context);
+                if (asBitmap) {
+                    Glide.with(context).asBitmap().load(imageUrl).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            imageView.setImageBitmap(resource);
+                        }
+                    });
+                    return;
+                }
 
+                RequestManager requestManager = Glide.with(context);
                 RequestBuilder<Drawable> drawableTypeRequest;
+
                 if (isUrl) {
                     drawableTypeRequest = requestManager.load(imageUrl);
                 } else if (isUri) {
@@ -152,10 +174,10 @@ public class ImageLoader {
 
                 drawableTypeRequest.apply(options).transition(DrawableTransitionOptions.withCrossFade()).into(imageView);
 
-                //  Ion.with(imageView).load(item.getMainImage());
-
             } catch (Exception ignored) {
             }
         }
+
+
     }
 }

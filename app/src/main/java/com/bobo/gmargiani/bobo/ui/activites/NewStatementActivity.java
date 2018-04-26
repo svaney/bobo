@@ -14,7 +14,7 @@ public class NewStatementActivity extends AuthorizedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_new_statement;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_new_statement);
     }
 }

@@ -14,7 +14,7 @@ public class HelpActivity extends RootDetailedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_help;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_help);
     }
 }

@@ -49,8 +49,8 @@ public abstract class RootActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    protected int getHeaderText() {
-        return R.string.app_name;
+    protected String getHeaderText() {
+        return getString(R.string.app_name);
     }
 
     @Override

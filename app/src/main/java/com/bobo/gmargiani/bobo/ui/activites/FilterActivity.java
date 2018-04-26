@@ -402,7 +402,7 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
     }
 
     @Override
-    protected int getHeaderText() {
-        return (R.string.activity_name_filter);
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_filter);
     }
 }

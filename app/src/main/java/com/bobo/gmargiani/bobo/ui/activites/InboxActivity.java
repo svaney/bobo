@@ -15,7 +15,7 @@ public class InboxActivity extends AuthorizedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_inbox;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_inbox);
     }
 }

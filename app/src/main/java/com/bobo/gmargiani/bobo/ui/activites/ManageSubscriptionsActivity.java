@@ -14,7 +14,7 @@ public class ManageSubscriptionsActivity extends AuthorizedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_manage_subscriptions;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_manage_subscriptions);
     }
 }

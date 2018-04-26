@@ -15,7 +15,7 @@ public class FavoritesActivity extends AuthorizedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_favorites;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_favorites);
     }
 }

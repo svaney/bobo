@@ -50,6 +50,9 @@
             android:name=".ui.activites.RegistrationActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activites.StatementDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activites.FilterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />

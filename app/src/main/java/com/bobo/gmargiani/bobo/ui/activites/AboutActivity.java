@@ -14,7 +14,7 @@ public class AboutActivity extends RootDetailedActivity {
     }
 
     @Override
-    protected int getHeaderText() {
-        return R.string.activity_name_about;
+    protected String getHeaderText() {
+        return getString(R.string.activity_name_about);
     }
 }
