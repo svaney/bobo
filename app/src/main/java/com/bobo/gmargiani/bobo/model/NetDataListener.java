@@ -20,4 +20,6 @@ public interface NetDataListener {
     void onLocationsResponse(ApiResponse<ArrayList<KeyValue>> response);
 
     void onCategoriesResponse(ApiResponse<ArrayList<KeyValue>> response);
+
+    void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId, long statementId);
 }

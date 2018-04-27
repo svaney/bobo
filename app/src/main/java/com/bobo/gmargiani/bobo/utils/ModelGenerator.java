@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.utils;
 
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 
@@ -43,7 +44,7 @@ public class ModelGenerator {
             item.setStatementId(itemCount);
 
             long range = 252460800L;
-            item.setCreateDate((long)(generator.nextDouble()*range) + 1262289600L);
+            item.setCreateDate((long) (generator.nextDouble() * range) + 1262289600L);
 
             int price = generator.nextInt(9990);
 
@@ -72,7 +73,7 @@ public class ModelGenerator {
         values.add(new KeyValue("KT", "Kutaisi"));
         values.add(new KeyValue("MS", "Mestia"));
 
-        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<ArrayList<KeyValue>>();
+        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<>();
         response.setCode("0");
         response.setResult(values);
         return response;
@@ -88,11 +89,25 @@ public class ModelGenerator {
         values.add(new KeyValue("MS", "Music"));
 
 
-        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<ArrayList<KeyValue>>();
+        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<>();
         response.setCode("0");
         response.setResult(values);
         return response;
 
     }
 
+    public static ApiResponse<OwnerDetails> getOwnerDetails(long ownerId) {
+        OwnerDetails details = new OwnerDetails();
+        details.setCompany(false);
+        details.setLocation("Batumi");
+        details.setOwnerId(ownerId);
+        details.setOwnerName("Zuraba");
+        details.setOwnerSecondName("Machavariani");
+        details.setAvatar("http://plus.kvira.ge/wp-content/uploads/2016/10/davit_tarxan_mouravi_0410.jpg");
+        details.setPhone("+995 98 19 41 17");
+        ApiResponse<OwnerDetails> response = new ApiResponse<>();
+        response.setCode("0");
+        response.setResult(details);
+        return response;
+    }
 }

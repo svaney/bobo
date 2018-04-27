@@ -61,4 +61,8 @@ public class ApiManager {
     public void getCategories() {
         dataListener.onCategoriesResponse(ModelGenerator.getCategories());
     }
+
+    public void getOwnerDetails(long statementId, long ownerId) {
+        dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId, statementId);
+    }
 }

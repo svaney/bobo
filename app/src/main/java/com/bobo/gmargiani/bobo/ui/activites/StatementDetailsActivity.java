@@ -1,12 +1,15 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.os.Bundle;
+import android.support.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView;
@@ -15,7 +18,10 @@ import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class StatementDetailsActivity extends RootDetailedActivity {
     @BindView(R.id.gallery_footer)
@@ -57,8 +63,11 @@ public class StatementDetailsActivity extends RootDetailedActivity {
     @BindView(R.id.ic_statistics_favorite)
     ImageView icFavorites;
 
+    @BindView(R.id.owner_pic)
+    ImageView ownerProfPic;
 
     private StatementItem statementItem;
+    private OwnerDetailsEvent ownerDetailsEvent;
 
 
     @Override
@@ -141,6 +150,54 @@ public class StatementDetailsActivity extends RootDetailedActivity {
                 .build();
     }
 
+    private void setUpDetails() {
+        if (statementItem != null && statementItem.getOwnerDetails() != null) {
+
+            ImageLoader.load(ownerProfPic)
+                    .setUrl(statementItem.getOwnerDetails().getAvatar())
+                    .setOval(true)
+                    .build();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        requestDetails();
+    }
+
+    private void requestDetails() {
+        if (statementItem != null && statementItem.getOwnerDetails() == null) {
+            userInfo.requestOwnerDetails(statementItem.getStatementId(), statementItem.getOwnerId());
+        } else if (statementItem != null) {
+            setUpDetails();
+        }
+    }
+
+    @Subscribe
+    public void onOwnerDetailsEvent(OwnerDetailsEvent event) {
+        if (ownerDetailsEvent != event && statementItem != null && statementItem.getOwnerId() == event.getOwnerId()) {
+            ownerDetailsEvent = event;
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    showFullLoading();
+                    break;
+                case RootEvent.STATE_ERROR:
+                    showFullError();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    showContent();
+                    setUpDetails();
+                    break;
+            }
+        }
+    }
+
+    @OnClick(R.id.full_retry_button)
+    public void onRetryClick() {
+        requestDetails();
+    }
+
     @Override
     public void onBackPressed() {
         if (fullGalleryWrapper.getVisibility() == View.VISIBLE) {
@@ -157,7 +214,7 @@ public class StatementDetailsActivity extends RootDetailedActivity {
 
     @Override
     public boolean needEventBus() {
-        return false;
+        return true;
     }
 
     @Override

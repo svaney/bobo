@@ -6,6 +6,7 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
@@ -33,6 +34,7 @@ public class UserInfo implements NetDataListener {
     private StatementsEvent statementsEvent;
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
+    private OwnerDetailsEvent ownerDetailsEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -176,15 +178,51 @@ public class UserInfo implements NetDataListener {
     }
 
     public StatementItem getStatementItemById(long id) {
-        if (statementsEvent != null && statementsEvent.getStatements() != null){
-            for (StatementItem it : statementsEvent.getStatements()){
-                if (it.getStatementId() == id){
+        if (statementsEvent != null && statementsEvent.getStatements() != null) {
+            for (StatementItem it : statementsEvent.getStatements()) {
+                if (it.getStatementId() == id) {
                     return it;
                 }
             }
         }
 
         return null;
+    }
+
+    public void requestOwnerDetails(final long statementId, final long ownerId) {
+        if (shouldNotRefresh(ownerDetailsEvent) && ownerDetailsEvent.getOwnerId() == ownerId) {
+            eventBus.post(ownerDetailsEvent);
+        } else {
+            ownerDetailsEvent = new OwnerDetailsEvent();
+            ownerDetailsEvent.setOwnerId(ownerId);
+            ownerDetailsEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(ownerDetailsEvent);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getOwnerDetails(statementId, ownerId);
+                }
+            }, 1000);
+        }
+    }
+
+    @Override
+    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId, long statementId) {
+        if (ownerDetailsEvent != null && ownerId == ownerDetailsEvent.getOwnerId()) {
+            ownerDetailsEvent = (OwnerDetailsEvent) ownerDetailsEvent.copyData();
+
+            if (response.isSuccess()) {
+                ownerDetailsEvent.setState(RootEvent.STATE_SUCCESS);
+                ownerDetailsEvent.setOwnerDetails(response.getResult());
+                if (getStatementItemById(statementId) != null) {
+                    getStatementItemById(statementId).setOwnerDetails(response.getResult());
+                }
+            } else {
+                ownerDetailsEvent.setState(RootEvent.STATE_ERROR);
+            }
+            eventBus.post(ownerDetailsEvent);
+
+        }
     }
 
     public void requestLocations() {
@@ -276,6 +314,5 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
-
 
 }

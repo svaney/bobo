@@ -14,6 +14,7 @@ public class StatementItem {
     private boolean isFavorite;
     private int totalViews;
     private int totalFavorites;
+    private OwnerDetails ownerDetails;
 
     public String getMainImage() {
         if (images != null && images.size() > 0) {
@@ -100,5 +101,13 @@ public class StatementItem {
 
     public void setTotalFavorites(int totalFavorites) {
         this.totalFavorites = totalFavorites;
+    }
+
+    public void setOwnerDetails(OwnerDetails ownerDetails) {
+        this.ownerDetails = ownerDetails;
+    }
+
+    public OwnerDetails getOwnerDetails() {
+        return ownerDetails;
     }
 }
