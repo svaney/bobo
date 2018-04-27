@@ -12,6 +12,8 @@ public class StatementItem {
     private Long createDate;
     private BigDecimal price;
     private boolean isFavorite;
+    private int totalViews;
+    private int totalFavorites;
 
     public String getMainImage() {
         if (images != null && images.size() > 0) {
@@ -82,5 +84,21 @@ public class StatementItem {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public int getTotalViews() {
+        return totalViews;
+    }
+
+    public void setTotalViews(int totalViews) {
+        this.totalViews = totalViews;
+    }
+
+    public int getTotalFavorites() {
+        return totalFavorites;
+    }
+
+    public void setTotalFavorites(int totalFavorites) {
+        this.totalFavorites = totalFavorites;
     }
 }

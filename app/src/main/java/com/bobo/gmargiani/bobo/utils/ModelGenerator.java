@@ -41,6 +41,10 @@ public class ModelGenerator {
             item.setDescription("aq aris agcerili ranairia da ravaria simon es saqoneli");
             item.setTitle("Nivti: " + itemCount++);
             item.setStatementId(itemCount);
+
+            long range = 252460800L;
+            item.setCreateDate((long)(generator.nextDouble()*range) + 1262289600L);
+
             int price = generator.nextInt(9990);
 
             item.setPrice(new BigDecimal(price).divide(new BigDecimal(100)));

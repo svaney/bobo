@@ -1,5 +1,20 @@
 <resources>
 
+    <string-array name="months">
+        <item>იანვარი</item>
+        <item>თებერვალი</item>
+        <item>მარტი</item>
+        <item>აპრილი</item>
+        <item>მაისი</item>
+        <item>ივნისი</item>
+        <item>ივლისი</item>
+        <item>აგვისტო</item>
+        <item>სექტემბერი</item>
+        <item>ოქტომბერი</item>
+        <item>ნოემბერი</item>
+        <item>დეკემბერი</item>
+    </string-array>
+
     <string name="activity_name_favorites">ფავორიტები</string>
     <string name="activity_name_filter">ფილტრი</string>
     <string name="activity_name_inbox">შეტყობინებები</string>

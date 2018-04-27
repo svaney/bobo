@@ -16,22 +16,126 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/statement_detail_gallery_height"
-        android:layout_below="@id/app_bar">
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar"
+        android:orientation="vertical">
 
-        <com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView
-            android:id="@+id/gallery"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/statement_detail_gallery_height" />
+            android:layout_height="@dimen/statement_detail_gallery_height">
 
-        <com.bobo.gmargiani.bobo.ui.views.GalleryFooter
-            android:id="@+id/gallery_footer"
+            <com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView
+                android:id="@+id/gallery"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/statement_detail_gallery_height" />
+
+            <com.bobo.gmargiani.bobo.ui.views.GalleryFooter
+                android:id="@+id/gallery_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom" />
-    </FrameLayout>
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical"
+            android:padding="@dimen/item_default_margin">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/statement_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_large" />
+
+                <TextView
+                    android:id="@+id/statement_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/statement_price"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_large" />
+
+                <LinearLayout
+                    android:id="@+id/item_statistics_wrapper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ic_statistics_views"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginRight="@dimen/item_default_small_margin"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/statement_views"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/item_default_margin"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/text_size_medium" />
+
+                    <ImageView
+                        android:id="@+id/ic_statistics_favorite"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginRight="@dimen/item_default_small_margin"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/statement_total_favorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/statement_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/item_statistics_wrapper"
+                    android:layout_marginTop="@dimen/item_default_small_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_titles" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/full_screen_gallery_wrapper"
@@ -47,15 +151,22 @@
             android:layout_marginBottom="@dimen/item_default_margin"
             android:layout_marginTop="@dimen/item_default_margin" />
 
-        <ImageView
-            android:id="@+id/close_full_gallery"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="top|right"
             android:layout_margin="@dimen/item_default_margin"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:src="@drawable/ic_close_white" />
+            android:background="@color/statement_black_transparent_background">
+
+            <ImageView
+                android:id="@+id/close_full_gallery"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:src="@drawable/ic_close_white" />
+        </FrameLayout>
 
 
         <com.bobo.gmargiani.bobo.ui.views.GalleryFooter
