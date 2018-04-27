@@ -40,6 +40,7 @@ public class ModelGenerator {
             StatementItem item = new StatementItem();
             item.setDescription("aq aris agcerili ranairia da ravaria simon es saqoneli");
             item.setTitle("Nivti: " + itemCount++);
+            item.setStatementId(itemCount);
             int price = generator.nextInt(9990);
 
             item.setPrice(new BigDecimal(price).divide(new BigDecimal(100)));
@@ -67,7 +68,7 @@ public class ModelGenerator {
         values.add(new KeyValue("KT", "Kutaisi"));
         values.add(new KeyValue("MS", "Mestia"));
 
-        ApiResponse<ArrayList<KeyValue>>  response = new ApiResponse<ArrayList<KeyValue>>();
+        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<ArrayList<KeyValue>>();
         response.setCode("0");
         response.setResult(values);
         return response;
@@ -83,7 +84,7 @@ public class ModelGenerator {
         values.add(new KeyValue("MS", "Music"));
 
 
-        ApiResponse<ArrayList<KeyValue>>  response = new ApiResponse<ArrayList<KeyValue>>();
+        ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<ArrayList<KeyValue>>();
         response.setCode("0");
         response.setResult(values);
         return response;

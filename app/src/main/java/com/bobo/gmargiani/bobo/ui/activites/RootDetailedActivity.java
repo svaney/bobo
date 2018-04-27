@@ -26,6 +26,12 @@ public abstract class RootDetailedActivity extends RootActivity {
         }
     }
 
+    protected void refreshHeaderText() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getHeaderText());
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

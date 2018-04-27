@@ -27,6 +27,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private Context context;
     private LazyLoaderListener lazyLoaderListener;
     private ArrayList<StatementItem> items;
+    private RecyclerItemClickListener clickListener;
 
     private boolean isGrid;
     private boolean isLoading;
@@ -62,10 +63,11 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         return isGrid;
     }
 
-    public StatementRecyclerAdapter(Context context, boolean isGrid, LazyLoaderListener listener) {
+    public StatementRecyclerAdapter(Context context, boolean isGrid, RecyclerItemClickListener clickListener, LazyLoaderListener listener) {
         this.context = context;
         this.isGrid = isGrid;
         this.lazyLoaderListener = listener;
+        this.clickListener = clickListener;
     }
 
     public void checkLoader(RecyclerView recyclerView) {
@@ -215,7 +217,9 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void onClick(View v) {
-
+            if (clickListener != null){
+                clickListener.onRecyclerItemClick(getAdapterPosition());
+            }
         }
     }
 

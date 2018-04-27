@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.util.DisplayMetrics;
@@ -128,5 +129,11 @@ public class AppUtils {
         return getDimen(dimenId, App.getInstance());
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static Drawable getDrawable(int resId, Context context) {
+        return atLeastMarshmallow() ?
+                context.getResources().getDrawable(resId, context.getTheme()) : context.getResources().getDrawable(resId);
+
+    }
 
 }

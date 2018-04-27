@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -16,4 +16,54 @@
 
     </android.support.design.widget.AppBarLayout>
 
-</LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statement_detail_gallery_height"
+        android:layout_below="@id/app_bar">
+
+        <com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView
+            android:id="@+id/gallery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/statement_detail_gallery_height" />
+
+        <com.bobo.gmargiani.bobo.ui.views.GalleryFooter
+            android:id="@+id/gallery_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/full_screen_gallery_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent_background"
+        android:translationZ="10dp">
+
+        <com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView
+            android:id="@+id/full_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/item_default_margin"
+            android:layout_marginTop="@dimen/item_default_margin" />
+
+        <ImageView
+            android:id="@+id/close_full_gallery"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|right"
+            android:layout_margin="@dimen/item_default_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:src="@drawable/ic_close_white" />
+
+
+        <com.bobo.gmargiani.bobo.ui.views.GalleryFooter
+            android:id="@+id/full_gallery_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+
+    </FrameLayout>
+
+</RelativeLayout>

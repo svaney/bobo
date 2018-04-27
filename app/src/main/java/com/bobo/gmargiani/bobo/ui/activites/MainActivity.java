@@ -17,14 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
@@ -47,7 +46,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener {
+        ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener, RecyclerItemClickListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -243,7 +242,7 @@ public class MainActivity extends RootActivity
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-        adapter = new StatementRecyclerAdapter(this, isGrid, this);
+        adapter = new StatementRecyclerAdapter(this, isGrid, this,this);
         adapter.setIsLoading(true);
         statementsEvent = null;
         adapter.setData(new ArrayList<StatementItem>());
@@ -355,6 +354,17 @@ public class MainActivity extends RootActivity
                 LocaleHelper.changeLanguage(MainActivity.this);
                 restartApp();
             }
+        }
+    }
+
+    @Override
+    public void onRecyclerItemClick(int pos) {
+        if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > pos) {
+            StatementItem item = statementsEvent.getStatements().get(pos);
+
+            Intent intent = new Intent(MainActivity.this, StatementDetailsActivity.class);
+            intent.putExtra(AppConsts.PARAM_STATEMENT_ID, item.getStatementId());
+            startActivity(intent);
         }
     }
 

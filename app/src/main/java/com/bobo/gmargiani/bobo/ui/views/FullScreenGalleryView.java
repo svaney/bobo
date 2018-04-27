@@ -1,29 +1,29 @@
 package com.bobo.gmargiani.bobo.ui.views;
 
 import android.content.Context;
+import android.os.Parcel;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
+
 import java.util.ArrayList;
 
 public class FullScreenGalleryView extends ViewPager {
 
     private ArrayList<String> imageLinks;
-    private OnTouchListener touchListener;
     private FullScreenGalleryViewAdapter adapter;
-
-    public void setFiles(ArrayList<String> imageLinks) {
-        this.imageLinks = imageLinks;
-        adapter = new FullScreenGalleryViewAdapter();
-
-        setAdapter(adapter);
-    }
+    private RecyclerItemClickListener imageClickListener;
+    private boolean isImageTouchable;
 
     public FullScreenGalleryView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,6 +32,21 @@ public class FullScreenGalleryView extends ViewPager {
     @Override
     public FullScreenGalleryViewAdapter getAdapter() {
         return adapter;
+    }
+
+    public void setImages(ArrayList<String> imageLinks) {
+        this.imageLinks = imageLinks;
+        adapter = new FullScreenGalleryViewAdapter();
+
+        setAdapter(adapter);
+    }
+
+    public void setOnImageClickListener(RecyclerItemClickListener listener) {
+        this.imageClickListener = listener;
+    }
+
+    public void setImageTouchable(boolean imageTouchable) {
+        isImageTouchable = imageTouchable;
     }
 
     @Override
@@ -52,11 +67,6 @@ public class FullScreenGalleryView extends ViewPager {
         }
     }
 
-    public void setOnPhotoTapListener(OnTouchListener touchListener) {
-        this.touchListener = touchListener;
-    }
-
-
     public class FullScreenGalleryViewAdapter extends PagerAdapter {
 
         @Override
@@ -64,25 +74,37 @@ public class FullScreenGalleryView extends ViewPager {
             return imageLinks == null ? 0 : imageLinks.size();
         }
 
-        private View createView() {
+        private FrameLayout createView() {
             FrameLayout frameLayout = new FrameLayout(getContext());
             frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            TouchImageView imageView = new TouchImageView(getContext());
-
-            frameLayout.setTag(imageView);
-            frameLayout.addView(imageView);
+            if (isImageTouchable) {
+                TouchImageView imageView = new TouchImageView(getContext());
+                frameLayout.addView(imageView);
+            } else {
+                ImageView imageView = new ImageView(getContext());
+                frameLayout.addView(imageView);
+            }
 
             return frameLayout;
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, final int position) {
 
-            View recycledView = createView();
+            FrameLayout recycledView = createView();
 
-            TouchImageView imageView = (TouchImageView) recycledView.getTag();
-            imageView.setOnTouchListener(touchListener);
+            ImageView imageView = (ImageView) recycledView.getChildAt(0);
+
+            if (imageClickListener != null) {
+                imageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imageClickListener.onRecyclerItemClick(position);
+                    }
+                });
+
+            }
 
             ImageLoader.load(imageView)
                     .setUrl(imageLinks.get(position), true)

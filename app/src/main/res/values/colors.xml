@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#F2F2F2</color>
     <color name="colorAccent">#10B1F1</color>
+
     <color name="color_accent_light">#cff1ff</color>
 
     <color name="error_red_color">#ffff4444</color>

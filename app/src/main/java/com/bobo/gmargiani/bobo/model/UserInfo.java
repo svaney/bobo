@@ -175,6 +175,18 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+    public StatementItem getStatementItemById(long id) {
+        if (statementsEvent != null && statementsEvent.getStatements() != null){
+            for (StatementItem it : statementsEvent.getStatements()){
+                if (it.getStatementId() == id){
+                    return it;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void requestLocations() {
         if (shouldNotRefresh(locationsEvent)) {
             eventBus.post(locationsEvent);
@@ -264,5 +276,6 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
+
 
 }
