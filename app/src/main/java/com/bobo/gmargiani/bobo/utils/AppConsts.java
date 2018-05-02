@@ -14,6 +14,7 @@ public class AppConsts {
 
     public final static int PERMISSION_CAMERA = 501;
     public final static int PERMISSION_EXTERNAL_STORAGE = 502;
+    public final static int PERMISSION_PHONE = 503;
 
     public final static String PARAM_FILTER_PARAMS = "FILTER_PARAMS";
     public final static String PARAM_STATEMENT_ID = "PARAM_STATEMENT_ID";

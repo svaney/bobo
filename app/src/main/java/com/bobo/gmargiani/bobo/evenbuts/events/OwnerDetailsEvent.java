@@ -5,16 +5,7 @@ import com.bobo.gmargiani.bobo.model.OwnerDetails;
 
 public class OwnerDetailsEvent extends RootEvent {
     private long ownerId;
-    private OwnerDetails ownerDetails;
 
-
-    public OwnerDetails getOwnerDetails() {
-        return ownerDetails;
-    }
-
-    public void setOwnerDetails(OwnerDetails ownerDetails) {
-        this.ownerDetails = ownerDetails;
-    }
 
     public long getOwnerId() {
         return ownerId;
@@ -27,7 +18,6 @@ public class OwnerDetailsEvent extends RootEvent {
     @Override
     public Object copyData() {
         OwnerDetailsEvent event = new OwnerDetailsEvent();
-        event.setOwnerDetails(getOwnerDetails());
         event.setOwnerId(getOwnerId());
         return event;
     }

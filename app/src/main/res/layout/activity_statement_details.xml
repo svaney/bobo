@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -47,12 +48,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDark"
-                android:orientation="vertical"
-                android:padding="@dimen/item_default_margin">
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/item_default_margin"
+                    android:layout_marginRight="@dimen/item_default_margin"
+                    android:layout_marginTop="@dimen/item_default_margin">
 
                     <TextView
                         android:id="@+id/statement_price"
@@ -140,18 +143,94 @@
                     android:id="@+id/main_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/item_default_margin">
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/item_default_margin">
 
                     <ImageView
                         android:id="@+id/owner_pic"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_centerVertical="true"
                         android:scaleType="centerCrop" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/item_default_margin"
+                        android:layout_toRightOf="@id/owner_pic"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/owner_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size_large" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/ic_owner_location"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center_vertical" />
+
+                            <TextView
+                                android:id="@+id/owner_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/item_default_margin"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="@dimen/text_size_small" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/owner_tel_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/item_default_small_margin"
+                            android:paddingRight="@dimen/item_default_small_margin"
+                            android:paddingTop="4dp">
+
+
+                            <ImageView
+                                android:id="@+id/ic_owner_tel"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center_vertical" />
+
+                            <com.bobo.gmargiani.bobo.ui.views.ReadMoreText
+                                android:id="@+id/owner_tel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/item_default_margin"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="@color/colorAccent"
+                                android:textIsSelectable="true"
+                                android:textSize="@dimen/text_size_medium" />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
 
                 </RelativeLayout>
 
             </LinearLayout>
-
 
             <include
                 android:id="@+id/full_loader"
@@ -173,6 +252,101 @@
                 <include layout="@layout/component_retry_view" />
 
             </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/item_default_margin"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/item_default_small_margin"
+                    android:layout_marginTop="@dimen/item_default_small_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ic_statement_category"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center_vertical" />
+
+                    <TextView
+                        android:id="@+id/statement_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/item_default_margin"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/item_default_small_margin"
+                    android:layout_marginTop="@dimen/item_default_small_margin"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ic_statement_location"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center_vertical" />
+
+                    <TextView
+                        android:id="@+id/statement_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/item_default_margin"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/text_size_medium" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/statement_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_titles" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_default_margin"
+                    android:text="@string/statement_details_title_details"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <com.bobo.gmargiani.bobo.ui.views.ReadMoreText
+                    android:id="@+id/statement_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_default_small_margin"
+                    android:textSize="@dimen/text_size_small"
+                    app:colorClickableText="@color/colorAccent"
+                    app:trimCollapsedText="@string/read_more_text_view_collapse_text"
+                    app:trimExpandedText="@string/read_more_text_view_expand_text"
+                    app:trimLength="300" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/similar_statements_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
 
         </LinearLayout>

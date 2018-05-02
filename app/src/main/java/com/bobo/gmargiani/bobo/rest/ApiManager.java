@@ -62,7 +62,7 @@ public class ApiManager {
         dataListener.onCategoriesResponse(ModelGenerator.getCategories());
     }
 
-    public void getOwnerDetails(long statementId, long ownerId) {
-        dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId, statementId);
+    public void getOwnerDetails(long ownerId) {
+        dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId);
     }
 }

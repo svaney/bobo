@@ -1,12 +1,16 @@
 package com.bobo.gmargiani.bobo.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -127,6 +131,28 @@ public class AppUtils {
 
     public static int getDimen(int dimenId) {
         return getDimen(dimenId, App.getInstance());
+    }
+
+    @SuppressLint("NewApi")
+    public static void callNumber(Activity activity, String number) {
+        try {
+            if (AppUtils.atLeastMarshmallow()) {
+                if (AppUtils.hasPermission(activity, Manifest.permission.CALL_PHONE)) {
+                    createCallIntent(activity, number);
+                } else {
+                    activity.requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, AppConsts.PERMISSION_PHONE);
+                }
+            } else {
+                createCallIntent(activity, number);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private static void createCallIntent(Activity activity, String number) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+        activity.startActivity(callIntent);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

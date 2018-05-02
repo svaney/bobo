@@ -15,6 +15,10 @@ public class StatementItem {
     private int totalViews;
     private int totalFavorites;
     private OwnerDetails ownerDetails;
+    private String location;
+    private boolean isSelling;
+    private boolean isRenting;
+    private String category;
 
     public String getMainImage() {
         if (images != null && images.size() > 0) {
@@ -109,5 +113,37 @@ public class StatementItem {
 
     public OwnerDetails getOwnerDetails() {
         return ownerDetails;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public boolean isSelling() {
+        return isSelling;
+    }
+
+    public void setSelling(boolean selling) {
+        isSelling = selling;
+    }
+
+    public boolean isRenting() {
+        return isRenting;
+    }
+
+    public void setRenting(boolean renting) {
+        isRenting = renting;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

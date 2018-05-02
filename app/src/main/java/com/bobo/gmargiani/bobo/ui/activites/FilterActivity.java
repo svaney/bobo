@@ -101,13 +101,6 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         setValues();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        userInfo.requestCategories();
-        userInfo.requestLocations();
-    }
-
     private void setValues() {
         setSellRentValues();
         setCategoryValues();
@@ -398,7 +391,7 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     @Override
     public boolean needEventBus() {
-        return true;
+        return false;
     }
 
     @Override

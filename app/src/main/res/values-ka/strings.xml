@@ -35,10 +35,15 @@
     <string name="common_text_sell">გაყიდე</string>
     <string name="common_text_all">ყველა</string>
     <string name="common_text_select">არჩევა</string>
+    <string name="common_text_selling">იყიდება</string>
+    <string name="common_text_renting">ქირავდება</string>
 
     <string name="button_text_retry">თავიდან</string>
     <string name="button_text_cancel">გაუქმება</string>
     <string name="button_text_filter">გაფილტვრა</string>
+
+    <string name="read_more_text_view_collapse_text">&#160;მეტის ნახვა</string>
+    <string name="read_more_text_view_expand_text">&#160;ნაკლები</string>
 
     <string name="action_filter">ფილტრი</string>
     <string name="action_favorite">ფავორიტები</string>
@@ -71,5 +76,8 @@
     <string name="filter_title_order">დალაგება</string>
     <string name="filter_title_show">ჩვენება</string>
     <string name="filter_title_list_type">სიის ჩვენების ტიპი</string>
+
+    <string name="statement_details_title_details">დეტალური ინფორმაცია</string>
+
 
 </resources>

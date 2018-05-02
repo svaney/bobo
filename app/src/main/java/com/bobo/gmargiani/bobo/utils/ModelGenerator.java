@@ -1,5 +1,7 @@
 package com.bobo.gmargiani.bobo.utils;
 
+import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
@@ -39,9 +41,12 @@ public class ModelGenerator {
 
         for (int i = 0; i < count; i++) {
             StatementItem item = new StatementItem();
-            item.setDescription("aq aris agcerili ranairia da ravaria simon es saqoneli");
+            item.setOwnerId(generator.nextInt(2));
+            item.setDescription(App.getInstance().getString(R.string.lorem));
             item.setTitle("Nivti: " + itemCount++);
             item.setStatementId(itemCount);
+            item.setCategory("CL");
+            item.setSelling(true);
 
             long range = 252460800L;
             item.setCreateDate((long) (generator.nextDouble() * range) + 1262289600L);
@@ -55,6 +60,9 @@ public class ModelGenerator {
                 add(imageUrls.get(generator.nextInt(imageUrls.size())));
                 add(imageUrls.get(generator.nextInt(imageUrls.size())));
             }});
+
+            item.setLocation("TB");
+
             items.add(item);
         }
 
@@ -99,11 +107,15 @@ public class ModelGenerator {
     public static ApiResponse<OwnerDetails> getOwnerDetails(long ownerId) {
         OwnerDetails details = new OwnerDetails();
         details.setCompany(false);
-        details.setLocation("Batumi");
+        details.setLocation("TB");
         details.setOwnerId(ownerId);
         details.setOwnerName("Zuraba");
         details.setOwnerSecondName("Machavariani");
-        details.setAvatar("http://plus.kvira.ge/wp-content/uploads/2016/10/davit_tarxan_mouravi_0410.jpg");
+        if (ownerId == 0) {
+            details.setAvatar("http://plus.kvira.ge/wp-content/uploads/2016/10/davit_tarxan_mouravi_0410.jpg");
+        } else {
+            details.setAvatar("http://es.me/wp-content/uploads/2017/08/Olofmeister-FaZe-Clan-from-Fnatic-817x320.jpeg");
+        }
         details.setPhone("+995 98 19 41 17");
         ApiResponse<OwnerDetails> response = new ApiResponse<>();
         response.setCode("0");

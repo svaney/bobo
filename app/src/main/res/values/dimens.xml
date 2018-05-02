@@ -18,7 +18,8 @@
     <dimen name="text_size_large">20sp</dimen>
     <dimen name="text_size_button">18sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
-    <dimen name="text_size_small">10sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_very_small">10sp</dimen>
     <dimen name="text_size_titles">14sp</dimen>
     <dimen name="text_size_descriptions">12sp</dimen>
     <dimen name="statement_favorite_ic_size">28dp</dimen>

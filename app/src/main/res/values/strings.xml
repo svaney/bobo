@@ -3,6 +3,8 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="lorem" translatable="false">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</string>
+
 
     <string-array name="months">
         <item>January</item>
@@ -40,10 +42,15 @@
     <string name="common_text_sell">SELL</string>
     <string name="common_text_all">All</string>
     <string name="common_text_select">Select</string>
+    <string name="common_text_selling">Selling</string>
+    <string name="common_text_renting">Renting</string>
 
     <string name="button_text_retry">RETRY</string>
     <string name="button_text_cancel">CANCEL</string>
     <string name="button_text_filter">FILTER</string>
+
+    <string name="read_more_text_view_collapse_text">&#160;Show less</string>
+    <string name="read_more_text_view_expand_text">&#160;Show more</string>
 
     <string name="action_filter">Filter</string>
     <string name="action_favorite">Favorites</string>
@@ -76,6 +83,9 @@
     <string name="filter_title_order">Order by</string>
     <string name="filter_title_show">Show</string>
     <string name="filter_title_list_type">List Type</string>
+
+    <string name="statement_details_title_details">Detailed information</string>
+
 
 
 </resources>

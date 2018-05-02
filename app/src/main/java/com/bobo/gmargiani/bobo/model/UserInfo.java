@@ -189,7 +189,21 @@ public class UserInfo implements NetDataListener {
         return null;
     }
 
-    public void requestOwnerDetails(final long statementId, final long ownerId) {
+    public ArrayList<StatementItem> getStatementsByOwnerId(long ownerId) {
+        ArrayList<StatementItem> arr = new ArrayList<>();
+        if (statementsEvent != null && statementsEvent.getStatements() != null) {
+            for (StatementItem it : statementsEvent.getStatements()) {
+                if (it.getOwnerId() == ownerId) {
+                    arr.add(it);
+                }
+            }
+        }
+        return arr;
+
+    }
+
+
+    public void requestOwnerDetails(final long ownerId) {
         if (shouldNotRefresh(ownerDetailsEvent) && ownerDetailsEvent.getOwnerId() == ownerId) {
             eventBus.post(ownerDetailsEvent);
         } else {
@@ -200,23 +214,24 @@ public class UserInfo implements NetDataListener {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    apiManager.getOwnerDetails(statementId, ownerId);
+                    apiManager.getOwnerDetails(ownerId);
                 }
             }, 1000);
         }
     }
 
     @Override
-    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId, long statementId) {
+    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId) {
         if (ownerDetailsEvent != null && ownerId == ownerDetailsEvent.getOwnerId()) {
             ownerDetailsEvent = (OwnerDetailsEvent) ownerDetailsEvent.copyData();
 
             if (response.isSuccess()) {
                 ownerDetailsEvent.setState(RootEvent.STATE_SUCCESS);
-                ownerDetailsEvent.setOwnerDetails(response.getResult());
-                if (getStatementItemById(statementId) != null) {
-                    getStatementItemById(statementId).setOwnerDetails(response.getResult());
+
+                for (StatementItem it : getStatementsByOwnerId(ownerId)) {
+                    it.setOwnerDetails(response.getResult());
                 }
+
             } else {
                 ownerDetailsEvent.setState(RootEvent.STATE_ERROR);
             }

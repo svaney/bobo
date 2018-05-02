@@ -1,7 +1,9 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.transition.TransitionManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,12 +11,17 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView;
 import com.bobo.gmargiani.bobo.ui.views.GalleryFooter;
+import com.bobo.gmargiani.bobo.ui.views.ReadMoreText;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
@@ -66,13 +73,56 @@ public class StatementDetailsActivity extends RootDetailedActivity {
     @BindView(R.id.owner_pic)
     ImageView ownerProfPic;
 
+    @BindView(R.id.owner_title)
+    TextView ownerTitle;
+
+    @BindView(R.id.owner_location)
+    TextView ownerLocation;
+
+    @BindView(R.id.statement_details)
+    ReadMoreText statementDetails;
+
+    @BindView(R.id.ic_owner_tel)
+    ImageView icOwnerTel;
+
+    @BindView(R.id.owner_tel)
+    TextView ownerTel;
+
+    @BindView(R.id.ic_owner_location)
+    ImageView icOwnerLocation;
+
+    @BindView(R.id.statement_type)
+    TextView statementType;
+
+    @BindView(R.id.ic_statement_category)
+    ImageView icStatementCategory;
+
+    @BindView(R.id.statement_category)
+    TextView statementCategory;
+
+    @BindView(R.id.ic_statement_location)
+    ImageView icStatementLocation;
+
+    @BindView(R.id.statement_location)
+    TextView statementLocation;
+
+    @BindView(R.id.similar_statements_recycler_view)
+    RecyclerView similarRecycler;
+
     private StatementItem statementItem;
     private OwnerDetailsEvent ownerDetailsEvent;
+
+
+    private LocationsEvent locationsEvent;
+    private CategoriesEvent categoriesEvent;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        categoriesEvent = userInfo.getCategoriesEvent();
+        locationsEvent = userInfo.getLocationsEvent();
 
         long id = getIntent().getLongExtra(AppConsts.PARAM_STATEMENT_ID, -1);
 
@@ -139,6 +189,14 @@ public class StatementDetailsActivity extends RootDetailedActivity {
 
         statementDate.setText(Utils.getFullDate(statementItem.getCreateDate(), this));
 
+        statementDetails.setText(statementItem.getDescription());
+
+        statementLocation.setText(locationsEvent.getValueByKey(statementItem.getLocation()));
+        statementCategory.setText(categoriesEvent.getValueByKey(statementItem.getCategory()));
+        statementType.setText(statementItem.isSelling() ? getString(R.string.common_text_selling) :
+                (statementItem.isRenting() ? getString(R.string.common_text_renting) : ""));
+
+
         ImageLoader.load(icFavorites)
                 .setRes(R.drawable.ic_favorite)
                 .applyTint(R.color.ic_grey_color)
@@ -148,14 +206,37 @@ public class StatementDetailsActivity extends RootDetailedActivity {
                 .setRes(R.drawable.ic_views)
                 .applyTint(R.color.ic_grey_color)
                 .build();
+
+        ImageLoader.load(icStatementCategory)
+                .setRes(R.drawable.ic_blue_category)
+                .applyTint(R.color.colorAccent)
+                .build();
+
+        ImageLoader.load(icStatementLocation)
+                .setRes(R.drawable.ic_blue_location)
+                .applyTint(R.color.colorAccent)
+                .build();
     }
 
     private void setUpDetails() {
         if (statementItem != null && statementItem.getOwnerDetails() != null) {
-
             ImageLoader.load(ownerProfPic)
                     .setUrl(statementItem.getOwnerDetails().getAvatar())
                     .setOval(true)
+                    .build();
+
+            ownerTitle.setText(statementItem.getOwnerDetails().getDisplayName());
+            ownerLocation.setText(locationsEvent.getValueByKey(statementItem.getOwnerDetails().getLocation()));
+            ownerTel.setText(statementItem.getOwnerDetails().getPhone());
+
+            ImageLoader.load(icOwnerTel)
+                    .setRes(R.drawable.ic_phone)
+                    .applyTint(R.color.colorAccent)
+                    .build();
+
+            ImageLoader.load(icOwnerLocation)
+                    .setRes(R.drawable.ic_blue_location)
+                    .applyTint(R.color.colorAccent)
                     .build();
         }
     }
@@ -163,13 +244,16 @@ public class StatementDetailsActivity extends RootDetailedActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        userInfo.requestCategories();
+        userInfo.requestLocations();
         requestDetails();
     }
 
     private void requestDetails() {
         if (statementItem != null && statementItem.getOwnerDetails() == null) {
-            userInfo.requestOwnerDetails(statementItem.getStatementId(), statementItem.getOwnerId());
-        } else if (statementItem != null) {
+            userInfo.requestOwnerDetails(statementItem.getOwnerId());
+        } else {
+            showContent();
             setUpDetails();
         }
     }
@@ -192,6 +276,19 @@ public class StatementDetailsActivity extends RootDetailedActivity {
             }
         }
     }
+
+    @OnClick({R.id.owner_tel_container, R.id.owner_tel, R.id.ic_owner_tel})
+    public void onCallOwnerClick() {
+        AppUtils.callNumber(this, statementItem.getOwnerDetails().getPhone());
+    }
+
+    @Subscribe
+    public void onPermissionGranted(GrantedPermissionsEvent event) {
+        if (event.getRequestCode() == AppConsts.PERMISSION_PHONE) {
+            onCallOwnerClick();
+        }
+    }
+
 
     @OnClick(R.id.full_retry_button)
     public void onRetryClick() {

@@ -73,4 +73,12 @@ public class OwnerDetails {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public String getDisplayName() {
+        if (isCompany) {
+            return getCompanyName();
+        }
+
+        return getOwnerName() + " " + getOwnerSecondName();
+    }
 }

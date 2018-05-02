@@ -75,7 +75,7 @@
                 android:text="@string/nav_title_language"
                 android:textAllCaps="true"
                 android:textColor="@color/color_white"
-                android:textSize="@dimen/text_size_small" />
+                android:textSize="@dimen/text_size_very_small" />
         </LinearLayout>
     </RelativeLayout>
 
