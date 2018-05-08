@@ -7,6 +7,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
@@ -35,6 +36,7 @@ public class UserInfo implements NetDataListener {
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
     private OwnerDetailsEvent ownerDetailsEvent;
+    private SimilarStatementsEvent similarStatementsEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -84,6 +86,39 @@ public class UserInfo implements NetDataListener {
                 tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
             }
             eventBus.post(tokenAuthorizationEvent);
+        }
+    }
+
+    public void requestSimilarStatements(final long statementId) {
+        if (shouldNotRefresh(similarStatementsEvent) && similarStatementsEvent.getStatementId() == statementId) {
+            eventBus.post(similarStatementsEvent);
+        } else {
+            similarStatementsEvent = new SimilarStatementsEvent();
+            similarStatementsEvent.setStatementId(statementId);
+            similarStatementsEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(similarStatementsEvent);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getSimilarStatements(statementId);
+                }
+            }, 1000);
+
+        }
+    }
+
+    @Override
+    public void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response) {
+        if (similarStatementsEvent != null && similarStatementsEvent.getStatementId() == statementId) {
+            similarStatementsEvent = (SimilarStatementsEvent) similarStatementsEvent.copyData();
+            if (response.isSuccess()) {
+                similarStatementsEvent.setState(RootEvent.STATE_SUCCESS);
+                similarStatementsEvent.setSimilarStatements(response.getResult());
+            } else {
+                similarStatementsEvent.setState(RootEvent.STATE_ERROR);
+            }
+            eventBus.post(similarStatementsEvent);
         }
     }
 
@@ -177,6 +212,7 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+
     public StatementItem getStatementItemById(long id) {
         if (statementsEvent != null && statementsEvent.getStatements() != null) {
             for (StatementItem it : statementsEvent.getStatements()) {
@@ -198,6 +234,7 @@ public class UserInfo implements NetDataListener {
                 }
             }
         }
+
         return arr;
 
     }
@@ -227,6 +264,7 @@ public class UserInfo implements NetDataListener {
 
             if (response.isSuccess()) {
                 ownerDetailsEvent.setState(RootEvent.STATE_SUCCESS);
+                ownerDetailsEvent.setDetails(response.getResult());
 
                 for (StatementItem it : getStatementsByOwnerId(ownerId)) {
                     it.setOwnerDetails(response.getResult());
@@ -329,5 +367,6 @@ public class UserInfo implements NetDataListener {
 
         return false;
     }
+
 
 }

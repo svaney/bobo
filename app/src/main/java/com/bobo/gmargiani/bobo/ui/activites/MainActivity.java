@@ -242,7 +242,7 @@ public class MainActivity extends RootActivity
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-        adapter = new StatementRecyclerAdapter(this, isGrid, this,this);
+        adapter = new StatementRecyclerAdapter(this, isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this,this);
         adapter.setIsLoading(true);
         statementsEvent = null;
         adapter.setData(new ArrayList<StatementItem>());

@@ -167,12 +167,22 @@ public class ReadMoreText extends android.support.v7.widget.AppCompatTextView {
         public void onClick(View widget) {
             readMore = !readMore;
             setText();
+
+            if (readMoreListener != null){
+                readMoreListener.onClick(null);
+            }
         }
 
         @Override
         public void updateDrawState(TextPaint ds) {
             ds.setColor(colorClickableText);
         }
+    }
+
+    private OnClickListener readMoreListener;
+
+    public void setReadMoreClickListener(OnClickListener listener){
+        this.readMoreListener = listener;
     }
 
     protected void onGlobalLayoutLineEndIndex() {

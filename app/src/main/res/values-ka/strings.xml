@@ -78,6 +78,7 @@
     <string name="filter_title_list_type">სიის ჩვენების ტიპი</string>
 
     <string name="statement_details_title_details">დეტალური ინფორმაცია</string>
+    <string name="statement_details_similars">მსგავსი განცხადებები</string>
 
 
 </resources>

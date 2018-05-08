@@ -22,4 +22,6 @@ public interface NetDataListener {
     void onCategoriesResponse(ApiResponse<ArrayList<KeyValue>> response);
 
     void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId);
+
+    void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response);
 }

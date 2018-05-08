@@ -85,7 +85,7 @@
     <string name="filter_title_list_type">List Type</string>
 
     <string name="statement_details_title_details">Detailed information</string>
-
+    <string name="statement_details_similars">Similar Statements</string>
 
 
 </resources>

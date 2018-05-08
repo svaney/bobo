@@ -1,8 +1,11 @@
 package com.bobo.gmargiani.bobo.model;
 
+import org.parceler.Parcel;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+@Parcel
 public class StatementItem {
     private long statementId;
     private long ownerId;

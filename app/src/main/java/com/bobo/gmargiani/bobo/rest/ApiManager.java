@@ -65,4 +65,8 @@ public class ApiManager {
     public void getOwnerDetails(long ownerId) {
         dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId);
     }
+
+    public void getSimilarStatements(long statementId) {
+        dataListener.onSimilarStatements(statementId, ModelGenerator.generateStatements(10));
+    }
 }

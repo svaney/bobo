@@ -1,5 +1,8 @@
 package com.bobo.gmargiani.bobo.model;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class OwnerDetails {
     private long ownerId;
     private String ownerName;

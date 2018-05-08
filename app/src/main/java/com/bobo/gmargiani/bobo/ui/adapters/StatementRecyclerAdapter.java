@@ -1,7 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,16 +19,21 @@ import com.bobo.gmargiani.bobo.utils.Utils;
 import java.util.ArrayList;
 
 public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static int HOLDER_TYPE_LOADER = 10;
-    public static int HOLDER_TYPE_ITEM = 20;
-    public static int HOLDER_TYPE_ERROR = 30;
+    public static final int HOLDER_TYPE_LOADER = 10;
+    public static final int HOLDER_TYPE_ITEM = 20;
+    public static final int HOLDER_TYPE_ERROR = 30;
+
+    public static final int ADAPTER_TYPE_LIST = 10;
+    public static final int ADAPTER_TYPE_GRID = 20;
+    public static final int ADAPTER_TYPE_SIMILAR = 30;
+
 
     private Context context;
     private LazyLoaderListener lazyLoaderListener;
     private ArrayList<StatementItem> items;
     private RecyclerItemClickListener clickListener;
 
-    private boolean isGrid;
+    private int adapterType;
     private boolean isLoading;
     private boolean isError;
 
@@ -60,12 +64,12 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     };
 
     public boolean isGrid() {
-        return isGrid;
+        return adapterType == ADAPTER_TYPE_GRID;
     }
 
-    public StatementRecyclerAdapter(Context context, boolean isGrid, RecyclerItemClickListener clickListener, LazyLoaderListener listener) {
+    public StatementRecyclerAdapter(Context context, int adapterType, RecyclerItemClickListener clickListener, LazyLoaderListener listener) {
         this.context = context;
-        this.isGrid = isGrid;
+        this.adapterType = adapterType;
         this.lazyLoaderListener = listener;
         this.clickListener = clickListener;
     }
@@ -128,7 +132,19 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HOLDER_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(isGrid ? R.layout.recycler_item_statement_grid : R.layout.recycler_item_statement, parent, false);
+            int resId = R.layout.recycler_item_statement;
+            switch (adapterType) {
+                case ADAPTER_TYPE_GRID:
+                    resId = R.layout.recycler_item_statement_grid;
+                    break;
+                case ADAPTER_TYPE_LIST:
+                    resId = R.layout.recycler_item_statement;
+                    break;
+                case ADAPTER_TYPE_SIMILAR:
+                    resId = R.layout.recycler_item_similar_statement;
+                    break;
+            }
+            View view = LayoutInflater.from(context).inflate(resId, parent, false);
             return new StatementHolder(view);
         }
 
@@ -154,7 +170,8 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     .setErroPlaceHolder(R.drawable.statement_image_place_holder)
                     .build();
 
-            holder.favoritesIc.setVisibility(View.VISIBLE);
+            if (holder.favoritesIc != null)
+                holder.favoritesIc.setVisibility(View.VISIBLE);
 
         }
     }
@@ -201,7 +218,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             if (favoritesIc != null) {
                 ImageLoader.load(favoritesIc)
                         .setRes(R.drawable.ic_favorite)
-                        .applyTint(isGrid ? R.color.color_white : R.color.ic_grey_color)
+                        .applyTint(adapterType == ADAPTER_TYPE_GRID ? R.color.color_white : R.color.ic_grey_color)
                         .build();
             }
 
@@ -217,7 +234,7 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void onClick(View v) {
-            if (clickListener != null){
+            if (clickListener != null) {
                 clickListener.onRecyclerItemClick(getAdapterPosition());
             }
         }
