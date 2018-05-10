@@ -44,6 +44,9 @@
     <string name="common_text_select">Select</string>
     <string name="common_text_selling">Selling</string>
     <string name="common_text_renting">Renting</string>
+    <string name="common_text_subscribe">Subscribe</string>
+    <string name="common_text_active">Active</string>
+    <string name="common_text_archive">Archive</string>
 
     <string name="button_text_retry">RETRY</string>
     <string name="button_text_cancel">CANCEL</string>

@@ -20,9 +20,6 @@ public class OwnerDetailsEvent extends RootEvent {
         return ownerDetails;
     }
 
-    public void setOwnerDetails(OwnerDetails ownerDetails) {
-        this.ownerDetails = ownerDetails;
-    }
 
     @Override
     public Object copyData() {
@@ -34,5 +31,10 @@ public class OwnerDetailsEvent extends RootEvent {
 
     public void setDetails(OwnerDetails result) {
         this.ownerDetails = result;
+    }
+
+    @Override
+    public void setState(int state) {
+        super.setState(state);
     }
 }

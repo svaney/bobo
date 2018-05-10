@@ -69,4 +69,8 @@ public class ApiManager {
     public void getSimilarStatements(long statementId) {
         dataListener.onSimilarStatements(statementId, ModelGenerator.generateStatements(10));
     }
+
+    public void getStatementsByOwner(long ownerId) {
+        dataListener.onOwnerStatements(ownerId, ModelGenerator.generateStatements(10));
+    }
 }

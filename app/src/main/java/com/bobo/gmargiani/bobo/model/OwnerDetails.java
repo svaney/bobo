@@ -1,6 +1,9 @@
 package com.bobo.gmargiani.bobo.model;
 
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
+
 import org.parceler.Parcel;
+
 
 @Parcel
 public class OwnerDetails {

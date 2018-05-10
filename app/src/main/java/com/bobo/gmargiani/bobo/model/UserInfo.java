@@ -7,6 +7,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
@@ -35,8 +36,9 @@ public class UserInfo implements NetDataListener {
     private StatementsEvent statementsEvent;
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
-    private OwnerDetailsEvent ownerDetailsEvent;
     private SimilarStatementsEvent similarStatementsEvent;
+    private OwnerStatementsEvent ownerStatementsEvent;
+    private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -225,28 +227,26 @@ public class UserInfo implements NetDataListener {
         return null;
     }
 
-    public ArrayList<StatementItem> getStatementsByOwnerId(long ownerId) {
-        ArrayList<StatementItem> arr = new ArrayList<>();
-        if (statementsEvent != null && statementsEvent.getStatements() != null) {
-            for (StatementItem it : statementsEvent.getStatements()) {
-                if (it.getOwnerId() == ownerId) {
-                    arr.add(it);
-                }
-            }
+    public void requestOwnerDetails(final long ownerId) {
+        if (ownerDetailsList == null) {
+            ownerDetailsList = new ArrayList<>();
         }
 
-        return arr;
-
-    }
-
-
-    public void requestOwnerDetails(final long ownerId) {
-        if (shouldNotRefresh(ownerDetailsEvent) && ownerDetailsEvent.getOwnerId() == ownerId) {
-            eventBus.post(ownerDetailsEvent);
+        if (shouldNotRefresh(getOwnerDetailsEvent(ownerId))) {
+            eventBus.post(getOwnerDetailsEvent(ownerId));
         } else {
-            ownerDetailsEvent = new OwnerDetailsEvent();
+            OwnerDetailsEvent ownerDetailsEvent = getOwnerDetailsEvent(ownerId);
+
+            if (ownerDetailsEvent == null) {
+                ownerDetailsEvent = new OwnerDetailsEvent();
+                ownerDetailsList.add(ownerDetailsEvent);
+            } else {
+                ownerDetailsEvent.copyData();
+            }
+
             ownerDetailsEvent.setOwnerId(ownerId);
             ownerDetailsEvent.setState(RootEvent.STATE_LOADING);
+
             eventBus.post(ownerDetailsEvent);
             handler.postDelayed(new Runnable() {
                 @Override
@@ -259,23 +259,90 @@ public class UserInfo implements NetDataListener {
 
     @Override
     public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId) {
-        if (ownerDetailsEvent != null && ownerId == ownerDetailsEvent.getOwnerId()) {
-            ownerDetailsEvent = (OwnerDetailsEvent) ownerDetailsEvent.copyData();
+        if (ownerDetailsList == null) {
+            ownerDetailsList = new ArrayList<>();
+        }
 
-            if (response.isSuccess()) {
-                ownerDetailsEvent.setState(RootEvent.STATE_SUCCESS);
-                ownerDetailsEvent.setDetails(response.getResult());
+        OwnerDetailsEvent event = getOwnerDetailsEvent(ownerId);
 
-                for (StatementItem it : getStatementsByOwnerId(ownerId)) {
-                    it.setOwnerDetails(response.getResult());
+        if (event != null) {
+            ownerDetailsList.remove(event);
+            event = (OwnerDetailsEvent) event.copyData();
+        } else {
+            event = new OwnerDetailsEvent();
+            event.setOwnerId(ownerId);
+        }
+
+        ownerDetailsList.add(event);
+
+        if (response.isSuccess()) {
+            event.setState(RootEvent.STATE_SUCCESS);
+            event.setDetails(response.getResult());
+
+        } else {
+            event.setState(RootEvent.STATE_ERROR);
+        }
+
+        eventBus.post(event);
+    }
+
+    public OwnerDetailsEvent getOwnerDetailsEvent(long ownerId) {
+        if (ownerDetailsList != null) {
+            for (OwnerDetailsEvent event : ownerDetailsList) {
+                if (event.getOwnerId() == ownerId) {
+                    return event;
                 }
-
-            } else {
-                ownerDetailsEvent.setState(RootEvent.STATE_ERROR);
             }
-            eventBus.post(ownerDetailsEvent);
+        }
+
+        return null;
+    }
+
+    public void requestOwnerStatements(final long ownerId) {
+
+        if (shouldNotRefresh(ownerStatementsEvent) && ownerStatementsEvent.getOwnerId() == ownerId) {
+            eventBus.post(ownerStatementsEvent);
+        } else {
+            ownerStatementsEvent = new OwnerStatementsEvent();
+            ownerStatementsEvent.setOwnerId(ownerId);
+            ownerStatementsEvent.setState(RootEvent.STATE_LOADING);
+
+            eventBus.post(ownerStatementsEvent);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.getStatementsByOwner(ownerId);
+                }
+            }, 500);
 
         }
+
+    }
+
+    @Override
+    public void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response) {
+        if (ownerStatementsEvent != null && ownerStatementsEvent.getOwnerId() == ownerId) {
+            ownerStatementsEvent = new OwnerStatementsEvent();
+            ownerStatementsEvent.setOwnerId(ownerId);
+            if (response.isSuccess()) {
+                ownerStatementsEvent.setState(RootEvent.STATE_SUCCESS);
+                ownerStatementsEvent.setOwnerStatements(response.getResult());
+            } else {
+                ownerStatementsEvent.setState(RootEvent.STATE_ERROR);
+            }
+
+            eventBus.post(ownerStatementsEvent);
+        }
+    }
+
+
+    public ArrayList<StatementItem> getOwnerStatements(long ownerId) {
+        if (ownerStatementsEvent != null && ownerStatementsEvent.getState() == RootEvent.STATE_SUCCESS && ownerStatementsEvent.getOwnerId() == ownerId){
+            return ownerStatementsEvent.getOwnerStatements();
+        }
+
+        return null;
     }
 
     public void requestLocations() {

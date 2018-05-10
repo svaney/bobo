@@ -37,6 +37,9 @@
     <string name="common_text_select">არჩევა</string>
     <string name="common_text_selling">იყიდება</string>
     <string name="common_text_renting">ქირავდება</string>
+    <string name="common_text_subscribe">გამოწერა</string>
+    <string name="common_text_active">აქტიური</string>
+    <string name="common_text_archive">არქივი</string>
 
     <string name="button_text_retry">თავიდან</string>
     <string name="button_text_cancel">გაუქმება</string>
@@ -79,6 +82,7 @@
 
     <string name="statement_details_title_details">დეტალური ინფორმაცია</string>
     <string name="statement_details_similars">მსგავსი განცხადებები</string>
+
 
 
 </resources>

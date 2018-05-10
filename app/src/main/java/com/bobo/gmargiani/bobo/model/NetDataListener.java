@@ -24,4 +24,6 @@ public interface NetDataListener {
     void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId);
 
     void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response);
+
+    void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response);
 }

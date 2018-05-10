@@ -249,15 +249,15 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
     }
 
     private void setUpOwnerDetails() {
-        if (statementItem != null && statementItem.getOwnerDetails() != null) {
+        if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null) {
             ImageLoader.load(ownerProfPic)
-                    .setUrl(statementItem.getOwnerDetails().getAvatar())
+                    .setUrl(ownerDetailsEvent.getOwnerDetails().getAvatar())
                     .setOval(true)
                     .build();
 
-            ownerTitle.setText(statementItem.getOwnerDetails().getDisplayName());
-            ownerLocation.setText(locationsEvent.getValueByKey(statementItem.getOwnerDetails().getLocation()));
-            ownerTel.setText(statementItem.getOwnerDetails().getPhone());
+            ownerTitle.setText(ownerDetailsEvent.getOwnerDetails().getDisplayName());
+            ownerLocation.setText(locationsEvent.getValueByKey(ownerDetailsEvent.getOwnerDetails().getLocation()));
+            ownerTel.setText(ownerDetailsEvent.getOwnerDetails().getPhone());
 
             ImageLoader.load(icOwnerTel)
                     .setRes(R.drawable.ic_phone)
@@ -302,12 +302,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     private void requestDetails() {
         if (statementItem != null) {
-            if (statementItem.getOwnerDetails() == null) {
-                userInfo.requestOwnerDetails(statementItem.getOwnerId());
-            } else {
-                setUpOwnerDetails();
-                showOwnerContent();
-            }
+            userInfo.requestOwnerDetails(statementItem.getOwnerId());
             userInfo.requestSimilarStatements(statementItem.getStatementId());
         }
     }
@@ -324,7 +319,6 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
                     showOwnerError();
                     break;
                 case RootEvent.STATE_SUCCESS:
-                    statementItem.setOwnerDetails(event.getOwnerDetails());
                     showOwnerContent();
                     setUpOwnerDetails();
                     break;
@@ -354,8 +348,17 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     @OnClick(R.id.call_button)
     public void onCallOwnerClick() {
-        if (statementItem != null)
-            AppUtils.callNumber(this, statementItem.getOwnerDetails().getPhone());
+        if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null)
+            AppUtils.callNumber(this, ownerDetailsEvent.getOwnerDetails().getPhone());
+    }
+
+    @OnClick({R.id.owner_content, R.id.owner_tel})
+    public void onOwnerClick(){
+        if (ownerDetailsEvent != null) {
+            Intent intent = new Intent(this, OwnerProfileActivity.class);
+            intent.putExtra(AppConsts.PARAM_OWNER_ID, ownerDetailsEvent.getOwnerId());
+            startActivity(intent);
+        }
     }
 
 

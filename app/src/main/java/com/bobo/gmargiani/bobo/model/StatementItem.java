@@ -17,7 +17,6 @@ public class StatementItem {
     private boolean isFavorite;
     private int totalViews;
     private int totalFavorites;
-    private OwnerDetails ownerDetails;
     private String location;
     private boolean isSelling;
     private boolean isRenting;
@@ -108,14 +107,6 @@ public class StatementItem {
 
     public void setTotalFavorites(int totalFavorites) {
         this.totalFavorites = totalFavorites;
-    }
-
-    public void setOwnerDetails(OwnerDetails ownerDetails) {
-        this.ownerDetails = ownerDetails;
-    }
-
-    public OwnerDetails getOwnerDetails() {
-        return ownerDetails;
     }
 
     public String getLocation() {
