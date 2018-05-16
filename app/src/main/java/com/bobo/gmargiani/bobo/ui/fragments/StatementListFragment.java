@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,10 +16,13 @@ import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -71,6 +75,12 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
 
     @Override
     public void onRecyclerItemClick(int pos) {
+        if (statements != null && statements.size() > pos){
+            StatementItem item = statements.get(pos);
 
+            Intent intent = new Intent(getContext(), StatementDetailsActivity.class);
+            intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
+            startActivity(intent);
+        }
     }
 }

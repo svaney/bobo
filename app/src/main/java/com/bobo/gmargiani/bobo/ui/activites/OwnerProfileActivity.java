@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,6 +53,9 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
     @BindView(R.id.pager)
     ViewPager viewPager;
+
+    @BindView(R.id.app_bar)
+    View appBar;
 
 
     private LocationsEvent locationsEvent;
@@ -176,11 +180,26 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
     }
 
     @Override
+    protected void showFullLoading() {
+        super.showFullLoading();
+        appBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showFullError() {
+        super.showFullError();
+        appBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void showContent() {
+        super.showContent();
+        appBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     protected String getHeaderText() {
-        if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null) {
-            return ownerDetailsEvent.getOwnerDetails().getDisplayName();
-        }
-        return super.getHeaderText();
+        return "";
     }
 
     @Override
