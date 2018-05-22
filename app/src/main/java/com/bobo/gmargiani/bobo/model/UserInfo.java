@@ -8,6 +8,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
@@ -42,6 +43,7 @@ public class UserInfo implements NetDataListener {
     private OwnerStatementsEvent ownerStatementsEvent;
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
+    private OwnerSearchEvent ownerSearchEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -161,6 +163,50 @@ public class UserInfo implements NetDataListener {
                 appVersionEvent.setState(RootEvent.STATE_ERROR);
             }
             eventBus.post(appVersionEvent);
+        }
+    }
+
+    public void searchOwners(final String query, final int from){
+        if (TextUtils.isEmpty(query)) {
+            return;
+        }
+
+        if (shouldNotRefresh(ownerSearchEvent) && ownerSearchEvent.getFrom() >= from && query.equals(ownerSearchEvent.getSearchQuery())) {
+            eventBus.post(ownerSearchEvent);
+        } else {
+            ownerSearchEvent = ownerSearchEvent == null || !query.equals(ownerSearchEvent.getSearchQuery())
+                    ? new OwnerSearchEvent(query) : (OwnerSearchEvent) ownerSearchEvent.copyData();
+
+            ownerSearchEvent.setState(RootEvent.STATE_LOADING);
+            ownerSearchEvent.setFrom(from);
+
+            eventBus.post(ownerSearchEvent);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.searchOwners(from, LAZY_LOADER_COUNT, query);
+                }
+            }, 2000);
+        }
+    }
+
+    @Override
+    public void onSearchOwners(ApiResponse<ArrayList<OwnerDetails>> response, int from, String query, int count) {
+        if (ownerSearchEvent != null && ownerSearchEvent.getFrom() == from && query.equals(ownerSearchEvent.getSearchQuery())) {
+
+            ownerSearchEvent = (OwnerSearchEvent) ownerSearchEvent.copyData();
+            if (response.isSuccess()) {
+                ownerSearchEvent.setState(RootEvent.STATE_SUCCESS);
+                ownerSearchEvent.addOwners(response.getResult());
+                if (response.getResult() != null && response.getResult().size() < count) {
+                    ownerSearchEvent.setCanLoadMore(false);
+                }
+            } else {
+                ownerSearchEvent.setState(RootEvent.STATE_ERROR);
+            }
+
+            eventBus.post(ownerSearchEvent);
         }
     }
 

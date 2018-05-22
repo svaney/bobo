@@ -77,4 +77,9 @@ public class ApiManager {
     public void searchStatements(int from, int count, String query) {
         dataListener.onSearchStatements(ModelGenerator.generateStatements(count), from, query, count);
     }
+
+    public void searchOwners(int from, int count, String query) {
+        dataListener.onSearchOwners(ModelGenerator.getOwnerDetails(count), from, query, count);
+    }
+
 }

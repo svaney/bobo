@@ -27,5 +27,7 @@ public interface NetDataListener {
 
     void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response);
 
-    void onSearchStatements(ApiResponse<ArrayList<StatementItem>> arrayListApiResponse, int from, String query, int count);
+    void onSearchStatements(ApiResponse<ArrayList<StatementItem>> response, int from, String query, int count);
+
+    void onSearchOwners(ApiResponse<ArrayList<OwnerDetails>> response, int from, String query, int count);
 }

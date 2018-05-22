@@ -122,4 +122,19 @@ public class ModelGenerator {
         response.setResult(details);
         return response;
     }
+
+    public static ApiResponse<ArrayList<OwnerDetails>> getOwnerDetails(int count) {
+        ApiResponse<ArrayList<OwnerDetails>> response = new ApiResponse<>();
+        response.setCode("0");
+
+        ArrayList<OwnerDetails> details = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            details.add(getOwnerDetails((long) i / 2).getResult());
+        }
+        response.setResult(details);
+        return response;
+    }
+
+
 }

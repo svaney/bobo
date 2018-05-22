@@ -13,11 +13,11 @@ public class StatementSearchEvent extends RootEvent {
 
     private ArrayList<StatementItem> statements = new ArrayList<>();
 
-    public StatementSearchEvent(){
+    public StatementSearchEvent() {
 
     }
 
-    public StatementSearchEvent(String searchQuery){
+    public StatementSearchEvent(String searchQuery) {
         setSearchQuery(searchQuery);
     }
 
