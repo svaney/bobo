@@ -73,4 +73,8 @@ public class ApiManager {
     public void getStatementsByOwner(long ownerId) {
         dataListener.onOwnerStatements(ownerId, ModelGenerator.generateStatements(10));
     }
+
+    public void searchStatements(int from, int count, String query) {
+        dataListener.onSearchStatements(ModelGenerator.generateStatements(count), from, query, count);
+    }
 }

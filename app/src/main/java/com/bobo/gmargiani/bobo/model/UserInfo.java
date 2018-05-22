@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.model;
 
 import android.os.Handler;
+import android.text.TextUtils;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
@@ -9,6 +10,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
@@ -39,6 +41,7 @@ public class UserInfo implements NetDataListener {
     private SimilarStatementsEvent similarStatementsEvent;
     private OwnerStatementsEvent ownerStatementsEvent;
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
+    private StatementSearchEvent statementSearchEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -161,6 +164,49 @@ public class UserInfo implements NetDataListener {
         }
     }
 
+    public void searchStatements(final String query, final int from) {
+        if (TextUtils.isEmpty(query)) {
+            return;
+        }
+
+        if (shouldNotRefresh(statementSearchEvent) && statementSearchEvent.getFrom() >= from && query.equals(statementSearchEvent.getSearchQuery())) {
+            eventBus.post(statementSearchEvent);
+        } else {
+            statementSearchEvent = statementSearchEvent == null || !query.equals(statementSearchEvent.getSearchQuery())
+                    ? new StatementSearchEvent(query) : (StatementSearchEvent) statementSearchEvent.copyData();
+
+            statementSearchEvent.setState(RootEvent.STATE_LOADING);
+            statementSearchEvent.setFrom(from);
+
+            eventBus.post(statementSearchEvent);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    apiManager.searchStatements(from, LAZY_LOADER_COUNT, query);
+                }
+            }, 2000);
+        }
+    }
+
+    @Override
+    public void onSearchStatements(ApiResponse<ArrayList<StatementItem>> response, int from, String query, int count) {
+        if (statementSearchEvent != null && statementSearchEvent.getFrom() == from && query.equals(statementSearchEvent.getSearchQuery())) {
+
+            statementSearchEvent = (StatementSearchEvent) statementSearchEvent.copyData();
+            if (response.isSuccess()) {
+                statementSearchEvent.setState(RootEvent.STATE_SUCCESS);
+                statementSearchEvent.addStatements(response.getResult());
+                if (response.getResult() != null && response.getResult().size() < count) {
+                    statementSearchEvent.setCanLoadMore(false);
+                }
+            } else {
+                statementSearchEvent.setState(RootEvent.STATE_ERROR);
+            }
+
+            eventBus.post(statementSearchEvent);
+        }
+    }
 
     public void requestStatements(final int from, boolean update,
                                   final boolean sell, final boolean rent, final String category, final String location,
@@ -213,7 +259,6 @@ public class UserInfo implements NetDataListener {
             eventBus.post(statementsEvent);
         }
     }
-
 
     public StatementItem getStatementItemById(long id) {
         if (statementsEvent != null && statementsEvent.getStatements() != null) {
@@ -338,7 +383,7 @@ public class UserInfo implements NetDataListener {
 
 
     public ArrayList<StatementItem> getOwnerStatements(long ownerId) {
-        if (ownerStatementsEvent != null && ownerStatementsEvent.getState() == RootEvent.STATE_SUCCESS && ownerStatementsEvent.getOwnerId() == ownerId){
+        if (ownerStatementsEvent != null && ownerStatementsEvent.getState() == RootEvent.STATE_SUCCESS && ownerStatementsEvent.getOwnerId() == ownerId) {
             return ownerStatementsEvent.getOwnerStatements();
         }
 

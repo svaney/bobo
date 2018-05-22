@@ -90,5 +90,7 @@
     <string name="statement_details_title_details">Detailed information</string>
     <string name="statement_details_similars">Similar Statements</string>
 
+    <string name="search_tab_name_statements">Statements</string>
+    <string name="search_tab_name_owners">Users</string>
 
 </resources>

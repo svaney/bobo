@@ -18,7 +18,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <com.bobo.gmargiani.bobo.ui.views.ToolbarWidget
+            <com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget
                 android:id="@+id/toolbar_widget"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

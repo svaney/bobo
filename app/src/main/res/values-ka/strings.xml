@@ -83,6 +83,9 @@
     <string name="statement_details_title_details">დეტალური ინფორმაცია</string>
     <string name="statement_details_similars">მსგავსი განცხადებები</string>
 
+    <string name="search_tab_name_statements">განცხადებები</string>
+    <string name="search_tab_name_owners">მომხარებელები</string>
+
 
 
 </resources>

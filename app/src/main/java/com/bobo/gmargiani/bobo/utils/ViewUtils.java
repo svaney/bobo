@@ -46,7 +46,7 @@ public class ViewUtils {
         v.startAnimation(animation);
     }
 
-    public static boolean validateEditText(TextInputEditText et, Context context){
+    public static boolean validateEditText(TextInputEditText et, Context context) {
         if (TextUtils.isEmpty(et.getText())) {
             et.setBackground(ViewUtils.getErrorRectangleBackground(context));
             ViewUtils.shakeView(et);
@@ -82,7 +82,7 @@ public class ViewUtils {
         };
 
         // 1dp/ms
-        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density)) * 4);
         v.startAnimation(a);
         return a;
     }
@@ -110,14 +110,14 @@ public class ViewUtils {
         };
 
         // 1dp/ms
-        a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)) * 4);
         v.startAnimation(a);
         return a;
     }
 
-    public static View findViewInChildren(View parent, int resId){
-        for (View v : getAllChildren(parent)){
-            if (v.getId() == resId){
+    public static View findViewInChildren(View parent, int resId) {
+        for (View v : getAllChildren(parent)) {
+            if (v.getId() == resId) {
                 return v;
             }
         }

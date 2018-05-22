@@ -67,14 +67,14 @@
             android:textSize="@dimen/text_size_medium" />
 
         <ImageView
-            android:id="@+id/toolbar_search"
+            android:id="@+id/toolbar_action_icon"
             android:layout_width="@dimen/toolbar_ic_size"
             android:layout_height="@dimen/toolbar_ic_size"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="@dimen/item_default_small_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:src="@drawable/ic_search" />
+            android:clickable="true" />
+
 
 
     </FrameLayout>

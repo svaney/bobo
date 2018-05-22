@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
-import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
@@ -35,7 +33,7 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_statement_list, container, false);
+        return inflater.inflate(R.layout.fragment_list, container, false);
     }
 
     @Override

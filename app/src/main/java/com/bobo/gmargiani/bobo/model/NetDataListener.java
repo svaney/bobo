@@ -26,4 +26,6 @@ public interface NetDataListener {
     void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response);
 
     void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response);
+
+    void onSearchStatements(ApiResponse<ArrayList<StatementItem>> arrayListApiResponse, int from, String query, int count);
 }

@@ -58,6 +58,9 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 int numItems = recyclerView.getAdapter().getItemCount();
                 if (isLoading && pos >= numItems - 1) {
                     lazyLoaderListener.onLastItemIsVisible();
+                } else if (!loaderChecked) {
+                    loaderChecked = true;
+                    notifyItems();
                 }
             }
         }
@@ -74,7 +77,10 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.clickListener = clickListener;
     }
 
+    private boolean loaderChecked;
+
     public void checkLoader(RecyclerView recyclerView) {
+        loaderChecked = false;
         onScrollListener.onScrolled(recyclerView, 0, 0);
     }
 
@@ -238,11 +244,5 @@ public class StatementRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 clickListener.onRecyclerItemClick(getAdapterPosition());
             }
         }
-    }
-
-    public interface LazyLoaderListener {
-        void onLastItemIsVisible();
-
-        void onLazyLoaderErrorClick();
     }
 }

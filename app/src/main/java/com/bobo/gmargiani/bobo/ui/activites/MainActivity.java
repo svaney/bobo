@@ -23,9 +23,10 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
-import com.bobo.gmargiani.bobo.ui.views.ToolbarWidget;
+import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
@@ -46,7 +47,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        ToolbarWidget.ToolbarWidgetListener, StatementRecyclerAdapter.LazyLoaderListener, RecyclerItemClickListener {
+        ToolbarSearchWidget.ToolbarWidgetListener, LazyLoaderListener, RecyclerItemClickListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -55,7 +56,7 @@ public class MainActivity extends RootActivity
     protected DrawerLayout drawer;
 
     @BindView(R.id.toolbar_widget)
-    protected ToolbarWidget toolbarWidget;
+    protected ToolbarSearchWidget toolbarWidget;
 
     @BindView(R.id.search_background)
     protected View searchBackground;
@@ -222,6 +223,8 @@ public class MainActivity extends RootActivity
             adapter.checkLoader(recyclerView);
         } catch (Exception ignored) {
         }
+
+        toolbarWidget.collapseSearch();
     }
 
     private void setUpRecyclerView() {
@@ -337,7 +340,11 @@ public class MainActivity extends RootActivity
 
     @Override
     public void onSearchString(String query) {
-
+        if (!TextUtils.isEmpty(query)){
+            Intent intent = new Intent(this, SearchActivity.class);
+            intent.putExtra(AppConsts.PARAM_SEARCH_QUERY, query);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -464,6 +471,11 @@ public class MainActivity extends RootActivity
             searchBackground.setAlpha(0);
             searchBackground.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onSearchStringChange(String query) {
+
     }
 
     @OnClick(R.id.full_retry_button)
