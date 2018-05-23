@@ -16,6 +16,8 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
+import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.OwnerAdapter;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
@@ -184,6 +186,18 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
 
     @Override
     public void onRecyclerItemClick(int pos) {
+        switch (listType) {
+            case LIST_TYPE_OWNER:
+                if (ownerSearchEvent != null && ownerSearchEvent.getOwners() != null && pos >=0 && pos < ownerSearchEvent.getOwners().size()){
+                    OwnerProfileActivity.start(getContext(), ownerSearchEvent.getOwners().get(pos).getOwnerId());
+                }
+                break;
+            default:
+                if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && pos >=0 && pos < statementSearchEvent.getStatements().size()){
+                    StatementDetailsActivity.start(getContext(), statementSearchEvent.getStatements().get(pos));
+                }
+                break;
+        }
 
     }
 }

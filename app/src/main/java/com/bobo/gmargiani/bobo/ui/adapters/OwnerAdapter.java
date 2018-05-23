@@ -66,6 +66,7 @@ public class OwnerAdapter extends InfinityAdapter {
             subscribeImage = itemView.findViewById(R.id.ic_subscribe);
             ownerName = itemView.findViewById(R.id.owner_name);
             ownerMail = itemView.findViewById(R.id.owner_mail);
+            itemView.setOnClickListener(this);
         }
 
         @Override
