@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/owner_item_height"
+    android:layout_margin="@dimen/item_default_small_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/owner_image"
+            android:layout_width="64dp"
+            android:layout_marginLeft="@dimen/item_default_margin"
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:padding="@dimen/item_default_margin"
+            android:id="@+id/subscribe_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/common_text_subscribe"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_small" />
+
+            <ImageView
+                android:id="@+id/ic_subscribe"
+                android:layout_width="@dimen/toolbar_ic_size"
+                android:layout_height="@dimen/toolbar_ic_size"
+                android:layout_marginLeft="@dimen/item_default_small_margin" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/item_default_small_margin"
+            android:layout_marginRight="@dimen/item_default_small_margin"
+            android:layout_toLeftOf="@id/subscribe_container"
+            android:layout_toRightOf="@id/owner_image"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/owner_mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="@dimen/text_size_small" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

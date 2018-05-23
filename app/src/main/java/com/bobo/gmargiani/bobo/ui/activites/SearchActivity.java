@@ -1,6 +1,5 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,22 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
-import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
-import com.bobo.gmargiani.bobo.ui.fragments.OwnerInfinityListFragment;
-import com.bobo.gmargiani.bobo.ui.fragments.StatementInfinityListFragment;
-import com.bobo.gmargiani.bobo.ui.fragments.StatementListFragment;
+import com.bobo.gmargiani.bobo.ui.fragments.OwnerSearchListFragment;
+import com.bobo.gmargiani.bobo.ui.fragments.StatemenSearchListFragment;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -85,8 +77,11 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
     @Override
     public void onSearchString(String query) {
         if (!TextUtils.isEmpty(query)) {
-            ViewUtils.collapse(searchHelperContainer);
-            searchQuery = query;
+            try {
+                ViewUtils.collapse(searchHelperContainer);
+                searchQuery = query;
+                ((PagerAdapter)viewPager.getAdapter()).refreshSearchQuery();
+            }catch (Exception ignored){}
         }
     }
 
@@ -169,15 +164,15 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
-        OwnerInfinityListFragment ownerFragment;
-        StatementInfinityListFragment statementFragment;
+        OwnerSearchListFragment ownerFragment;
+        StatemenSearchListFragment statementFragment;
 
 
         public PagerAdapter(FragmentManager fm, int NumOfTabs) {
             super(fm);
             this.mNumOfTabs = NumOfTabs;
-            ownerFragment = new OwnerInfinityListFragment();
-            statementFragment = new StatementInfinityListFragment();
+            ownerFragment = new OwnerSearchListFragment();
+            statementFragment = new StatemenSearchListFragment();
 
             Bundle b = new Bundle();
             b.putString(AppConsts.PARAM_SEARCH_QUERY, searchQuery);
@@ -198,6 +193,17 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
                 default:
                     return null;
             }
+        }
+
+        public void refreshSearchQuery(){
+            if (statementFragment != null){
+                statementFragment.setSearchQuery(searchQuery);
+            }
+
+            if (ownerFragment != null){
+                ownerFragment.setSearchQuery(searchQuery);
+            }
+
         }
 
         @Override

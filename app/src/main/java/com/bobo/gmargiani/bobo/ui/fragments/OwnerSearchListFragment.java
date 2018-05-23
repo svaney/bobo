@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
+import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
+import com.bobo.gmargiani.bobo.ui.adapters.OwnerAdapter;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
@@ -25,11 +28,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class StatementInfinityListFragment extends RootFragment implements LazyLoaderListener, RecyclerItemClickListener {
-    private StatementRecyclerAdapter adapter;
+public class OwnerSearchListFragment extends RootFragment implements LazyLoaderListener, RecyclerItemClickListener {
+    private OwnerAdapter adapter;
     private RecyclerView recyclerView;
 
-    private StatementSearchEvent statementSearchEvent;
+    private OwnerSearchEvent ownerSearchEvent;
     private String searchQuery;
 
     @Override
@@ -42,6 +45,12 @@ public class StatementInfinityListFragment extends RootFragment implements LazyL
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycler_view);
         searchQuery = getArguments().getString(AppConsts.PARAM_SEARCH_QUERY);
+    }
+
+    public void setSearchQuery(String query){
+        searchQuery = query;
+        adapter = null;
+        setUpRecyclerView();
     }
 
     @Override
@@ -59,9 +68,9 @@ public class StatementInfinityListFragment extends RootFragment implements LazyL
     }
 
     @Subscribe
-    public void onStatementItems(final StatementSearchEvent event) {
-        if (statementSearchEvent != event) {
-            statementSearchEvent = event;
+    public void onOwnerDetails(OwnerSearchEvent event) {
+        if (ownerSearchEvent != event) {
+            ownerSearchEvent = event;
 
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
@@ -71,7 +80,7 @@ public class StatementInfinityListFragment extends RootFragment implements LazyL
                     adapter.setError();
                     break;
                 case RootEvent.STATE_SUCCESS:
-                    adapter.setData(event.getStatements());
+                    adapter.setData(event.getOwners());
                     adapter.setIsLoading(event.canLoadMore());
                     break;
             }
@@ -97,26 +106,26 @@ public class StatementInfinityListFragment extends RootFragment implements LazyL
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             }
 
-            adapter = new StatementRecyclerAdapter(getContext(), isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this);
+            adapter = new OwnerAdapter(getContext(), this, this);
             adapter.setIsLoading(true);
-            statementSearchEvent = null;
+            ownerSearchEvent = null;
             adapter.setData(new ArrayList<StatementItem>());
             recyclerView.setAdapter(adapter);
         }
     }
 
     @Override
-    public void onRecyclerItemClick(int pos) {
-
-    }
-
-    @Override
     public void onLastItemIsVisible() {
-        App.getInstance().getUserInfo().searchStatements(searchQuery, adapter.getItemCount() - 1);
+        App.getInstance().getUserInfo().searchOwners(searchQuery, adapter.getItemCount() - 1);
     }
 
     @Override
     public void onLazyLoaderErrorClick() {
         onLastItemIsVisible();
+    }
+
+    @Override
+    public void onRecyclerItemClick(int pos) {
+
     }
 }
