@@ -1,5 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,8 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
-import com.bobo.gmargiani.bobo.ui.fragments.OwnerSearchListFragment;
-import com.bobo.gmargiani.bobo.ui.fragments.StatemenSearchListFragment;
+import com.bobo.gmargiani.bobo.ui.fragments.SearchListFragment;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
@@ -44,6 +45,14 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
 
     private String searchQuery;
     private boolean activityStarted;
+
+    public static void start(Context context, String query) {
+        if (context != null) {
+            Intent intent = new Intent(context, SearchActivity.class);
+            intent.putExtra(AppConsts.PARAM_SEARCH_QUERY, query);
+            context.startActivity(intent);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,8 +89,9 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
             try {
                 ViewUtils.collapse(searchHelperContainer);
                 searchQuery = query;
-                ((PagerAdapter)viewPager.getAdapter()).refreshSearchQuery();
-            }catch (Exception ignored){}
+                ((PagerAdapter) viewPager.getAdapter()).refreshSearchQuery();
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -164,21 +174,26 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
         int mNumOfTabs;
-        OwnerSearchListFragment ownerFragment;
-        StatemenSearchListFragment statementFragment;
+        SearchListFragment ownerFragment;
+        SearchListFragment statementFragment;
 
 
         public PagerAdapter(FragmentManager fm, int NumOfTabs) {
             super(fm);
             this.mNumOfTabs = NumOfTabs;
-            ownerFragment = new OwnerSearchListFragment();
-            statementFragment = new StatemenSearchListFragment();
+            ownerFragment = new SearchListFragment();
+            statementFragment = new SearchListFragment();
 
             Bundle b = new Bundle();
             b.putString(AppConsts.PARAM_SEARCH_QUERY, searchQuery);
+            b.putInt(AppConsts.PARAM_LIST_TYPE, SearchListFragment.LIST_TYPE_STATEMENT);
 
             statementFragment.setArguments(b);
-            ownerFragment.setArguments(b);
+
+            Bundle b2 = new Bundle();
+            b2.putString(AppConsts.PARAM_SEARCH_QUERY, searchQuery);
+            b2.putInt(AppConsts.PARAM_LIST_TYPE, SearchListFragment.LIST_TYPE_OWNER);
+            ownerFragment.setArguments(b2);
 
         }
 
@@ -195,12 +210,12 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
             }
         }
 
-        public void refreshSearchQuery(){
-            if (statementFragment != null){
+        public void refreshSearchQuery() {
+            if (statementFragment != null) {
                 statementFragment.setSearchQuery(searchQuery);
             }
 
-            if (ownerFragment != null){
+            if (ownerFragment != null) {
                 ownerFragment.setSearchQuery(searchQuery);
             }
 

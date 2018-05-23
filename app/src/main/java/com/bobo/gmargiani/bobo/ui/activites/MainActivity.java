@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
@@ -180,7 +181,7 @@ public class MainActivity extends RootActivity
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewStatementActivity.class));
+                NewStatementActivity.start(MainActivity.this);
             }
         });
     }
@@ -245,7 +246,7 @@ public class MainActivity extends RootActivity
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-        adapter = new StatementRecyclerAdapter(this, isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this,this);
+        adapter = new StatementRecyclerAdapter(this, isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this);
         adapter.setIsLoading(true);
         statementsEvent = null;
         adapter.setData(new ArrayList<StatementItem>());
@@ -340,10 +341,8 @@ public class MainActivity extends RootActivity
 
     @Override
     public void onSearchString(String query) {
-        if (!TextUtils.isEmpty(query)){
-            Intent intent = new Intent(this, SearchActivity.class);
-            intent.putExtra(AppConsts.PARAM_SEARCH_QUERY, query);
-            startActivity(intent);
+        if (!TextUtils.isEmpty(query)) {
+            SearchActivity.start(this, query);
         }
     }
 
@@ -368,10 +367,7 @@ public class MainActivity extends RootActivity
     public void onRecyclerItemClick(int pos) {
         if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > pos) {
             StatementItem item = statementsEvent.getStatements().get(pos);
-
-            Intent intent = new Intent(MainActivity.this, StatementDetailsActivity.class);
-            intent.putExtra(AppConsts.PARAM_STATEMENT_ID, item.getStatementId());
-            startActivity(intent);
+            StatementDetailsActivity.start(this, item.getStatementId());
         }
     }
 
@@ -393,15 +389,13 @@ public class MainActivity extends RootActivity
     public void onMenuIconClick(int iconResId) {
         switch (iconResId) {
             case R.id.toolbar_favorite:
-                startActivity(new Intent(this, FavoritesActivity.class));
+                FavoritesActivity.start(this);
                 break;
             case R.id.toolbar_filter:
-                Intent intent = new Intent(this, FilterActivity.class);
-                intent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
-                startActivityForResult(intent, AppConsts.RC_FILTER);
+                FilterActivity.startWithResult(this, filterValues);
                 break;
             case R.id.toolbar_inbox:
-                startActivity(new Intent(this, InboxActivity.class));
+                InboxActivity.start(this);
                 break;
         }
     }
@@ -417,27 +411,25 @@ public class MainActivity extends RootActivity
         drawer.closeDrawer(GravityCompat.START);
 
         if (id == R.id.nav_filter) {
-            Intent intent = new Intent(this, FilterActivity.class);
-            intent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
-            startActivityForResult(intent, AppConsts.RC_FILTER);
+            FilterActivity.startWithResult(this, filterValues);
         } else if (id == R.id.nav_favorites) {
-            startActivity(new Intent(this, FavoritesActivity.class));
+            FavoritesActivity.start(this);
         } else if (id == R.id.nav_subscriptions) {
-            startActivity(new Intent(this, ManageSubscriptionsActivity.class));
+            ManageSubscriptionsActivity.start(this);
         } else if (id == R.id.nav_my_statements) {
-            startActivity(new Intent(this, MyStatementsActivity.class));
+            MyStatementsActivity.start(this);
         } else if (id == R.id.nav_inbox) {
-            startActivity(new Intent(this, InboxActivity.class));
+            InboxActivity.start(this);
         } else if (id == R.id.nav_new_statement) {
-            startActivity(new Intent(this, NewStatementActivity.class));
+            NewStatementActivity.start(this);
         } else if (id == R.id.nav_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            SettingsActivity.start(this);
         } else if (id == R.id.nav_terms_and_conditions) {
-            startActivity(new Intent(this, TermsActivity.class));
+            TermsActivity.start(this);
         } else if (id == R.id.nav_about) {
-            startActivity(new Intent(this, AboutActivity.class));
+            AboutActivity.start(this);
         } else if (id == R.id.nav_help) {
-            startActivity(new Intent(this, HelpActivity.class));
+            HelpActivity.start(this);
         }
 
         return true;

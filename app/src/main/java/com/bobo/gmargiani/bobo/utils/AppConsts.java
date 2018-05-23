@@ -21,6 +21,7 @@ public class AppConsts {
     public final static String PARAM_STATEMENT = "PARAM_STATEMENT";
     public final static String PARAM_OWNER_ID = "PARAM_OWNER_ID";
     public final static String PARAM_SEARCH_QUERY = "PARAM_SEARCH_QUERY";
+    public final static String PARAM_LIST_TYPE = "PARAM_LIST_TYPE";
 
 
 

@@ -62,7 +62,7 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             }
 
-            adapter = new StatementRecyclerAdapter(getContext(), isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this,null);
+            adapter = new StatementRecyclerAdapter(getContext(), isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, null);
             adapter.setIsLoading(false);
 
             adapter.setData(statements);
@@ -73,12 +73,10 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
 
     @Override
     public void onRecyclerItemClick(int pos) {
-        if (statements != null && statements.size() > pos){
+        if (statements != null && statements.size() > pos) {
             StatementItem item = statements.get(pos);
 
-            Intent intent = new Intent(getContext(), StatementDetailsActivity.class);
-            intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
-            startActivity(intent);
+            StatementDetailsActivity.start(getContext(), item);
         }
     }
 }

@@ -1,11 +1,10 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.transition.TransitionManager;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -76,6 +75,16 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
+
+    public static void startWithResult(FragmentActivity context, ArrayList<String> filterValues) {
+        if (context != null) {
+            Intent intent = new Intent(context, FilterActivity.class);
+            if (filterValues != null) {
+                intent.putExtra(AppConsts.PARAM_FILTER_PARAMS, Parcels.wrap(filterValues));
+            }
+            context.startActivityForResult(intent, AppConsts.RC_FILTER);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

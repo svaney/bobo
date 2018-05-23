@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -63,6 +64,14 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
     private OwnerDetailsEvent ownerDetailsEvent;
     private OwnerStatementsEvent ownerStatementsEvent;
     private long ownerId;
+
+    public static void start(Context context, long ownerId) {
+        if (context != null) {
+            Intent intent = new Intent(context, OwnerProfileActivity.class);
+            intent.putExtra(AppConsts.PARAM_OWNER_ID, ownerId);
+            context.startActivity(intent);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

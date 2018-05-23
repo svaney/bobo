@@ -15,7 +15,6 @@ import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
-import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.OwnerAdapter;
@@ -28,11 +27,19 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class OwnerSearchListFragment extends RootFragment implements LazyLoaderListener, RecyclerItemClickListener {
-    private OwnerAdapter adapter;
-    private RecyclerView recyclerView;
+public class SearchListFragment extends RootFragment implements LazyLoaderListener, RecyclerItemClickListener {
+    public static final int LIST_TYPE_STATEMENT = 0;
+    public static final int LIST_TYPE_OWNER = 10;
+
+    private OwnerAdapter ownerAdapter;
+    private StatementRecyclerAdapter statementAdapter;
 
     private OwnerSearchEvent ownerSearchEvent;
+    private StatementSearchEvent statementSearchEvent;
+
+    private RecyclerView recyclerView;
+
+    private int listType;
     private String searchQuery;
 
     @Override
@@ -45,11 +52,13 @@ public class OwnerSearchListFragment extends RootFragment implements LazyLoaderL
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycler_view);
         searchQuery = getArguments().getString(AppConsts.PARAM_SEARCH_QUERY);
+        listType = getArguments().getInt(AppConsts.PARAM_LIST_TYPE, LIST_TYPE_STATEMENT);
     }
 
-    public void setSearchQuery(String query){
+    public void setSearchQuery(String query) {
         searchQuery = query;
-        adapter = null;
+        ownerAdapter = null;
+        statementAdapter = null;
         setUpRecyclerView();
     }
 
@@ -58,7 +67,14 @@ public class OwnerSearchListFragment extends RootFragment implements LazyLoaderL
         super.onStart();
         App.getInstance().getEventBus().register(this);
         setUpRecyclerView();
-        adapter.checkLoader(recyclerView);
+
+        if (ownerAdapter != null) {
+            ownerAdapter.checkLoader(recyclerView);
+        }
+
+        if (statementAdapter != null) {
+            statementAdapter.checkLoader(recyclerView);
+        }
     }
 
     @Override
@@ -69,26 +85,46 @@ public class OwnerSearchListFragment extends RootFragment implements LazyLoaderL
 
     @Subscribe
     public void onOwnerDetails(OwnerSearchEvent event) {
-        if (ownerSearchEvent != event) {
+        if (ownerSearchEvent != event && ownerAdapter != null) {
             ownerSearchEvent = event;
 
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
-                    adapter.setIsLoading(true);
+                    ownerAdapter.setIsLoading(true);
                     break;
                 case RootEvent.STATE_ERROR:
-                    adapter.setError();
+                    ownerAdapter.setError();
                     break;
                 case RootEvent.STATE_SUCCESS:
-                    adapter.setData(event.getOwners());
-                    adapter.setIsLoading(event.canLoadMore());
+                    ownerAdapter.setData(event.getOwners());
+                    ownerAdapter.setIsLoading(event.canLoadMore());
+                    break;
+            }
+        }
+    }
+
+    @Subscribe
+    public void onStatementItems(StatementSearchEvent event) {
+        if (statementSearchEvent != event && statementAdapter != null) {
+            statementSearchEvent = event;
+
+            switch (event.getState()) {
+                case RootEvent.STATE_LOADING:
+                    statementAdapter.setIsLoading(true);
+                    break;
+                case RootEvent.STATE_ERROR:
+                    statementAdapter.setError();
+                    break;
+                case RootEvent.STATE_SUCCESS:
+                    statementAdapter.setData(event.getStatements());
+                    statementAdapter.setIsLoading(event.canLoadMore());
                     break;
             }
         }
     }
 
     private void setUpRecyclerView() {
-        if (adapter == null) {
+        if (statementAdapter == null && ownerAdapter == null) {
             boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
             if (isGrid) {
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
@@ -106,17 +142,39 @@ public class OwnerSearchListFragment extends RootFragment implements LazyLoaderL
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             }
 
-            adapter = new OwnerAdapter(getContext(), this, this);
-            adapter.setIsLoading(true);
             ownerSearchEvent = null;
-            adapter.setData(new ArrayList<StatementItem>());
-            recyclerView.setAdapter(adapter);
+            statementSearchEvent = null;
+
+            switch (listType) {
+                case LIST_TYPE_OWNER:
+                    ownerAdapter = new OwnerAdapter(getContext(), this, this);
+                    ownerAdapter.setIsLoading(true);
+                    ownerAdapter.setData(new ArrayList<>());
+                    recyclerView.setAdapter(ownerAdapter);
+                    break;
+                default:
+                    statementAdapter = new StatementRecyclerAdapter(getContext(),
+                            isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this);
+                    statementAdapter.setIsLoading(true);
+                    statementAdapter.setData(new ArrayList<>());
+                    recyclerView.setAdapter(statementAdapter);
+                    break;
+            }
+
         }
     }
 
     @Override
     public void onLastItemIsVisible() {
-        App.getInstance().getUserInfo().searchOwners(searchQuery, adapter.getItemCount() - 1);
+        switch (listType) {
+            case LIST_TYPE_OWNER:
+                App.getInstance().getUserInfo().searchOwners(searchQuery, ownerAdapter.getItemCount() - 1);
+                break;
+            default:
+                App.getInstance().getUserInfo().searchStatements(searchQuery, statementAdapter.getItemCount() - 1);
+                break;
+        }
+
     }
 
     @Override
@@ -129,3 +187,4 @@ public class OwnerSearchListFragment extends RootFragment implements LazyLoaderL
 
     }
 }
+

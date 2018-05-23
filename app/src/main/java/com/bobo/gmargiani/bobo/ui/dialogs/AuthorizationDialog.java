@@ -38,8 +38,8 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
         if (v == closeButton) {
             dismiss();
         } else if (v == registerButton) {
-            getContext().startActivity(new Intent(getContext(), RegistrationActivity.class));
             dismiss();
+            RegistrationActivity.start(getContext());
         }
     }
 

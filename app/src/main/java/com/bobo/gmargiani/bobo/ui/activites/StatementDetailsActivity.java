@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -139,6 +140,23 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
 
+    public static void start(Context context, long statementId) {
+        if (context != null) {
+            Intent intent = new Intent(context, StatementDetailsActivity.class);
+            intent.putExtra(AppConsts.PARAM_STATEMENT_ID, statementId);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void start(Context context, StatementItem item) {
+        if (context != null) {
+            Intent intent = new Intent(context, StatementDetailsActivity.class);
+            if (item != null) {
+                intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
+            }
+            context.startActivity(intent);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -288,9 +306,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
         if (similarStatementsEvent != null && similarStatementsEvent.getSimilarStatements() != null && similarStatementsEvent.getSimilarStatements().size() > pos) {
             StatementItem item = similarStatementsEvent.getSimilarStatements().get(pos);
 
-            Intent intent = new Intent(StatementDetailsActivity.this, StatementDetailsActivity.class);
-            intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
-            startActivity(intent);
+            StatementDetailsActivity.start(this, item);
         }
     }
 
@@ -353,11 +369,9 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
     }
 
     @OnClick({R.id.owner_content, R.id.owner_tel})
-    public void onOwnerClick(){
+    public void onOwnerClick() {
         if (ownerDetailsEvent != null) {
-            Intent intent = new Intent(this, OwnerProfileActivity.class);
-            intent.putExtra(AppConsts.PARAM_OWNER_ID, ownerDetailsEvent.getOwnerId());
-            startActivity(intent);
+            OwnerProfileActivity.start(this, ownerDetailsEvent.getOwnerId());
         }
     }
 
