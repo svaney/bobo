@@ -178,8 +178,10 @@ public class ImagePicker {
         options.setToolbarColor(ContextCompat.getColor(context, R.color.color_black));
         options.setActiveWidgetColor(ContextCompat.getColor(context, R.color.colorAccent));
         options.setToolbarTitle("სურათი");
-        options.setFreeStyleCropEnabled(true);
+        options.setFreeStyleCropEnabled(false);
         options.useSourceImageAspectRatio();
+        options.setShowCropGrid(false);
+
         options.setHideBottomControls(true);
         return options;
     }
