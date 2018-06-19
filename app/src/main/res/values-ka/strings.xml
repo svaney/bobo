@@ -44,6 +44,7 @@
     <string name="button_text_retry">თავიდან</string>
     <string name="button_text_cancel">გაუქმება</string>
     <string name="button_text_filter">გაფილტვრა</string>
+    <string name="button_text_add_statement">განთავსება</string>
 
     <string name="read_more_text_view_collapse_text">&#160;მეტის ნახვა</string>
     <string name="read_more_text_view_expand_text">&#160;ნაკლები</string>
@@ -86,6 +87,11 @@
     <string name="search_tab_name_statements">განცხადებები</string>
     <string name="search_tab_name_owners">მომხარებელები</string>
 
-
+    <string name="register_hint_pass">პაროლი</string>
+    <string name="register_hint_pass_second">გაიმეორეთ პაროლი</string>
+    <string name="register_hint_name">სახელი</string>
+    <string name="register_hint_last_name">გვარი</string>
+    <string name="register_hint_email">ელ. ფოსტა</string>
+    <string name="register_hint_phone">ტელეფონის ნომერი</string>
 
 </resources>

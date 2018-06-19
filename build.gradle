@@ -23,7 +23,7 @@ allprojects {
     }
 
     ext {
-        supportLibrariesVersion = '27.0.2'
+        supportLibrariesVersion = '27.1.0'
         playServicesVersion = '11.8.0'
     }
 }

@@ -19,6 +19,7 @@
     <color name="color_white">#ffffff</color>
     <color name="color_black">#000000</color>
     <color name="floating_button_background_color">#3aa9fd</color>
+    <color name="new_picture_background">#d2d1d1</color>
 
 
 </resources>

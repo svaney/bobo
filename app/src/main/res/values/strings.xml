@@ -51,6 +51,7 @@
     <string name="button_text_retry">RETRY</string>
     <string name="button_text_cancel">CANCEL</string>
     <string name="button_text_filter">FILTER</string>
+    <string name="button_text_add_statement">CREATE</string>
 
     <string name="read_more_text_view_collapse_text">&#160;Show less</string>
     <string name="read_more_text_view_expand_text">&#160;Show more</string>
@@ -92,5 +93,12 @@
 
     <string name="search_tab_name_statements">Statements</string>
     <string name="search_tab_name_owners">Users</string>
+
+    <string name="register_hint_pass">Password</string>
+    <string name="register_hint_pass_second">Re-enter Password</string>
+    <string name="register_hint_name">Name</string>
+    <string name="register_hint_last_name">Last Name</string>
+    <string name="register_hint_email">Email</string>
+    <string name="register_hint_phone">Phone number</string>
 
 </resources>

@@ -34,4 +34,5 @@
     <dimen name="filter_text_view_radius">26dp</dimen>
     <dimen name="statement_detail_gallery_height">200dp</dimen>
     <dimen name="search_helper_min_width">160dp</dimen>
+    <dimen name="picture_place_holder_radius">6dp</dimen>
 </resources>

@@ -35,6 +35,16 @@ public class ViewUtils {
         return bg;
     }
 
+    public static GradientDrawable getErrorBottomBackground(Context context) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(AppUtils.convertDpToPixels(5, context));
+        bg.setStroke(AppUtils.convertDpToPixels(1, context), ContextCompat.getColor(context, android.R.color.holo_red_light));
+        bg.setColor(ContextCompat.getColor(context, android.R.color.transparent));
+
+        return bg;
+    }
+
 
     public static void closeKeyboard(View focused) {
         InputMethodManager imm = (InputMethodManager) focused.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -48,7 +58,16 @@ public class ViewUtils {
 
     public static boolean validateEditText(TextInputEditText et, Context context) {
         if (TextUtils.isEmpty(et.getText())) {
-            et.setBackground(ViewUtils.getErrorRectangleBackground(context));
+            et.setBackground(ViewUtils.getErrorBottomBackground(context));
+            ViewUtils.shakeView(et);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateEditText(EditText et, Context context) {
+        if (TextUtils.isEmpty(et.getText())) {
+            et.setBackground(ViewUtils.getErrorBottomBackground(context));
             ViewUtils.shakeView(et);
             return false;
         }
