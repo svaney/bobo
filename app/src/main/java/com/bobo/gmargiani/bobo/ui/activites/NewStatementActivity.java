@@ -1,5 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +14,8 @@ import android.widget.LinearLayout;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.model.KeyValue;
@@ -19,8 +23,9 @@ import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
 import com.bobo.gmargiani.bobo.ui.dialogs.ListDialog;
 import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
 import com.bobo.gmargiani.bobo.ui.views.NewImageView;
-import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
+import com.bobo.gmargiani.bobo.utils.AppConsts;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImagePicker;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
@@ -173,7 +178,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @Override
     public void onCloseImageClick(int position) {
-        if (position < userImages.size()){
+        if (position < userImages.size()) {
             userImages.remove(position);
             setImageValues();
             try {
@@ -183,12 +188,43 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
         }
     }
 
+
+    @SuppressLint("NewApi")
     @Override
     public void onImageClick(int position) {
-        if (position < userImages.size()){
+        lastClickedImagePosition = position;
+        if (position < userImages.size()) {
 
         } else {
-            ImagePicker.pickImageFromGallery(NewStatementActivity.this, R.string.app_name);
+            if (!AppUtils.hasPermission(this, Manifest.permission.CAMERA) && !permissionRequested) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, AppConsts.PERMISSION_CAMERA);
+            } else {
+                permissionRequested = false;
+                ImagePicker.pickImageUsingChooser(NewStatementActivity.this, R.string.app_name, R.string.app_name);
+            }
+        }
+    }
+
+    private int lastClickedImagePosition;
+    private boolean permissionRequested;
+
+    @Subscribe
+    public void onGrantedPermissionEvent(GrantedPermissionsEvent event) {
+        if (event.getGrantedPermissions().size() > 0) {
+            if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
+                onImageClick(lastClickedImagePosition);
+            }
+        }
+    }
+
+    @Subscribe
+    public void onDeniedPermissionEvent(DeniedPermissionsEvent event) {
+        if (event.getDeniedPermissions().size() > 0) {
+            if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
+                permissionRequested = true;
+                onImageClick(lastClickedImagePosition);
+                AlertManager.showError(this, "თქვენ უარი თქვით კამერის გამოყენების უფლებაზე. შესაბამისად შესაძლებელი იქნება სურათების მხოლოდ გალერეედან ატვირთვა", AlertManager.VERY_LONG);
+            }
         }
     }
 
@@ -297,4 +333,6 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     protected String getHeaderText() {
         return getString(R.string.activity_name_new_statement);
     }
+
+
 }
