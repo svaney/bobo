@@ -77,7 +77,9 @@ public class NewImageView extends FrameLayout {
             addButton.setVisibility(GONE);
             closeButtonWrapper.setVisibility(VISIBLE);
             userImage.setVisibility(VISIBLE);
-            userImage.setImageBitmap(bitmap);
+            ImageLoader.load(userImage)
+                    .setBitmap(bitmap)
+                    .build();
         }
     }
 

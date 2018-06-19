@@ -181,7 +181,6 @@ public class ImagePicker {
         options.setFreeStyleCropEnabled(true);
         options.useSourceImageAspectRatio();
         options.setHideBottomControls(true);
-
         return options;
     }
 
