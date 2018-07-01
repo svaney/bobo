@@ -119,10 +119,13 @@ public class AppUtils {
         return getAndroidVersion() >= Build.VERSION_CODES.N;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    @SuppressLint("NewApi")
     public static boolean hasPermission(Activity activity, String permission) {
-        int hasLocationPermission = activity.checkSelfPermission(permission);
-        return hasLocationPermission == PackageManager.PERMISSION_GRANTED;
+        if (atLeastMarshmallow()) {
+            return activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
     }
 
     public static int getDimen(int dimensionId, Context context) {

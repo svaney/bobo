@@ -128,7 +128,7 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
     private void setUpRecyclerView() {
         if (statementAdapter == null && ownerAdapter == null) {
             boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
-            if (isGrid) {
+            if (isGrid && listType == LIST_TYPE_STATEMENT) {
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
                 gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
