@@ -353,7 +353,7 @@ public class MainActivity extends RootActivity
                 if (userInfo.isAuthorized()) {
 
                 } else {
-                    showAuthorizationDialog();
+                    showAuthorizationDialog(null);
                 }
                 drawer.closeDrawer(GravityCompat.START);
             } else if (v == languageChangebtn) {

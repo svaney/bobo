@@ -102,5 +102,8 @@
     <string name="register_hint_last_name">Last Name</string>
     <string name="register_hint_email">Email</string>
     <string name="register_hint_phone">Phone number</string>
+    <string name="register_hint_company">Company name</string>
+    <string name="common_text_company">company</string>
+    <string name="register_error_duplicate_user">User with this e-mail, already exists</string>
 
 </resources>

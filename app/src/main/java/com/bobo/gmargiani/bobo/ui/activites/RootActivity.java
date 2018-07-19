@@ -1,5 +1,6 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
+import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
@@ -127,7 +129,11 @@ public abstract class RootActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        App.getInstance().postActivityResultEvent(requestCode, resultCode, data);
+        if (requestCode == AppConsts.RC_REGISTER && resultCode == Activity.RESULT_OK) {
+            showAuthorizationDialog(data.getStringExtra(AppConsts.PARAM_EMAIL));
+        } else {
+            App.getInstance().postActivityResultEvent(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -153,18 +159,26 @@ public abstract class RootActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void showAuthorizationDialog() {
-        showAuthorizationDialog(null);
-    }
-
-    public void showAuthorizationDialog(DialogInterface.OnCancelListener onCancelListener) {
-        AuthorizationDialog dialog = new AuthorizationDialog(this);
-        if (onCancelListener != null) {
-            dialog.setOnCancelListener(onCancelListener);
-        }
+    public void showAuthorizationDialog(String mail) {
+        AuthorizationDialog dialog = new AuthorizationDialog(this, mail);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (RootActivity.this instanceof AuthorizedActivity){
+                    finish();
+                }
+            }
+        });
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                App.getInstance().getEventBus().unregister(dialog);
+            }
+        });
     }
+
 
     public void showDialog(String title, String text, boolean showOkButton, final View.OnClickListener onOkClickListener, boolean showCancelButton,
                            final View.OnClickListener onCancelClickListener, final DialogInterface.OnDismissListener onDismissListener) {

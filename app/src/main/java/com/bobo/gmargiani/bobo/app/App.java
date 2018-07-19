@@ -70,6 +70,14 @@ public class App extends Application {
 
     }
 
+    public static NetApi getNetApi(){
+        if (getInstance() != null){
+            return getInstance().netApi;
+        }
+
+        return null;
+    }
+
     public EventBus getEventBus() {
         return eventBus;
     }

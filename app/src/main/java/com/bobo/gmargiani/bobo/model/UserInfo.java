@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.model;
 
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
@@ -84,18 +85,19 @@ public class UserInfo implements NetDataListener {
     }
 
     @Override
-    public void onAuthorizeByTokenEvent(ApiResponse<Boolean> response, String token) {
-        if (tokenAuthorizationEvent != null && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
-            tokenAuthorizationEvent = (TokenAuthorizationEvent) tokenAuthorizationEvent.copyData();
+    public void onAuthorizeByTokenEvent(ApiResponse<Token> response) {
 
-            if (response.isSuccess()) {
-                tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
-                tokenAuthorizationEvent.setAuthorized(response.getResult());
-            } else {
-                tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
-            }
-            eventBus.post(tokenAuthorizationEvent);
+        tokenAuthorizationEvent = new TokenAuthorizationEvent();
+
+        if (response.isSuccess() && response.getResult() != null && !TextUtils.isEmpty(response.getResult().getToken())) {
+            tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
+            tokenAuthorizationEvent.setAuthorized(true);
+            PreferencesApiManager.getInstance().saveToken(response.getResult().getToken());
+        } else {
+            tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
         }
+        eventBus.post(tokenAuthorizationEvent);
+
     }
 
     public void requestSimilarStatements(final String statementId) {
@@ -114,7 +116,7 @@ public class UserInfo implements NetDataListener {
 
     @Override
     public void onSimilarStatements(String statementId, ApiResponse<ArrayList<StatementItem>> response) {
-        if (similarStatementsEvent != null && Utils.equals(similarStatementsEvent.getStatementId() , statementId)) {
+        if (similarStatementsEvent != null && Utils.equals(similarStatementsEvent.getStatementId(), statementId)) {
             similarStatementsEvent = (SimilarStatementsEvent) similarStatementsEvent.copyData();
             if (response.isSuccess()) {
                 similarStatementsEvent.setState(RootEvent.STATE_SUCCESS);

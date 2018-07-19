@@ -32,7 +32,7 @@ public abstract class AuthorizedActivity extends RootDetailedActivity implements
                     if (event.isAuthorized()) {
                         userIsAuthorized();
                     } else {
-                        showAuthorizationDialog(this);
+                        showAuthorizationDialog(null);
                     }
                     break;
             }

@@ -11,6 +11,7 @@ public class AppConsts {
     public final static int RC_CAMERA = 101;
     public final static int RC_GALLERY = 102;
     public final static int RC_FILTER = 103;
+    public final static int RC_REGISTER = 104;
 
     public final static int PERMISSION_CAMERA = 501;
     public final static int PERMISSION_EXTERNAL_STORAGE = 502;
@@ -22,6 +23,10 @@ public class AppConsts {
     public final static String PARAM_OWNER_ID = "PARAM_OWNER_ID";
     public final static String PARAM_SEARCH_QUERY = "PARAM_SEARCH_QUERY";
     public final static String PARAM_LIST_TYPE = "PARAM_LIST_TYPE";
+    public final static String PARAM_EMAIL = "PARAM_EMAIL";
+
+
+
 
 
 

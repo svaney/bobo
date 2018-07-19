@@ -4,6 +4,7 @@ import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.Token;
 
 import java.util.ArrayList;
 
@@ -38,4 +39,10 @@ public interface RetrofitService {
 
     @GET("/statements/similar/5b463ef4497cf6625fc3b8bd")
     Call<ApiResponse<ArrayList<StatementItem>>> getSimilarStatements(@Query("statementId") String statementId);
+
+    @POST("/users/register")
+    Call<ApiResponse<Object>> registerUser(@Body RetrofitApi.RegisterUser user);
+
+    @POST("/users/login")
+    Call<ApiResponse<Token>> logIn(@Body RetrofitApi.LogIn logIn);
 }

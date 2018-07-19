@@ -4,6 +4,7 @@ import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.Token;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,4 +26,8 @@ public abstract class NetApi {
     public abstract void getOwnerDetails(String ownerId, RestCallback<ApiResponse<OwnerDetails>> restCallback);
 
     public abstract void getSimilarStatements(String statementId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
+
+    public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback);
+
+    public abstract void logIn(String email, String password, RestCallback<ApiResponse<Token>> callback);
 }

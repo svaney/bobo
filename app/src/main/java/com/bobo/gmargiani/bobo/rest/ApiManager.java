@@ -43,7 +43,8 @@ public class ApiManager {
     }
 
     public void authorizeByToken(final String token) {
-        dataListener.onAuthorizeByTokenEvent(ModelGenerator.generateTokeResponse(), token);
+
+
     }
 
 
@@ -159,5 +160,6 @@ public class ApiManager {
     public void searchOwners(int from, int count, String query) {
       //  dataListener.onSearchOwners(ModelGenerator.getOwnerDetails(count), from, query, count);
     }
+
 
 }

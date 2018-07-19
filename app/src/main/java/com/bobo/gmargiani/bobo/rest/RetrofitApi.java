@@ -4,6 +4,7 @@ import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.Token;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void getOwnerDetails(String ownerId,RestCallback<ApiResponse<OwnerDetails>> callback) {
+    public void getOwnerDetails(String ownerId, RestCallback<ApiResponse<OwnerDetails>> callback) {
         Call<ApiResponse<OwnerDetails>> call = retService.getOwnerDetails(new UserId(ownerId));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
@@ -70,7 +71,50 @@ public class RetrofitApi extends NetApi {
         call.enqueue(new RetrofitCallback<>(callback));
     }
 
-    public class UserId{
+    @Override
+    public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback) {
+        Call<ApiResponse<Object>> call = retService.registerUser(new RegisterUser(email, password, isCompany, firstName, lastName, phoneNum));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void logIn(String email, String password, RestCallback<ApiResponse<Token>> callback) {
+        Call<ApiResponse<Token>> call = retService.logIn(new LogIn(email, password));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    public class RegisterUser {
+        String email;
+        String password;
+        boolean isCompany;
+        String firstName;
+        String lastName;
+        String phoneNum;
+
+        public RegisterUser(String email, String password, boolean isCompany, String firstName, String lastName, String phoneNum) {
+            this.email = email;
+            this.password = password;
+            this.isCompany = isCompany;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.phoneNum = phoneNum;
+        }
+    }
+
+    public class LogIn {
+        String email;
+        String password;
+
+        public LogIn(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+    }
+
+
+    public class UserId {
         String userId;
 
         public UserId(String userId) {
@@ -82,12 +126,12 @@ public class RetrofitApi extends NetApi {
         int from;
         int count;
         boolean selling;
-     //   boolean renting;
-    //    String categoryId;
-    //    String locationId;
-   //     BigDecimal priceFrom;
+        //   boolean renting;
+        //    String categoryId;
+        //    String locationId;
+        //     BigDecimal priceFrom;
         BigDecimal priceTo;
-  //      String orderBy;
+        //      String orderBy;
         String searchQuery;
 
         public StatementJson(int from, int count, boolean selling, boolean renting, String categoryId, String locationId,
@@ -95,12 +139,12 @@ public class RetrofitApi extends NetApi {
             this.from = from;
             this.count = count;
             this.selling = selling;
-      //      this.renting = renting;
-      //      this.categoryId = categoryId;
-      //      this.locationId = locationId;
-      //      this.priceFrom = priceFrom;
+            //      this.renting = renting;
+            //      this.categoryId = categoryId;
+            //      this.locationId = locationId;
+            //      this.priceFrom = priceFrom;
             this.priceTo = priceTo;
-     //      this.orderBy = orderBy;
+            //      this.orderBy = orderBy;
             this.searchQuery = searchQuery;
         }
     }

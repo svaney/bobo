@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public interface NetDataListener {
     void onAppVersionEvent(ApiResponse<AppVersion> response);
 
-    void onAuthorizeByTokenEvent(ApiResponse<Boolean> response, String token);
+    void onAuthorizeByTokenEvent(ApiResponse<Token> response);
 
     void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response, int from, int count, boolean sell, boolean rent,
                            String category, String location, BigDecimal priceFrom, BigDecimal priceTo, String orderBy);

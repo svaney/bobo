@@ -94,6 +94,11 @@
     <string name="register_hint_name">სახელი</string>
     <string name="register_hint_last_name">გვარი</string>
     <string name="register_hint_email">ელ. ფოსტა</string>
+    <string name="register_hint_company">კომპანიის სახელი</string>
     <string name="register_hint_phone">ტელეფონის ნომერი</string>
+
+    <string name="common_text_company">კომპანია</string>
+    <string name="register_error_duplicate_user">მომხარებელი მითითებული მეილით, უკვე არსებობს</string>
+
 
 </resources>
