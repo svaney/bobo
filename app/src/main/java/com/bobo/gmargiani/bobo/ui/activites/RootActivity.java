@@ -24,6 +24,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
@@ -163,6 +164,43 @@ public abstract class RootActivity extends AppCompatActivity {
         }
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    public void showDialog(String title, String text, boolean showOkButton, final View.OnClickListener onOkClickListener, boolean showCancelButton,
+                           final View.OnClickListener onCancelClickListener, final DialogInterface.OnDismissListener onDismissListener) {
+        AlertDialog.Builder builder;
+        if (AppUtils.atLeastLollipop()) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+
+        builder.setTitle(title)
+                .setMessage(text);
+
+        if (showOkButton) {
+            builder.setPositiveButton(R.string.common_text_ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (onOkClickListener != null) {
+                        onOkClickListener.onClick(null);
+                    }
+                }
+            });
+        }
+
+        if (showCancelButton) {
+            builder.setNegativeButton(R.string.button_text_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (onCancelClickListener != null) {
+                        onCancelClickListener.onClick(null);
+                    }
+                }
+            });
+        }
+
+        builder.setOnDismissListener(onDismissListener);
+
+        builder.show();
     }
 
     public abstract int getLayoutId();

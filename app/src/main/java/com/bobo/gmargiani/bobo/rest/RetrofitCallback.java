@@ -21,8 +21,6 @@ public class RetrofitCallback<ContentType> implements Callback<ContentType> {
     @Override
     public void onResponse(Call<ContentType> call, Response<ContentType> response) {
         String requestSessionId = response.raw().request().url().queryParameter(RetrofitClient.PARAMETER_SESSION);
-        String serviceId = call.request().url().queryParameter(RetrofitService.SERVICE_ID);
-
 
         if (response.body() instanceof ApiResponse) {
             if (Utils.equals(requestSessionId, RetrofitClient.getSessionIdToCheck())) {

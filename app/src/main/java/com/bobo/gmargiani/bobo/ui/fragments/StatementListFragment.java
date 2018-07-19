@@ -39,7 +39,7 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        statements = App.getInstance().getUserInfo().getOwnerStatements(getArguments().getLong(AppConsts.PARAM_OWNER_ID, -1));
+        statements = App.getInstance().getUserInfo().getOwnerStatements(getArguments().getString(AppConsts.PARAM_OWNER_ID));
 
         if (statements != null) {
             recyclerView = view.findViewById(R.id.recycler_view);

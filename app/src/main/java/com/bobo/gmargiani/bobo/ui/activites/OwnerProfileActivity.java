@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.ui.fragments.StatementListFragment;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
+import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -63,9 +65,9 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
     private OwnerDetailsEvent ownerDetailsEvent;
     private OwnerStatementsEvent ownerStatementsEvent;
-    private long ownerId;
+    private String ownerId;
 
-    public static void start(Context context, long ownerId) {
+    public static void start(Context context, String ownerId) {
         if (context != null) {
             Intent intent = new Intent(context, OwnerProfileActivity.class);
             intent.putExtra(AppConsts.PARAM_OWNER_ID, ownerId);
@@ -79,13 +81,13 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
         locationsEvent = userInfo.getLocationsEvent();
 
-        ownerId = getIntent().getLongExtra(AppConsts.PARAM_OWNER_ID, -1);
+        ownerId = getIntent().getStringExtra(AppConsts.PARAM_OWNER_ID);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (ownerId != -1) {
+        if (!TextUtils.isEmpty(ownerId)) {
             userInfo.requestOwnerDetails(ownerId);
         }
     }
@@ -112,7 +114,7 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
     @Subscribe
     public void onOwnerStatementsEvent(OwnerStatementsEvent event) {
-        if (ownerStatementsEvent != event && event.getOwnerId() == ownerId) {
+        if (ownerStatementsEvent != event && Utils.equals(event.getOwnerId(), ownerId)) {
             ownerStatementsEvent = event;
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
@@ -173,7 +175,7 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
     @OnClick(R.id.full_retry_button)
     public void onOwnerErrorClick() {
-        if (ownerId != -1) {
+        if (!TextUtils.isEmpty(ownerId)) {
             userInfo.requestOwnerDetails(ownerId);
         }
     }
@@ -239,7 +241,7 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
             archivedStatements = new StatementListFragment();
 
             Bundle b = new Bundle();
-            b.putLong(AppConsts.PARAM_OWNER_ID, ownerId);
+            b.putString(AppConsts.PARAM_OWNER_ID, ownerId);
 
             activeStatements.setArguments(b);
             archivedStatements.setArguments(b);

@@ -6,14 +6,14 @@ import com.bobo.gmargiani.bobo.model.StatementItem;
 import java.util.ArrayList;
 
 public class SimilarStatementsEvent extends RootEvent {
-    private long statementId;
+    private String statementId;
     private ArrayList<StatementItem> similarStatements;
 
-    public long getStatementId() {
+    public String getStatementId() {
         return statementId;
     }
 
-    public void setStatementId(long statementId) {
+    public void setStatementId(String statementId) {
         this.statementId = statementId;
     }
 

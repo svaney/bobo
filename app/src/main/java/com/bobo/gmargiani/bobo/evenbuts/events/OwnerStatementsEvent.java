@@ -8,7 +8,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 
 public class OwnerStatementsEvent extends RootEvent {
-    private long ownerId;
+    private String ownerId;
     private ArrayList<StatementItem> ownerStatements;
 
     @Override
@@ -19,11 +19,11 @@ public class OwnerStatementsEvent extends RootEvent {
         return null;
     }
 
-    public long getOwnerId() {
+    public String getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(long ownerId) {
+    public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
 

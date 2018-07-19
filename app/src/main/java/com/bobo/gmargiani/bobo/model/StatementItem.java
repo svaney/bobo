@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 @Parcel
 public class StatementItem {
-    private long statementId;
-    private long ownerId;
-    private ArrayList<String> images;
+    private String _id;
+    private String userId;
+    private ArrayList<String> imageLinks;
     private String title;
     private String description;
-    private Long createDate;
+    private String createDate;
     private BigDecimal price;
     private boolean isFavorite;
     private int totalViews;
@@ -20,37 +20,37 @@ public class StatementItem {
     private String location;
     private boolean isSelling;
     private boolean isRenting;
-    private String category;
+    private String categoryId;
 
     public String getMainImage() {
-        if (images != null && images.size() > 0) {
-            return images.get(0);
+        if (imageLinks != null && imageLinks.size() > 0) {
+            return imageLinks.get(0);
         }
         return null;
     }
 
-    public long getOwnerId() {
-        return ownerId;
+    public String getOwnerId() {
+        return userId;
     }
 
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwnerId(String  ownerId) {
+        this.userId = ownerId;
     }
 
-    public long getStatementId() {
-        return statementId;
+    public String getStatementId() {
+        return _id;
     }
 
-    public void setStatementId(long statementId) {
-        this.statementId = statementId;
+    public void setStatementId(String statementId) {
+        this._id = statementId;
     }
 
     public ArrayList<String> getImages() {
-        return images;
+        return imageLinks;
     }
 
     public void setImages(ArrayList<String> images) {
-        this.images = images;
+        this.imageLinks = images;
     }
 
     public String getTitle() {
@@ -69,11 +69,11 @@ public class StatementItem {
         this.description = description;
     }
 
-    public Long getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Long createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
@@ -134,10 +134,10 @@ public class StatementItem {
     }
 
     public String getCategory() {
-        return category;
+        return categoryId;
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.categoryId = category;
     }
 }

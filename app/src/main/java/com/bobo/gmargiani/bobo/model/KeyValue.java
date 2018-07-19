@@ -5,31 +5,31 @@ package com.bobo.gmargiani.bobo.model;
  */
 
 public class KeyValue {
-    private String key;
-    private String value;
+    private String _id;
+    private String name;
 
-    public KeyValue(){
+    public KeyValue() {
 
     }
 
-    public KeyValue(String key, String value){
-        this.key = key;
-        this.value = value;
+    public KeyValue(String key, String value) {
+        this._id = key;
+        this.name = value;
     }
 
     public String getKey() {
-        return key;
+        return _id;
     }
 
     public void setKey(String key) {
-        this.key = key;
+        this._id = key;
     }
 
     public String getValue() {
-        return value;
+        return name;
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.name = value;
     }
 }

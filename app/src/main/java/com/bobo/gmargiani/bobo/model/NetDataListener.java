@@ -21,11 +21,11 @@ public interface NetDataListener {
 
     void onCategoriesResponse(ApiResponse<ArrayList<KeyValue>> response);
 
-    void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId);
+    void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, String ownerId);
 
-    void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response);
+    void onSimilarStatements(String statementId, ApiResponse<ArrayList<StatementItem>> response);
 
-    void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response);
+    void onOwnerStatements(String ownerId, ApiResponse<ArrayList<StatementItem>> response);
 
     void onSearchStatements(ApiResponse<ArrayList<StatementItem>> response, int from, String query, int count);
 

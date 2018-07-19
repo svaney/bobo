@@ -5,24 +5,67 @@ package com.bobo.gmargiani.bobo.model;
  */
 
 public class AppVersion {
-    private String serverStatus;
-    private String serverStatusDesc;
-    private boolean mustUpdateClient;
-    private String mustUpdateClientDesc;
+    private String _id;
+    private String dialogText;
+    private boolean showDialog;
+    private String title;
+    private String okButtonLink;
+    private boolean showCancelButton;
+    private boolean dismissAfterOK;
 
-    public String getServerStatus() {
-        return serverStatus;
+    public String get_id() {
+        return _id;
     }
 
-    public String getServerStatusDesc() {
-        return serverStatusDesc;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
-    public boolean isMustUpdateClient() {
-        return mustUpdateClient;
+    public String getDialogText() {
+        return dialogText;
     }
 
-    public String getMustUpdateClientDesc() {
-        return mustUpdateClientDesc;
+    public void setDialogText(String dialogText) {
+        this.dialogText = dialogText;
+    }
+
+    public boolean showDialog() {
+        return showDialog;
+    }
+
+    public void setShowDialog(boolean showDialog) {
+        this.showDialog = showDialog;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOkButtonLink() {
+        return okButtonLink;
+    }
+
+    public void setOkButtonLink(String okButtonLink) {
+        this.okButtonLink = okButtonLink;
+    }
+
+    public boolean showCancelButton() {
+        return showCancelButton;
+    }
+
+    public void setShowCancelButton(boolean showCancelButton) {
+        this.showCancelButton = showCancelButton;
+    }
+
+    public boolean dismissAfterOK() {
+        return dismissAfterOK;
+    }
+
+    public void setDismissAfterOK(boolean dismissAfterOK) {
+        this.dismissAfterOK = dismissAfterOK;
     }
 }

@@ -24,10 +24,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RetrofitClient {
-    public static final String BASE_URL_IP = "http://10.45.48.95";
-    public static final String BASE_URL = "login.bog.ge";
-    public static final String BASE_SEGMENT = "rb-middleware-api-connector";
-
+    public static final String BASE_URL_IP = "http://35.159.23.0:4000";
+//    public static final String BASE_URL = "login.bog.ge";
+ //   public static final String BASE_SEGMENT = "rb-middleware-api-connector";
+//
     public static final String PARAMETER_SESSION = "sessionId";
 
     public static final long READ_TIMEOUT = 40;
@@ -87,10 +87,10 @@ public class RetrofitClient {
                 HttpUrl originalHttpUrl = original.url();
 
                 HttpUrl.Builder builder = originalHttpUrl.newBuilder()
-                        .host(BASE_URL)
-                        .scheme("https")
-                        .addPathSegment(BASE_SEGMENT)
-                        .addQueryParameter(PARAMETER_SESSION, sessionId)
+                       // .host(BASE_URL)
+                        .scheme("http")
+                    //    .addPathSegment(BASE_SEGMENT)
+                    //    .addQueryParameter(PARAMETER_SESSION, sessionId)
                         .addQueryParameter("os", "ANDROID")
                         .addQueryParameter("osVersion", String.valueOf(AppUtils.getAndroidVersion()))
                         .addQueryParameter("appVersion", String.valueOf(appVersion))

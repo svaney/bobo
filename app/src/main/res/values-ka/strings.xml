@@ -40,6 +40,8 @@
     <string name="common_text_subscribe">გამოწერა</string>
     <string name="common_text_active">აქტიური</string>
     <string name="common_text_archive">არქივი</string>
+    <string name="common_text_ok">დადასტურება</string>
+    <string name="common_text_error">მოხდა შეცდომა, გთხოვთ სცადოთ თავიდან</string>
 
     <string name="button_text_retry">თავიდან</string>
     <string name="button_text_cancel">გაუქმება</string>

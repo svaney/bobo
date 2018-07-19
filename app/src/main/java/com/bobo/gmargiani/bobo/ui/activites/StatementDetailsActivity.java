@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,6 +57,9 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     @BindView(R.id.statement_price)
     TextView statementPrice;
+
+    @BindView(R.id.similar_title)
+    View similarsTitle;
 
     @BindView(R.id.statement_title)
     TextView statementTitle;
@@ -140,7 +144,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
 
-    public static void start(Context context, long statementId) {
+    public static void start(Context context, String statementId) {
         if (context != null) {
             Intent intent = new Intent(context, StatementDetailsActivity.class);
             intent.putExtra(AppConsts.PARAM_STATEMENT_ID, statementId);
@@ -165,7 +169,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
         categoriesEvent = userInfo.getCategoriesEvent();
         locationsEvent = userInfo.getLocationsEvent();
 
-        long id = getIntent().getLongExtra(AppConsts.PARAM_STATEMENT_ID, -1);
+        String id = getIntent().getStringExtra(AppConsts.PARAM_STATEMENT_ID);
 
         statementItem = userInfo.getStatementItemById(id);
 
@@ -234,8 +238,9 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
             statementViews.setText(String.valueOf(statementItem.getTotalViews()));
             statementFavorites.setText(String.valueOf(statementItem.getTotalFavorites()));
 
-            statementDate.setText(Utils.getFullDate(statementItem.getCreateDate(), this));
+            //   statementDate.setText(Utils.getFullDate(statementItem.getCreateDate(), this));
 
+            statementDate.setText(statementItem.getCreateDate());
             statementDetails.setText(statementItem.getDescription());
 
             statementLocation.setText(locationsEvent.getValueByKey(statementItem.getLocation()));
@@ -264,11 +269,15 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
                 .setRes(R.drawable.ic_blue_location)
                 .applyTint(R.color.colorAccent)
                 .build();
+
+        icStatementLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
+        statementLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
     }
 
     private void setUpOwnerDetails() {
         if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null) {
             ImageLoader.load(ownerProfPic)
+                    .setErroPlaceHolder(R.drawable.ic_avatar_default)
                     .setUrl(ownerDetailsEvent.getOwnerDetails().getAvatar())
                     .setOval(true)
                     .build();
@@ -291,13 +300,18 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     private void setUpSimilarStatementContent() {
         if (similarStatementsEvent != null && similarStatementsEvent.getState() == RootEvent.STATE_SUCCESS) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            if (similarStatementsEvent.getSimilarStatements() != null && similarStatementsEvent.getSimilarStatements().size() > 0) {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-            similarRecycler.setLayoutManager(layoutManager);
-            StatementRecyclerAdapter adapter = new StatementRecyclerAdapter(this, StatementRecyclerAdapter.ADAPTER_TYPE_SIMILAR, this, null);
-            adapter.setIsLoading(false);
-            adapter.setData(similarStatementsEvent.getSimilarStatements());
-            similarRecycler.setAdapter(adapter);
+                similarRecycler.setLayoutManager(layoutManager);
+                StatementRecyclerAdapter adapter = new StatementRecyclerAdapter(this, StatementRecyclerAdapter.ADAPTER_TYPE_SIMILAR, this, null);
+                adapter.setIsLoading(false);
+                adapter.setData(similarStatementsEvent.getSimilarStatements());
+                similarRecycler.setAdapter(adapter);
+            } else {
+                similarRecycler.setVisibility(View.GONE);
+                similarsTitle.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -325,7 +339,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     @Subscribe
     public void onOwnerDetailsEvent(OwnerDetailsEvent event) {
-        if (ownerDetailsEvent != event && statementItem != null && statementItem.getOwnerId() == event.getOwnerId()) {
+        if (ownerDetailsEvent != event && statementItem != null && Utils.equals(statementItem.getOwnerId(), event.getOwnerId())) {
             ownerDetailsEvent = event;
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
@@ -344,8 +358,11 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     @Subscribe
     public void onSimilarStatements(SimilarStatementsEvent event) {
-        if (similarStatementsEvent != event && statementItem != null && event.getStatementId() == statementItem.getStatementId()) {
+        if (similarStatementsEvent != event && statementItem != null && Utils.equals(event.getStatementId(), statementItem.getStatementId())) {
             similarStatementsEvent = event;
+
+            similarRecycler.setVisibility(View.VISIBLE);
+            similarsTitle.setVisibility(View.VISIBLE);
 
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:

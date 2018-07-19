@@ -20,6 +20,7 @@ import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -62,22 +63,23 @@ public class UserInfo implements NetDataListener {
     }
 
     private void requestTokenAuthorizationEvent(final String token) {
-        if (shouldNotRefresh(tokenAuthorizationEvent) && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
+        if (TextUtils.isEmpty(token)) {
+            tokenAuthorizationEvent = new TokenAuthorizationEvent();
+            tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
+            tokenAuthorizationEvent.setAuthorized(false);
             eventBus.post(tokenAuthorizationEvent);
         } else {
-            tokenAuthorizationEvent = new TokenAuthorizationEvent();
-            tokenAuthorizationEvent.setToken(token);
-            tokenAuthorizationEvent.setState(RootEvent.STATE_LOADING);
+            if (shouldNotRefresh(tokenAuthorizationEvent) && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
+                eventBus.post(tokenAuthorizationEvent);
+            } else {
+                tokenAuthorizationEvent = new TokenAuthorizationEvent();
+                tokenAuthorizationEvent.setToken(token);
+                tokenAuthorizationEvent.setState(RootEvent.STATE_LOADING);
 
-            eventBus.post(tokenAuthorizationEvent);
+                eventBus.post(tokenAuthorizationEvent);
+                apiManager.authorizeByToken(token);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.authorizeByToken(token);
-                }
-            }, 2000);
-
+            }
         }
     }
 
@@ -96,8 +98,8 @@ public class UserInfo implements NetDataListener {
         }
     }
 
-    public void requestSimilarStatements(final long statementId) {
-        if (shouldNotRefresh(similarStatementsEvent) && similarStatementsEvent.getStatementId() == statementId) {
+    public void requestSimilarStatements(final String statementId) {
+        if (shouldNotRefresh(similarStatementsEvent) && Utils.equals(similarStatementsEvent.getStatementId(), statementId)) {
             eventBus.post(similarStatementsEvent);
         } else {
             similarStatementsEvent = new SimilarStatementsEvent();
@@ -105,19 +107,14 @@ public class UserInfo implements NetDataListener {
             similarStatementsEvent.setState(RootEvent.STATE_LOADING);
             eventBus.post(similarStatementsEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getSimilarStatements(statementId);
-                }
-            }, 1000);
+            apiManager.getSimilarStatements(statementId);
 
         }
     }
 
     @Override
-    public void onSimilarStatements(long statementId, ApiResponse<ArrayList<StatementItem>> response) {
-        if (similarStatementsEvent != null && similarStatementsEvent.getStatementId() == statementId) {
+    public void onSimilarStatements(String statementId, ApiResponse<ArrayList<StatementItem>> response) {
+        if (similarStatementsEvent != null && Utils.equals(similarStatementsEvent.getStatementId() , statementId)) {
             similarStatementsEvent = (SimilarStatementsEvent) similarStatementsEvent.copyData();
             if (response.isSuccess()) {
                 similarStatementsEvent.setState(RootEvent.STATE_SUCCESS);
@@ -141,12 +138,7 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(appVersionEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getAppVersion("ANDROID", "MOBILE-EXT");
-                }
-            }, 1000);
+            apiManager.getAppVersion();
 
         }
     }
@@ -156,7 +148,12 @@ public class UserInfo implements NetDataListener {
 
         if (appVersionEvent != null) {
             appVersionEvent = (AppVersionEvent) appVersionEvent.copyData();
-            if (response.isSuccess()) {
+            if (response.isSuccess() && response.getResult() != null) {
+            /*    response.getResult().setShowDialog(true);
+                response.getResult().setTitle("გთხოვთ განაახლოთ აპლიკაცია");
+                response.getResult().setDialogText("აპლიკაციის გამართულად მუშაობისთვის, საჭიროა მისი განახლება");
+                response.getResult().setOkButtonLink("https://www.google.com/");
+                */
                 appVersionEvent.setState(RootEvent.STATE_SUCCESS);
                 appVersionEvent.setAppVersion(response.getResult());
             } else {
@@ -166,7 +163,7 @@ public class UserInfo implements NetDataListener {
         }
     }
 
-    public void searchOwners(final String query, final int from){
+    public void searchOwners(final String query, final int from) {
         if (TextUtils.isEmpty(query)) {
             return;
         }
@@ -273,13 +270,7 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(statementsEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getStatements(from, LAZY_LOADER_COUNT, sell, rent, category, location, priceFrom, priceTo, orderBy);
-                }
-            }, 1000);
-
+            apiManager.getStatements(from, LAZY_LOADER_COUNT, sell, rent, category, location, priceFrom, priceTo, orderBy);
         }
     }
 
@@ -306,10 +297,10 @@ public class UserInfo implements NetDataListener {
         }
     }
 
-    public StatementItem getStatementItemById(long id) {
+    public StatementItem getStatementItemById(String id) {
         if (statementsEvent != null && statementsEvent.getStatements() != null) {
             for (StatementItem it : statementsEvent.getStatements()) {
-                if (it.getStatementId() == id) {
+                if (Utils.equals(it.getStatementId(), id)) {
                     return it;
                 }
             }
@@ -318,7 +309,7 @@ public class UserInfo implements NetDataListener {
         return null;
     }
 
-    public void requestOwnerDetails(final long ownerId) {
+    public void requestOwnerDetails(final String ownerId) {
         if (ownerDetailsList == null) {
             ownerDetailsList = new ArrayList<>();
         }
@@ -339,17 +330,12 @@ public class UserInfo implements NetDataListener {
             ownerDetailsEvent.setState(RootEvent.STATE_LOADING);
 
             eventBus.post(ownerDetailsEvent);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getOwnerDetails(ownerId);
-                }
-            }, 1000);
+            apiManager.getOwnerDetails(ownerId);
         }
     }
 
     @Override
-    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, long ownerId) {
+    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, String ownerId) {
         if (ownerDetailsList == null) {
             ownerDetailsList = new ArrayList<>();
         }
@@ -377,10 +363,10 @@ public class UserInfo implements NetDataListener {
         eventBus.post(event);
     }
 
-    public OwnerDetailsEvent getOwnerDetailsEvent(long ownerId) {
+    public OwnerDetailsEvent getOwnerDetailsEvent(String ownerId) {
         if (ownerDetailsList != null) {
             for (OwnerDetailsEvent event : ownerDetailsList) {
-                if (event.getOwnerId() == ownerId) {
+                if (Utils.equals(event.getOwnerId(), ownerId)) {
                     return event;
                 }
             }
@@ -389,9 +375,9 @@ public class UserInfo implements NetDataListener {
         return null;
     }
 
-    public void requestOwnerStatements(final long ownerId) {
+    public void requestOwnerStatements(final String ownerId) {
 
-        if (shouldNotRefresh(ownerStatementsEvent) && ownerStatementsEvent.getOwnerId() == ownerId) {
+        if (shouldNotRefresh(ownerStatementsEvent) && Utils.equals(ownerStatementsEvent.getOwnerId(), ownerId)) {
             eventBus.post(ownerStatementsEvent);
         } else {
             ownerStatementsEvent = new OwnerStatementsEvent();
@@ -400,20 +386,15 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(ownerStatementsEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getStatementsByOwner(ownerId);
-                }
-            }, 500);
+            apiManager.getStatementsByOwner(ownerId);
 
         }
 
     }
 
     @Override
-    public void onOwnerStatements(long ownerId, ApiResponse<ArrayList<StatementItem>> response) {
-        if (ownerStatementsEvent != null && ownerStatementsEvent.getOwnerId() == ownerId) {
+    public void onOwnerStatements(String ownerId, ApiResponse<ArrayList<StatementItem>> response) {
+        if (ownerStatementsEvent != null && Utils.equals(ownerStatementsEvent.getOwnerId(), ownerId)) {
             ownerStatementsEvent = new OwnerStatementsEvent();
             ownerStatementsEvent.setOwnerId(ownerId);
             if (response.isSuccess()) {
@@ -428,8 +409,8 @@ public class UserInfo implements NetDataListener {
     }
 
 
-    public ArrayList<StatementItem> getOwnerStatements(long ownerId) {
-        if (ownerStatementsEvent != null && ownerStatementsEvent.getState() == RootEvent.STATE_SUCCESS && ownerStatementsEvent.getOwnerId() == ownerId) {
+    public ArrayList<StatementItem> getOwnerStatements(String ownerId) {
+        if (ownerStatementsEvent != null && ownerStatementsEvent.getState() == RootEvent.STATE_SUCCESS && Utils.equals(ownerStatementsEvent.getOwnerId(), ownerId)) {
             return ownerStatementsEvent.getOwnerStatements();
         }
 
@@ -443,12 +424,7 @@ public class UserInfo implements NetDataListener {
             locationsEvent = new LocationsEvent();
             locationsEvent.setState(RootEvent.STATE_LOADING);
             eventBus.post(locationsEvent);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.getLocations();
-                }
-            }, 1000);
+            apiManager.getLocations();
 
         }
     }

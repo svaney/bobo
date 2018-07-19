@@ -4,17 +4,22 @@ import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+
 
 @Parcel
 public class OwnerDetails {
-    private long ownerId;
-    private String ownerName;
-    private String ownerSecondName;
+    private String _id;
+    private String firstName;
+    private String lastName;
     private boolean isCompany;
     private String companyName;
-    private String phone;
+    private String phoneNum;
     private String location;
     private String avatar;
+    private String email;
+    private ArrayList<String> subscribedUsers;
+    private ArrayList<String> favourites;
 
     public String getAvatar() {
         return avatar;
@@ -24,28 +29,28 @@ public class OwnerDetails {
         this.avatar = avatar;
     }
 
-    public long getOwnerId() {
-        return ownerId;
+    public String getOwnerId() {
+        return _id;
     }
 
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwnerId(String ownerId) {
+        this._id = ownerId;
     }
 
     public String getOwnerName() {
-        return ownerName;
+        return firstName;
     }
 
     public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
+        this.firstName = ownerName;
     }
 
     public String getOwnerSecondName() {
-        return ownerSecondName;
+        return lastName;
     }
 
     public void setOwnerSecondName(String ownerSecondName) {
-        this.ownerSecondName = ownerSecondName;
+        this.lastName = ownerSecondName;
     }
 
     public boolean isCompany() {
@@ -65,11 +70,11 @@ public class OwnerDetails {
     }
 
     public String getPhone() {
-        return phone;
+        return phoneNum;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phoneNum = phone;
     }
 
     public String getLocation() {

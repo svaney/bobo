@@ -6,23 +6,25 @@ package com.bobo.gmargiani.bobo.rest;
 
 public class ApiResponse<ContentType> {
     public final static String SUCCESSFUL_RESPONSE_CODE = "0";
+    public final static String SUCCESSFUL_RESPONSE_MESSAGE = "OK";
 
-    private ContentType result;
+    private ContentType data;
 
     private String code;
 
     private String message;
 
     public boolean isSuccess() {
-        return SUCCESSFUL_RESPONSE_CODE.equals(code);
+        return SUCCESSFUL_RESPONSE_MESSAGE.equals(message) && SUCCESSFUL_RESPONSE_CODE.equals(code);
+
     }
 
     public ContentType getResult() {
-        return result;
+        return data;
     }
 
     public void setResult(ContentType result) {
-        this.result = result;
+        this.data = result;
     }
 
     public String getCode() {

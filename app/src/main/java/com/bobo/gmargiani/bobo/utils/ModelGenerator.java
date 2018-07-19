@@ -41,15 +41,15 @@ public class ModelGenerator {
 
         for (int i = 0; i < count; i++) {
             StatementItem item = new StatementItem();
-            item.setOwnerId(generator.nextInt(2));
+         //   item.setOwnerId(generator.nextInt(2));
             item.setDescription(App.getInstance().getString(R.string.lorem));
             item.setTitle("Nivti: " + itemCount++);
-            item.setStatementId(itemCount);
+      //      item.setStatementId(itemCount);
             item.setCategory("CL");
             item.setSelling(true);
 
             long range = 252460800L;
-            item.setCreateDate((long) (generator.nextDouble() * range) + 1262289600L);
+          //  item.setCreateDate((long) (generator.nextDouble() * range) + 1262289600L);
 
             int price = generator.nextInt(9990);
 
@@ -68,6 +68,7 @@ public class ModelGenerator {
 
         ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
         response.setCode("0");
+        response.setMessage("OK");
         response.setResult(items);
         return response;
     }
@@ -84,6 +85,7 @@ public class ModelGenerator {
         ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<>();
         response.setCode("0");
         response.setResult(values);
+        response.setMessage("OK");
         return response;
     }
 
@@ -100,6 +102,7 @@ public class ModelGenerator {
         ApiResponse<ArrayList<KeyValue>> response = new ApiResponse<>();
         response.setCode("0");
         response.setResult(values);
+        response.setMessage("OK");
         return response;
 
     }
@@ -108,7 +111,7 @@ public class ModelGenerator {
         OwnerDetails details = new OwnerDetails();
         details.setCompany(false);
         details.setLocation("TB");
-        details.setOwnerId(ownerId);
+       // details.setOwnerId(ownerId);
         details.setOwnerName("Zuraba");
         details.setOwnerSecondName("Machavariani");
         if (ownerId == 0) {
@@ -119,6 +122,7 @@ public class ModelGenerator {
         details.setPhone("+995 98 19 41 17");
         ApiResponse<OwnerDetails> response = new ApiResponse<>();
         response.setCode("0");
+        response.setMessage("OK");
         response.setResult(details);
         return response;
     }
@@ -126,6 +130,7 @@ public class ModelGenerator {
     public static ApiResponse<ArrayList<OwnerDetails>> getOwnerDetails(int count) {
         ApiResponse<ArrayList<OwnerDetails>> response = new ApiResponse<>();
         response.setCode("0");
+        response.setMessage("OK");
 
         ArrayList<OwnerDetails> details = new ArrayList<>();
 

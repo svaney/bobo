@@ -4,15 +4,15 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 
 public class OwnerDetailsEvent extends RootEvent {
-    private long ownerId;
+    private String ownerId;
     private OwnerDetails ownerDetails;
 
 
-    public long getOwnerId() {
+    public String getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(long ownerId) {
+    public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }
 
