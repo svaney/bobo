@@ -41,6 +41,8 @@ dependencies {
     implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
     implementation 'com.borjabravo:readmoretextview:2.1.0'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.github.yalantis:ucrop:2.2.2-native'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'

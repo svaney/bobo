@@ -48,7 +48,7 @@ public class UserInfo implements NetDataListener {
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
     private OwnerSearchEvent ownerSearchEvent;
-    private LogInEvent logInEvent = new LogInEvent();
+    private LogInEvent logInEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -59,11 +59,15 @@ public class UserInfo implements NetDataListener {
     }
 
     public void requestLogInEvent() {
+        if (logInEvent == null){
+            logInEvent = new LogInEvent();
+            logInEvent.setState(RootEvent.STATE_SUCCESS);
+        }
         eventBus.post(logInEvent);
     }
 
     public void setLogInEvent(boolean loggedIn) {
-        locationsEvent = new LocationsEvent();
+        logInEvent = new LogInEvent();
         logInEvent.setLoggedIn(loggedIn);
 
         if (loggedIn) {
