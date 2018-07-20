@@ -30,4 +30,6 @@ public abstract class NetApi {
     public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback);
 
     public abstract void logIn(String email, String password, RestCallback<ApiResponse<Token>> callback);
+
+    public abstract void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback);
 }

@@ -15,8 +15,8 @@ public class FavoritesActivity extends AuthorizedActivity {
 
 
     @Override
-    public void userIsAuthorized() {
-
+    public void userIsLoggedIn() {
+        
     }
 
     @Override

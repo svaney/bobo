@@ -112,6 +112,10 @@ public class ApiManager {
         });
     }
 
+    public void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback) {
+        netApi.getUserDetails(callback);
+    }
+
     public void getOwnerDetails(final String ownerId) {
         netApi.getOwnerDetails(ownerId, new RestCallback<ApiResponse<OwnerDetails>>() {
             @Override
@@ -160,6 +164,7 @@ public class ApiManager {
     public void searchOwners(int from, int count, String query) {
       //  dataListener.onSearchOwners(ModelGenerator.getOwnerDetails(count), from, query, count);
     }
+
 
 
 }

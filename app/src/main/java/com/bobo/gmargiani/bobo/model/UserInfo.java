@@ -8,6 +8,7 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
@@ -17,6 +18,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
@@ -46,6 +48,7 @@ public class UserInfo implements NetDataListener {
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
     private OwnerSearchEvent ownerSearchEvent;
+    private LogInEvent logInEvent = new LogInEvent();
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -53,6 +56,44 @@ public class UserInfo implements NetDataListener {
 
     public void setApiManager(ApiManager apiManager) {
         this.apiManager = apiManager;
+    }
+
+    public void requestLogInEvent() {
+        eventBus.post(logInEvent);
+    }
+
+    public void setLogInEvent(boolean loggedIn) {
+        locationsEvent = new LocationsEvent();
+        logInEvent.setLoggedIn(loggedIn);
+
+        if (loggedIn) {
+            apiManager.getUserDetails(new RestCallback<ApiResponse<OwnerDetails>>() {
+                @Override
+                public void onResponse(ApiResponse<OwnerDetails> response) {
+                    super.onResponse(response);
+                    logInEvent = new LogInEvent();
+                    if (response.isSuccess() && response.getResult() != null) {
+                        logInEvent.setUserDetails(response.getResult());
+                        logInEvent.setLoggedIn(true);
+                    } else {
+                        logInEvent.setLoggedIn(false);
+                    }
+
+                    eventBus.post(logInEvent);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    super.onFailure(t);
+                    logInEvent = new LogInEvent();
+                    logInEvent.setLoggedIn(false);
+                    eventBus.post(logInEvent);
+                }
+            });
+        } else {
+
+            eventBus.post(logInEvent);
+        }
     }
 
     public void requestTokenAuthorizationEvent() {
@@ -67,32 +108,26 @@ public class UserInfo implements NetDataListener {
         if (TextUtils.isEmpty(token)) {
             tokenAuthorizationEvent = new TokenAuthorizationEvent();
             tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
-            tokenAuthorizationEvent.setAuthorized(false);
             eventBus.post(tokenAuthorizationEvent);
         } else {
-            if (shouldNotRefresh(tokenAuthorizationEvent) && Utils.equals(tokenAuthorizationEvent.getToken(), token)) {
+            if (shouldNotRefresh(tokenAuthorizationEvent)) {
                 eventBus.post(tokenAuthorizationEvent);
             } else {
                 tokenAuthorizationEvent = new TokenAuthorizationEvent();
-                tokenAuthorizationEvent.setToken(token);
                 tokenAuthorizationEvent.setState(RootEvent.STATE_LOADING);
-
                 eventBus.post(tokenAuthorizationEvent);
                 apiManager.authorizeByToken(token);
-
             }
         }
     }
 
     @Override
     public void onAuthorizeByTokenEvent(ApiResponse<Token> response) {
-
         tokenAuthorizationEvent = new TokenAuthorizationEvent();
-
         if (response.isSuccess() && response.getResult() != null && !TextUtils.isEmpty(response.getResult().getToken())) {
             tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
-            tokenAuthorizationEvent.setAuthorized(true);
             PreferencesApiManager.getInstance().saveToken(response.getResult().getToken());
+            setLogInEvent(true);
         } else {
             tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
         }
@@ -481,7 +516,7 @@ public class UserInfo implements NetDataListener {
     }
 
     public boolean isAuthorized() {
-        return tokenAuthorizationEvent == null ? false : tokenAuthorizationEvent.isAuthorized();
+        return logInEvent == null ? false : logInEvent.isLoggedIn();
     }
 
     public boolean shouldNotRefresh(RootEvent event, boolean update) {

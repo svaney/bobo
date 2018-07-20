@@ -47,6 +47,8 @@ public abstract class RootActivity extends AppCompatActivity {
 
     protected Handler handler = new Handler();
 
+    private AuthorizationDialog authorizationDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,23 +162,39 @@ public abstract class RootActivity extends AppCompatActivity {
     }
 
     public void showAuthorizationDialog(String mail) {
-        AuthorizationDialog dialog = new AuthorizationDialog(this, mail);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        try {
+            authorizationDialog.dismiss();
+        } catch (Exception e) {
+
+        }
+
+        authorizationDialog = new AuthorizationDialog(this, mail);
+        authorizationDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                if (RootActivity.this instanceof AuthorizedActivity){
-                    finish();
+                if (RootActivity.this instanceof AuthorizedActivity) {
+                    if (!userInfo.isAuthorized()) {
+                        finish();
+                    }
                 }
             }
         });
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        authorizationDialog.setCanceledOnTouchOutside(false);
+        authorizationDialog.show();
+        authorizationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 App.getInstance().getEventBus().unregister(dialog);
             }
         });
+    }
+
+    public void closeAuthorizeDialog() {
+        try {
+            authorizationDialog.dismiss();
+        } catch (Exception e) {
+
+        }
     }
 
 

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
@@ -82,7 +83,6 @@ public class MainActivity extends RootActivity
 
     private boolean drawerListenerAdded;
 
-    private TokenAuthorizationEvent tokenAuthorizationEvent;
     private StatementsEvent statementsEvent;
 
     private StatementRecyclerAdapter adapter;
@@ -91,6 +91,8 @@ public class MainActivity extends RootActivity
     private boolean floatingButtonIsMoving;
 
     private ArrayList<String> filterValues;
+
+    private LogInEvent logInEvent;
 
     private RecyclerView.OnScrollListener floatingButtonListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -216,16 +218,20 @@ public class MainActivity extends RootActivity
     @Override
     protected void onStart() {
         super.onStart();
-        userInfo.requestTokenAuthorizationEvent();
-        try {
-            if (PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()) {
-                setUpRecyclerView();
-            }
-            adapter.checkLoader(recyclerView);
-        } catch (Exception ignored) {
+
+        if (adapter == null || PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()) {
+            setUpRecyclerView();
         }
+        adapter.checkLoader(recyclerView);
 
         toolbarWidget.collapseSearch();
+    }
+
+    @Subscribe
+    public void onLoginEvent(LogInEvent event){
+        if (logInEvent != event){
+            logInEvent = event;
+        }
     }
 
     private void setUpRecyclerView() {
@@ -297,26 +303,6 @@ public class MainActivity extends RootActivity
     @Override
     public void onLazyLoaderErrorClick() {
         onLastItemIsVisible();
-    }
-
-    @Subscribe
-    public void onTokenAuthorizationEvent(TokenAuthorizationEvent event) {
-        if (tokenAuthorizationEvent != event) {
-            tokenAuthorizationEvent = event;
-
-            switch (event.getState()) {
-                case RootEvent.STATE_LOADING:
-                    showFullLoading();
-                    break;
-                case RootEvent.STATE_SUCCESS:
-                    showContent();
-                    setUpRecyclerView();
-                    break;
-                case RootEvent.STATE_ERROR:
-                    showFullError();
-                    break;
-            }
-        }
     }
 
     @Subscribe
@@ -472,7 +458,7 @@ public class MainActivity extends RootActivity
 
     @OnClick(R.id.full_retry_button)
     public void onFullRetryClick() {
-        userInfo.requestTokenAuthorizationEvent();
+
     }
 
     @Override

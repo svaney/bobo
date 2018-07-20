@@ -65,6 +65,11 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
+    public void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback) {
+
+    }
+
+    @Override
     public void getSimilarStatements(String statementId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
         Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getSimilarStatements(statementId);
         callback.setCall(call);

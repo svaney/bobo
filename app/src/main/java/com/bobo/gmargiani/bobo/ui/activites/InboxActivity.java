@@ -14,7 +14,7 @@ public class InboxActivity extends AuthorizedActivity {
     }
 
     @Override
-    public void userIsAuthorized() {
+    public void userIsLoggedIn() {
 
     }
 
