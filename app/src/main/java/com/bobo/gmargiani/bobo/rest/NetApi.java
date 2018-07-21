@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.LogInData;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
@@ -21,15 +22,19 @@ public abstract class NetApi {
 
     public abstract void getCategories(RestCallback<ApiResponse<ArrayList<KeyValue>>> restCallback);
 
-    public abstract void getStatements(int from, int count, boolean sell, boolean rent, String category, String location, BigDecimal priceFrom, BigDecimal priceTo, String orderBy, RestCallback<ApiResponse<ArrayList<StatementItem>>> restCallback);
+    public abstract void getStatements(int from, int count, boolean sell, boolean rent, String searchQuery, ArrayList<String> categories, ArrayList<String> locations, BigDecimal priceFrom, BigDecimal priceTo, String orderBy, RestCallback<ApiResponse<ArrayList<StatementItem>>> restCallback);
 
     public abstract void getOwnerDetails(String ownerId, RestCallback<ApiResponse<OwnerDetails>> restCallback);
 
-    public abstract void getSimilarStatements(String statementId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
+    public abstract void getSimilarStatements(String setCategoryId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
 
     public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback);
 
-    public abstract void logIn(String email, String password, RestCallback<ApiResponse<Token>> callback);
+    public abstract void logIn(String email, String password, RestCallback<ApiResponse<LogInData>> callback);
 
-    public abstract void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback);
+    public abstract void logInByToken(String token, RestCallback<ApiResponse<OwnerDetails>> callback);
+
+    public abstract void getUsers(int from, int to, String searchQuery, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback);
+
+    public abstract void getUserStatements(String ownerId, int from, int count, RestCallback<ApiResponse<ArrayList<StatementItem>>> restCallback);
 }

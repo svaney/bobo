@@ -38,6 +38,8 @@
     <string name="common_text_selling">იყიდება</string>
     <string name="common_text_renting">ქირავდება</string>
     <string name="common_text_subscribe">გამოწერა</string>
+    <string name="common_text_unsubscribe">გამოწერის მოხსნა</string>
+    <string name="common_text_unsubscribe_two_line">გამოწერის\nმოხსნა</string>
     <string name="common_text_active">აქტიური</string>
     <string name="common_text_archive">არქივი</string>
     <string name="common_text_ok">დადასტურება</string>
@@ -99,6 +101,10 @@
 
     <string name="common_text_company">კომპანია</string>
     <string name="register_error_duplicate_user">მომხარებელი მითითებული მეილით, უკვე არსებობს</string>
+    <string name="error_pass_mail">მომხარებელი მითითებული იმეილით და პაროლით, არ მოიძებნა</string>
+    <string name="common_text_registration_succesful">რეგისტრაცია წარმატებით დასრულდა</string>
+    <string name="common_text_avatar">ავატარი</string>
+
 
 
 </resources>

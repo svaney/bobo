@@ -14,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.ui.fragments.SearchListFragment;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -114,6 +117,19 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
     protected void onStart() {
         super.onStart();
         activityStarted = true;
+
+        userInfo.requestLogInEvent();
+    }
+
+    private LogInEvent logInEvent;
+    @Subscribe
+    public void onLoginEvent(LogInEvent event) {
+        if (logInEvent != event) {
+            logInEvent = event;
+            if (userInfo.isAuthorized()) {
+                closeAuthorizeDialog();
+            }
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.model.LogInData;
+import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.Token;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
@@ -67,15 +70,25 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
             public void onClick(View v) {
                 loader.setVisibility(View.VISIBLE);
                 App.getNetApi().logIn(emailView.getText().toString(), passwordView.getText().toString(),
-                        new RestCallback<ApiResponse<Token>>() {
+                        new RestCallback<ApiResponse<LogInData>>() {
                             @Override
-                            public void onResponse(ApiResponse<Token> response) {
+                            public void onResponse(ApiResponse<LogInData> response) {
                                 super.onResponse(response);
-                                if (response.isSuccess() && response.getResult()!= null &&!TextUtils.isEmpty(response.getResult().getToken())) {
-                                    App.getInstance().getUserInfo().onAuthorizeByTokenEvent(response);
+                                if (response.isSuccess() && response.getResult() != null && response.getResult().getUserDetails() != null &&
+                                        !TextUtils.isEmpty(response.getResult().getToken())) {
+                                    ApiResponse<OwnerDetails> resp = new ApiResponse<>();
+                                    resp.setResult(response.getResult().getUserDetails());
+                                    resp.setMessage("OK");
+                                    resp.setCode("0");
+                                    App.getInstance().getUserInfo().onAuthorizeByTokenEvent(resp, response.getResult().getToken());
+                                } else if (response.getMessage() != null && response.getMessage().contains("Incorrect")) {
+                                    loader.setVisibility(View.GONE);
+                                    errorText.setText(R.string.error_pass_mail);
+                                    errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red_color));
                                 } else {
                                     loader.setVisibility(View.GONE);
                                     errorText.setText(getContext().getString(R.string.common_text_error));
+                                    errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red_color));
                                 }
                             }
 
@@ -84,6 +97,7 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
                                 super.onFailure(t);
                                 loader.setVisibility(View.GONE);
                                 errorText.setText(getContext().getString(R.string.common_text_error));
+                                errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red_color));
                             }
                         });
             }
@@ -91,6 +105,9 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
 
         if (!TextUtils.isEmpty(mail)) {
             emailView.setText(mail);
+            errorText.setText(getContext().getString(R.string.common_text_registration_succesful));
+            errorText.setVisibility(View.VISIBLE);
+            errorText.setTextColor(ContextCompat.getColor(getContext(), R.color.success_green_color));
         }
     }
 

@@ -67,8 +67,7 @@
                         <ImageView
                             android:id="@+id/user_profile_picture"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/item_default_margin" />
+                            android:layout_height="match_parent" />
 
                         <ImageView
                             android:layout_width="@dimen/toolbar_ic_size"

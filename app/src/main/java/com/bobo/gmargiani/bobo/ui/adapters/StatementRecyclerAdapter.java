@@ -25,7 +25,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
     public static final int ADAPTER_TYPE_SIMILAR = 30;
 
 
-    private RecyclerItemClickListener clickListener;
+    private StatementItemClickListener clickListener;
 
     private int adapterType;
 
@@ -33,7 +33,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
         return adapterType == ADAPTER_TYPE_GRID;
     }
 
-    public StatementRecyclerAdapter(Context context, int adapterType, RecyclerItemClickListener clickListener, LazyLoaderListener listener) {
+    public StatementRecyclerAdapter(Context context, int adapterType, StatementItemClickListener clickListener, LazyLoaderListener listener) {
         this.context = context;
         this.adapterType = adapterType;
         this.lazyLoaderListener = listener;
@@ -83,7 +83,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
     }
 
 
-    class StatementHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class StatementHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView price;
         ImageView image;
@@ -103,6 +103,15 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                         .setRes(R.drawable.ic_favorite)
                         .applyTint(adapterType == ADAPTER_TYPE_GRID ? R.color.color_white : R.color.ic_grey_color)
                         .build();
+
+                favoritesIc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (clickListener != null) {
+                            clickListener.onFavoritesClick(getAdapterPosition());
+                        }
+                    }
+                });
             }
 
             if (favoritesIcFilled != null) {
@@ -110,16 +119,32 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                         .setRes(R.drawable.ic_favorite_filled)
                         .applyTint(true)
                         .build();
+
+                favoritesIcFilled.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (clickListener != null) {
+                            clickListener.onFavoritesClick(getAdapterPosition());
+                        }
+                    }
+                });
             }
 
-            itemView.setOnClickListener(this);
-        }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onItemClick(getAdapterPosition());
+                    }
+                }
+            });
 
-        @Override
-        public void onClick(View v) {
-            if (clickListener != null) {
-                clickListener.onRecyclerItemClick(getAdapterPosition());
-            }
+
         }
+    }
+
+    public interface StatementItemClickListener{
+        void onItemClick(int position);
+        void onFavoritesClick(int position);
     }
 }

@@ -71,7 +71,7 @@ public class FullScreenGalleryView extends ViewPager {
 
         @Override
         public int getCount() {
-            return imageLinks == null ? 0 : imageLinks.size();
+            return imageLinks == null || imageLinks.size() == 0 ? 1 : imageLinks.size();
         }
 
         private FrameLayout createView() {
@@ -106,9 +106,15 @@ public class FullScreenGalleryView extends ViewPager {
 
             }
 
-            ImageLoader.load(imageView)
-                    .setUrl(imageLinks.get(position), true)
-                    .build();
+            if (imageLinks == null || imageLinks.size() == 0){
+                ImageLoader.load(imageView)
+                        .setRes(R.drawable.statement_image_place_holder)
+                        .build();
+            } else {
+                ImageLoader.load(imageView)
+                        .setUrl(imageLinks.get(position), true)
+                        .build();
+            }
 
             container.addView(recycledView);
 

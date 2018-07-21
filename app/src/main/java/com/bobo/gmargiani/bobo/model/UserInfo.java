@@ -1,7 +1,6 @@
 package com.bobo.gmargiani.bobo.model;
 
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
@@ -23,7 +22,6 @@ import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,7 +37,6 @@ public class UserInfo implements NetDataListener {
     private EventBus eventBus;
 
     private AppVersionEvent appVersionEvent;
-    private TokenAuthorizationEvent tokenAuthorizationEvent;
     private StatementsEvent statementsEvent;
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
@@ -48,7 +45,9 @@ public class UserInfo implements NetDataListener {
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
     private OwnerSearchEvent ownerSearchEvent;
+
     private LogInEvent logInEvent;
+    private TokenAuthorizationEvent tokenAuthorizationEvent;
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -59,45 +58,11 @@ public class UserInfo implements NetDataListener {
     }
 
     public void requestLogInEvent() {
-        if (logInEvent == null){
+        if (logInEvent == null) {
             logInEvent = new LogInEvent();
             logInEvent.setState(RootEvent.STATE_SUCCESS);
         }
         eventBus.post(logInEvent);
-    }
-
-    public void setLogInEvent(boolean loggedIn) {
-        logInEvent = new LogInEvent();
-        logInEvent.setLoggedIn(loggedIn);
-
-        if (loggedIn) {
-            apiManager.getUserDetails(new RestCallback<ApiResponse<OwnerDetails>>() {
-                @Override
-                public void onResponse(ApiResponse<OwnerDetails> response) {
-                    super.onResponse(response);
-                    logInEvent = new LogInEvent();
-                    if (response.isSuccess() && response.getResult() != null) {
-                        logInEvent.setUserDetails(response.getResult());
-                        logInEvent.setLoggedIn(true);
-                    } else {
-                        logInEvent.setLoggedIn(false);
-                    }
-
-                    eventBus.post(logInEvent);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    super.onFailure(t);
-                    logInEvent = new LogInEvent();
-                    logInEvent.setLoggedIn(false);
-                    eventBus.post(logInEvent);
-                }
-            });
-        } else {
-
-            eventBus.post(logInEvent);
-        }
     }
 
     public void requestTokenAuthorizationEvent() {
@@ -126,36 +91,45 @@ public class UserInfo implements NetDataListener {
     }
 
     @Override
-    public void onAuthorizeByTokenEvent(ApiResponse<Token> response) {
+    public void onAuthorizeByTokenEvent(ApiResponse<OwnerDetails> response, String token) {
         tokenAuthorizationEvent = new TokenAuthorizationEvent();
-        if (response.isSuccess() && response.getResult() != null && !TextUtils.isEmpty(response.getResult().getToken())) {
+        logInEvent = new LogInEvent();
+        logInEvent.setState(RootEvent.STATE_SUCCESS);
+        logInEvent.setLoggedIn(false);
+
+        if (response.isSuccess()) {
             tokenAuthorizationEvent.setState(RootEvent.STATE_SUCCESS);
-            PreferencesApiManager.getInstance().saveToken(response.getResult().getToken());
-            setLogInEvent(true);
+            logInEvent.setLoggedIn(true);
+            LogInData data = new LogInData();
+            data.setToken(token);
+            data.setUserDetails(response.getResult());
+            logInEvent.setLogInData(data);
+            eventBus.post(logInEvent);
+            PreferencesApiManager.getInstance().saveToken(token);
         } else {
+            PreferencesApiManager.getInstance().saveToken("");
             tokenAuthorizationEvent.setState(RootEvent.STATE_ERROR);
         }
         eventBus.post(tokenAuthorizationEvent);
-
     }
 
-    public void requestSimilarStatements(final String statementId) {
-        if (shouldNotRefresh(similarStatementsEvent) && Utils.equals(similarStatementsEvent.getStatementId(), statementId)) {
+    public void requestSimilarStatements(final String categoryId) {
+        if (shouldNotRefresh(similarStatementsEvent) && Utils.equals(similarStatementsEvent.getCategoryId(), categoryId)) {
             eventBus.post(similarStatementsEvent);
         } else {
             similarStatementsEvent = new SimilarStatementsEvent();
-            similarStatementsEvent.setStatementId(statementId);
+            similarStatementsEvent.setCategoryId(categoryId);
             similarStatementsEvent.setState(RootEvent.STATE_LOADING);
             eventBus.post(similarStatementsEvent);
 
-            apiManager.getSimilarStatements(statementId);
+            apiManager.getSimilarStatements(categoryId);
 
         }
     }
 
     @Override
     public void onSimilarStatements(String statementId, ApiResponse<ArrayList<StatementItem>> response) {
-        if (similarStatementsEvent != null && Utils.equals(similarStatementsEvent.getStatementId(), statementId)) {
+        if (similarStatementsEvent != null && Utils.equals(similarStatementsEvent.getCategoryId(), statementId)) {
             similarStatementsEvent = (SimilarStatementsEvent) similarStatementsEvent.copyData();
             if (response.isSuccess()) {
                 similarStatementsEvent.setState(RootEvent.STATE_SUCCESS);
@@ -220,12 +194,7 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(ownerSearchEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.searchOwners(from, LAZY_LOADER_COUNT, query);
-                }
-            }, 2000);
+            apiManager.searchOwners(from, LAZY_LOADER_COUNT, query);
         }
     }
 
@@ -264,12 +233,7 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(statementSearchEvent);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    apiManager.searchStatements(from, LAZY_LOADER_COUNT, query);
-                }
-            }, 2000);
+            apiManager.searchStatements(from, LAZY_LOADER_COUNT, query);
         }
     }
 
@@ -293,35 +257,35 @@ public class UserInfo implements NetDataListener {
     }
 
     public void requestStatements(final int from, boolean update,
-                                  final boolean sell, final boolean rent, final String category, final String location,
+                                  final boolean sell, final boolean rent, final ArrayList<String> categories, final ArrayList<String> locations,
                                   final BigDecimal priceFrom, final BigDecimal priceTo, final String orderBy) {
 
         if (shouldNotRefresh(statementsEvent, update)
                 && statementsEvent.getFrom() >= from
-                && statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)) {
+                && statementsEvent.hasSameParameters(sell, rent, categories, locations, priceFrom, priceTo, orderBy)) {
 
             eventBus.post(statementsEvent);
         } else {
 
-            statementsEvent = statementsEvent == null || !statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)
-                    ? new StatementsEvent(sell, rent, category, location, priceFrom, priceTo, orderBy) : (StatementsEvent) statementsEvent.copyData();
+            statementsEvent = statementsEvent == null || !statementsEvent.hasSameParameters(sell, rent, categories, locations, priceFrom, priceTo, orderBy)
+                    ? new StatementsEvent(sell, rent, categories, locations, priceFrom, priceTo, orderBy) : (StatementsEvent) statementsEvent.copyData();
 
             statementsEvent.setState(RootEvent.STATE_LOADING);
             statementsEvent.setFrom(from);
 
             eventBus.post(statementsEvent);
 
-            apiManager.getStatements(from, LAZY_LOADER_COUNT, sell, rent, category, location, priceFrom, priceTo, orderBy);
+            apiManager.getStatements(from, LAZY_LOADER_COUNT, sell, rent, categories, locations, priceFrom, priceTo, orderBy);
         }
     }
 
     @Override
     public void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response,
-                                  int from, int count, boolean sell, boolean rent, String category,
-                                  String location, BigDecimal priceFrom, BigDecimal priceTo, String orderBy) {
+                                  int from, int count, boolean sell, boolean rent, ArrayList<String> categories,
+                                  ArrayList<String> locations, BigDecimal priceFrom, BigDecimal priceTo, String orderBy) {
 
         if (statementsEvent != null && statementsEvent.getFrom() == from
-                && statementsEvent.hasSameParameters(sell, rent, category, location, priceFrom, priceTo, orderBy)) {
+                && statementsEvent.hasSameParameters(sell, rent, categories, locations, priceFrom, priceTo, orderBy)) {
 
             statementsEvent = (StatementsEvent) statementsEvent.copyData();
             if (response.isSuccess()) {

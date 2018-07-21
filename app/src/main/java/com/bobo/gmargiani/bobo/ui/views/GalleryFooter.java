@@ -27,6 +27,7 @@ public class GalleryFooter extends FrameLayout implements ViewPager.OnPageChange
 
     private int dotCount;
     private ImageView[] dotViews;
+    private OnClickListener onFavoriteClickListener;
 
 
     public GalleryFooter(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -51,11 +52,31 @@ public class GalleryFooter extends FrameLayout implements ViewPager.OnPageChange
                 .setRes(R.drawable.ic_favorite_filled)
                 .applyTint(true)
                 .build();
+
+        icFavorite.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFavoriteClick();
+            }
+        });
+
+        icFavoriteFilled.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFavoriteClick();
+            }
+        });
     }
 
     public void showFilledFavorite(boolean show) {
         icFavorite.setVisibility(show ? GONE : VISIBLE);
         icFavoriteFilled.setVisibility(show ? VISIBLE : GONE);
+    }
+
+    private void onFavoriteClick() {
+        if (onFavoriteClickListener != null) {
+            onFavoriteClickListener.onClick(null);
+        }
     }
 
     public void setDataSize(int count) {
@@ -103,7 +124,7 @@ public class GalleryFooter extends FrameLayout implements ViewPager.OnPageChange
 
 
     public void setSelectedPos(int pos) {
-        if (galleryView != null){
+        if (galleryView != null) {
             galleryView.setCurrentItem(pos);
         }
     }
@@ -127,4 +148,7 @@ public class GalleryFooter extends FrameLayout implements ViewPager.OnPageChange
 
     }
 
+    public void setOnFavoriteClickListener(OnClickListener onClickListener) {
+        this.onFavoriteClickListener = onClickListener;
+    }
 }

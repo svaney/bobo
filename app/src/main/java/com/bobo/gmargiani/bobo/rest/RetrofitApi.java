@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.LogInData;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
@@ -48,10 +49,10 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void getStatements(int from, int count, boolean selling, boolean renting, String categoryId, String locationId, BigDecimal priceFrom,
+    public void getStatements(int from, int count, boolean selling, boolean renting, String searchQuery, ArrayList<String> categoryIds, ArrayList<String> locationIds, BigDecimal priceFrom,
                               BigDecimal priceTo, String orderBy, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
 
-        StatementJson js = new StatementJson(from, count, selling, renting, categoryId, locationId, priceFrom, priceTo, orderBy, "");
+        StatementJson js = new StatementJson(from, count, selling, renting, categoryIds, locationIds, priceFrom, priceTo, orderBy, searchQuery);
         Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getStatements(js);
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
@@ -65,29 +66,77 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback) {
-
+    public void getSimilarStatements(String categoryId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
+        Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getSimilarStatements(new CategoryId(categoryId));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
     }
 
     @Override
-    public void getSimilarStatements(String statementId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
-        Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getSimilarStatements(statementId);
+    public void getUserStatements(String ownerId, int from, int count, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
+        Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getUserStatements(new OwnerStatements(from, count, ownerId));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
     }
 
     @Override
     public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback) {
-        Call<ApiResponse<Object>> call = retService.registerUser(new RegisterUser(email, password, isCompany, firstName, lastName, phoneNum));
+        Call<ApiResponse<Object>> call = retService.registerUser(new RegisterUser(email, password, isCompany, firstName, lastName, phoneNum, companyName));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
     }
 
     @Override
-    public void logIn(String email, String password, RestCallback<ApiResponse<Token>> callback) {
-        Call<ApiResponse<Token>> call = retService.logIn(new LogIn(email, password));
+    public void logIn(String email, String password, RestCallback<ApiResponse<LogInData>> callback) {
+        Call<ApiResponse<LogInData>> call = retService.logIn(new LogIn(email, password));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void logInByToken(String token, RestCallback<ApiResponse<OwnerDetails>> callback) {
+        Call<ApiResponse<OwnerDetails>> call = retService.logInByToken("Bearer " + token);
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void getUsers(int from, int to, String searchQuery, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback) {
+        Call<ApiResponse<ArrayList<OwnerDetails>>> call = retService.getUsers(new SearchUser(from, to, searchQuery));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    public class OwnerStatements {
+        int from;
+        int count;
+        String ownerId;
+
+        public OwnerStatements(int from, int to, String ownerId) {
+            this.from = from;
+            this.count = to;
+            this.ownerId = ownerId;
+        }
+    }
+
+    public class SearchUser {
+        int from;
+        int count;
+        String searchQuery;
+
+        public SearchUser(int from, int to, String searchQuery) {
+            this.from = from;
+            this.count = to;
+            this.searchQuery = searchQuery;
+        }
+    }
+
+    public class CategoryId {
+        String categoryId;
+
+        public CategoryId(String categoryId) {
+            this.categoryId = categoryId;
+        }
     }
 
     public class RegisterUser {
@@ -97,14 +146,16 @@ public class RetrofitApi extends NetApi {
         String firstName;
         String lastName;
         String phoneNum;
+        String companyName;
 
-        public RegisterUser(String email, String password, boolean isCompany, String firstName, String lastName, String phoneNum) {
+        public RegisterUser(String email, String password, boolean isCompany, String firstName, String lastName, String phoneNum, String companyName) {
             this.email = email;
             this.password = password;
             this.isCompany = isCompany;
             this.firstName = firstName;
             this.lastName = lastName;
             this.phoneNum = phoneNum;
+            this.companyName = companyName;
         }
     }
 
@@ -131,25 +182,25 @@ public class RetrofitApi extends NetApi {
         int from;
         int count;
         boolean selling;
-        //   boolean renting;
-        //    String categoryId;
-        //    String locationId;
-        //     BigDecimal priceFrom;
+        boolean renting;
+        ArrayList<String> categoryIds;
+        ArrayList<String> locationIds;
+        BigDecimal priceFrom;
         BigDecimal priceTo;
-        //      String orderBy;
+        //   String orderBy;
         String searchQuery;
 
-        public StatementJson(int from, int count, boolean selling, boolean renting, String categoryId, String locationId,
+        public StatementJson(int from, int count, boolean selling, boolean renting, ArrayList<String> categoryIds, ArrayList<String> locationIds,
                              BigDecimal priceFrom, BigDecimal priceTo, String orderBy, String searchQuery) {
             this.from = from;
             this.count = count;
             this.selling = selling;
-            //      this.renting = renting;
-            //      this.categoryId = categoryId;
-            //      this.locationId = locationId;
-            //      this.priceFrom = priceFrom;
+            this.renting = renting;
+            this.categoryIds = categoryIds;
+            this.locationIds = locationIds;
+            this.priceFrom = priceFrom;
             this.priceTo = priceTo;
-            //      this.orderBy = orderBy;
+            //   this.orderBy = orderBy;
             this.searchQuery = searchQuery;
         }
     }

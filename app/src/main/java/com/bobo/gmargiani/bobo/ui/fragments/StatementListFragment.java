@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
@@ -24,7 +25,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class StatementListFragment extends RootFragment implements RecyclerItemClickListener {
+public class StatementListFragment extends RootFragment implements StatementRecyclerAdapter.StatementItemClickListener {
 
     private ArrayList<StatementItem> statements;
 
@@ -39,7 +40,7 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        statements = App.getInstance().getUserInfo().getOwnerStatements(getArguments().getString(AppConsts.PARAM_OWNER_ID));
+        statements = userInfo.getOwnerStatements(getArguments().getString(AppConsts.PARAM_OWNER_ID));
 
         if (statements != null) {
             recyclerView = view.findViewById(R.id.recycler_view);
@@ -72,11 +73,23 @@ public class StatementListFragment extends RootFragment implements RecyclerItemC
     }
 
     @Override
-    public void onRecyclerItemClick(int pos) {
-        if (statements != null && statements.size() > pos) {
-            StatementItem item = statements.get(pos);
+    public void onItemClick(int position) {
+        if (statements != null && statements.size() > position) {
+            StatementItem item = statements.get(position);
 
             StatementDetailsActivity.start(getContext(), item);
         }
     }
+
+    @Override
+    public void onFavoritesClick(int position) {
+        if (userInfo == null || userInfo.isAuthorized()) {
+            try {
+                ((OwnerProfileActivity) getActivity()).showAuthorizationDialog(null);
+            } catch (Exception ignored) {
+
+            }
+        }
+    }
+
 }

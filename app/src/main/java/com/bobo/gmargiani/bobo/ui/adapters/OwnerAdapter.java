@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,9 @@ import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 
 public class OwnerAdapter extends InfinityAdapter {
-    private RecyclerItemClickListener clickListener;
+    private StatementRecyclerAdapter.StatementItemClickListener clickListener;
 
-    public OwnerAdapter(Context context, RecyclerItemClickListener clickListener, LazyLoaderListener listener) {
+    public OwnerAdapter(Context context, StatementRecyclerAdapter.StatementItemClickListener clickListener, LazyLoaderListener listener) {
         this.context = context;
         this.lazyLoaderListener = listener;
         this.clickListener = clickListener;
@@ -39,14 +40,21 @@ public class OwnerAdapter extends InfinityAdapter {
             holder.ownerMail.setText(item.getPhone());
             holder.ownerName.setText(item.getDisplayName());
 
-            ImageLoader.load(holder.ownerPic)
-                    .setUrl(item.getAvatar())
-                    .setOval(true)
-                    .build();
+            if (!TextUtils.isEmpty(item.getAvatar())) {
+                ImageLoader.load(holder.ownerPic)
+                        .setUrl(item.getAvatar())
+                        .setOval(true)
+                        .build();
+            } else {
+                ImageLoader.load(holder.ownerPic)
+                        .setRes(R.drawable.ic_avatar_default)
+                        .setOval(true)
+                        .build();
+            }
 
             ImageLoader.load(holder.subscribeImage)
-                    .setRes(R.drawable.ic_subscribe_full)
-                    .applyTint(true)
+                    .setRes(R.drawable.ic_subscribe_empty)
+                    .applyTint(false)
                     .build();
 
         }
@@ -58,6 +66,7 @@ public class OwnerAdapter extends InfinityAdapter {
         ImageView subscribeImage;
         TextView ownerName;
         TextView ownerMail;
+        TextView subscribeText;
 
         public OwnerHolder(View itemView) {
             super(itemView);
@@ -66,13 +75,31 @@ public class OwnerAdapter extends InfinityAdapter {
             subscribeImage = itemView.findViewById(R.id.ic_subscribe);
             ownerName = itemView.findViewById(R.id.owner_name);
             ownerMail = itemView.findViewById(R.id.owner_mail);
+            subscribeText = itemView.findViewById(R.id.subscribe_text);
             itemView.setOnClickListener(this);
+            subscribeImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onFavoritesClick(getAdapterPosition());
+                    }
+                }
+            });
+
+            subscribeText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onFavoritesClick(getAdapterPosition());
+                    }
+                }
+            });
         }
 
         @Override
         public void onClick(View v) {
             if (clickListener != null) {
-                clickListener.onRecyclerItemClick(getAdapterPosition());
+                clickListener.onItemClick(getAdapterPosition());
             }
         }
     }

@@ -45,6 +45,8 @@
     <string name="common_text_selling">Selling</string>
     <string name="common_text_renting">Renting</string>
     <string name="common_text_subscribe">Subscribe</string>
+    <string name="common_text_unsubscribe">Unsubscribe</string>
+    <string name="common_text_unsubscribe_two_line">Un-subscribe</string>
     <string name="common_text_active">Active</string>
     <string name="common_text_archive">Archive</string>
     <string name="common_text_ok">OK</string>
@@ -105,5 +107,8 @@
     <string name="register_hint_company">Company name</string>
     <string name="common_text_company">company</string>
     <string name="register_error_duplicate_user">User with this e-mail, already exists</string>
+    <string name="error_pass_mail">No user was found by email and password</string>
+    <string name="common_text_registration_succesful">Registration completed successfully</string>
+    <string name="common_text_avatar">Avatar</string>
 
 </resources>

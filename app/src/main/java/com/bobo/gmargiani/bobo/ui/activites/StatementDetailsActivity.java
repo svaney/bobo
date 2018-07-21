@@ -17,6 +17,7 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
@@ -36,7 +37,7 @@ import org.parceler.Parcels;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class StatementDetailsActivity extends RootDetailedActivity implements RecyclerItemClickListener {
+public class StatementDetailsActivity extends RootDetailedActivity implements StatementRecyclerAdapter.StatementItemClickListener {
     @BindView(R.id.gallery_footer)
     GalleryFooter galleryFooter;
 
@@ -196,6 +197,12 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
             });
 
             galleryFooter.showFilledFavorite(false);
+            galleryFooter.setOnFavoriteClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onFavoriteClick();
+                }
+            });
             galleryFooter.setDataSize(statementItem.getImages() == null ? 0 : statementItem.getImages().size());
             galleryFooter.setGallery(gallery);
             gallery.addOnPageChangeListener(galleryFooter);
@@ -212,13 +219,20 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     }
 
+    private void onFavoriteClick() {
+        if (!userInfo.isAuthorized()) {
+            showAuthorizationDialog(null);
+        }
+    }
+
     private void showFullScreenGallery(boolean show) {
         showFullScreenGallery(show, 0);
     }
 
     private void showFullScreenGallery(boolean show, int pos) {
-        fullGalleryWrapper.setVisibility(show ? View.VISIBLE : View.GONE);
-        if (show && statementItem != null) {
+
+        if (show && statementItem != null && statementItem.getImages() != null && statementItem.getImages().size() != 0) {
+            fullGalleryWrapper.setVisibility(show ? View.VISIBLE : View.GONE);
             fullGallery.setImages(statementItem.getImages());
             fullGallery.setImageTouchable(true);
             fullGallery.addOnPageChangeListener(fullGalleryFooter);
@@ -227,6 +241,15 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
             fullGalleryFooter.setDataSize(statementItem.getImages() == null ? 0 : statementItem.getImages().size());
             fullGalleryFooter.setGallery(fullGallery);
             fullGalleryFooter.setSelectedPos(pos);
+
+            fullGalleryFooter.setOnFavoriteClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onFavoriteClick();
+                }
+            });
+        } else {
+            fullGalleryWrapper.setVisibility(show && statementItem.getImages() != null && statementItem.getImages().size() != 0 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -295,6 +318,9 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
                     .setRes(R.drawable.ic_blue_location)
                     .applyTint(R.color.colorAccent)
                     .build();
+
+            ownerLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
+            icOwnerLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -316,24 +342,44 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
     }
 
     @Override
-    public void onRecyclerItemClick(int pos) {
-        if (similarStatementsEvent != null && similarStatementsEvent.getSimilarStatements() != null && similarStatementsEvent.getSimilarStatements().size() > pos) {
-            StatementItem item = similarStatementsEvent.getSimilarStatements().get(pos);
+    public void onItemClick(int position) {
+        if (similarStatementsEvent != null && similarStatementsEvent.getSimilarStatements() != null && similarStatementsEvent.getSimilarStatements().size() > position) {
+            StatementItem item = similarStatementsEvent.getSimilarStatements().get(position);
 
             StatementDetailsActivity.start(this, item);
         }
     }
 
     @Override
+    public void onFavoritesClick(int position) {
+        if (!userInfo.isAuthorized()) {
+            showAuthorizationDialog(null);
+        }
+    }
+
+
+    @Override
     protected void onStart() {
         super.onStart();
+        userInfo.requestLogInEvent();
         requestDetails();
+    }
+
+    private LogInEvent logInEvent;
+    @Subscribe
+    public void onLoginEvent(LogInEvent event) {
+        if (logInEvent != event) {
+            logInEvent = event;
+            if (userInfo.isAuthorized()) {
+                closeAuthorizeDialog();
+            }
+        }
     }
 
     private void requestDetails() {
         if (statementItem != null) {
             userInfo.requestOwnerDetails(statementItem.getOwnerId());
-            userInfo.requestSimilarStatements(statementItem.getStatementId());
+            userInfo.requestSimilarStatements(statementItem.getCategory());
         }
     }
 
@@ -358,7 +404,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements Re
 
     @Subscribe
     public void onSimilarStatements(SimilarStatementsEvent event) {
-        if (similarStatementsEvent != event && statementItem != null && Utils.equals(event.getStatementId(), statementItem.getStatementId())) {
+        if (similarStatementsEvent != event && statementItem != null && Utils.equals(event.getCategoryId(), statementItem.getCategory())) {
             similarStatementsEvent = event;
 
             similarRecycler.setVisibility(View.VISIBLE);

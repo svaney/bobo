@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.LogInData;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
@@ -12,7 +13,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -37,12 +41,21 @@ public interface RetrofitService {
     @POST("/users/details")
     Call<ApiResponse<OwnerDetails>> getOwnerDetails(@Body RetrofitApi.UserId userId);
 
-    @GET("/statements/similar/5b463ef4497cf6625fc3b8bd")
-    Call<ApiResponse<ArrayList<StatementItem>>> getSimilarStatements(@Query("statementId") String statementId);
+    @POST("/statements/similar")
+    Call<ApiResponse<ArrayList<StatementItem>>> getSimilarStatements(@Body RetrofitApi.CategoryId categoryId);
 
     @POST("/users/register")
     Call<ApiResponse<Object>> registerUser(@Body RetrofitApi.RegisterUser user);
 
     @POST("/users/login")
-    Call<ApiResponse<Token>> logIn(@Body RetrofitApi.LogIn logIn);
+    Call<ApiResponse<LogInData>> logIn(@Body RetrofitApi.LogIn logIn);
+
+    @POST("/users/getInfoByToken")
+    Call<ApiResponse<OwnerDetails>> logInByToken(@Header("Authorization") String token);
+
+    @POST("/users/getusers")
+    Call<ApiResponse<ArrayList<OwnerDetails>>> getUsers(@Body RetrofitApi.SearchUser token);
+
+    @POST("/statements/search")
+    Call<ApiResponse<ArrayList<StatementItem>>> getUserStatements(@Body RetrofitApi.OwnerStatements body);
 }

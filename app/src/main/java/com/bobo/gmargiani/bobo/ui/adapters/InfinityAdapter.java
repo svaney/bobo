@@ -110,7 +110,7 @@ public abstract class InfinityAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemViewType(int position) {
-        if ((isLoading || isError) &&position == getItemCount() - 1) {
+        if ((isLoading || isError) && position == getItemCount() - 1) {
             return isError ? HOLDER_TYPE_ERROR : HOLDER_TYPE_LOADER;
         }
 
@@ -122,7 +122,7 @@ public abstract class InfinityAdapter extends RecyclerView.Adapter<RecyclerView.
         return isLoading || isError ? getListSize() + 1 : getListSize();
     }
 
-    private int getListSize(){
+    private int getListSize() {
         return items == null ? 0 : items.size();
     }
 

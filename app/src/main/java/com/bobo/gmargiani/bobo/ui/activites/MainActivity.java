@@ -17,13 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
-import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
@@ -43,13 +43,14 @@ import org.parceler.Parcels;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends RootActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
-        ToolbarSearchWidget.ToolbarWidgetListener, LazyLoaderListener, RecyclerItemClickListener {
+        ToolbarSearchWidget.ToolbarWidgetListener, LazyLoaderListener, StatementRecyclerAdapter.StatementItemClickListener {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -77,7 +78,7 @@ public class MainActivity extends RootActivity
     protected ImageView languageImage;
     protected View userAvatarWrapper;
     protected View languageChangebtn;
-    protected View authorizeText;
+    protected TextView authorizeText;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -183,7 +184,11 @@ public class MainActivity extends RootActivity
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewStatementActivity.start(MainActivity.this);
+                if (!userInfo.isAuthorized()){
+                    showAuthorizationDialog(null);
+                } else {
+                    NewStatementActivity.start(MainActivity.this);
+                }
             }
         });
     }
@@ -218,7 +223,7 @@ public class MainActivity extends RootActivity
     @Override
     protected void onStart() {
         super.onStart();
-
+        userInfo.requestLogInEvent();
         if (adapter == null || PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()) {
             setUpRecyclerView();
         }
@@ -228,10 +233,23 @@ public class MainActivity extends RootActivity
     }
 
     @Subscribe
-    public void onLoginEvent(LogInEvent event){
-        if (logInEvent != event){
+    public void onLoginEvent(LogInEvent event) {
+        if (logInEvent != event) {
             logInEvent = event;
+            if (userInfo.isAuthorized()) {
+                closeAuthorizeDialog();
+
+                if (!TextUtils.isEmpty(event.getLogInData().getUserDetails().getAvatar()))
+                    ImageLoader.load(userAvatar)
+                            .setUrl(event.getLogInData().getUserDetails().getAvatar())
+                            .setOval(true)
+                            .build();
+
+                authorizeText.setText(event.getLogInData().getUserDetails().getDisplayName());
+            }
+
         }
+
     }
 
     private void setUpRecyclerView() {
@@ -296,8 +314,15 @@ public class MainActivity extends RootActivity
         String location = filterValues.get(FilterActivity.FILTER_PARAM_POS_LOCATION);
         String orderBy = filterValues.get(FilterActivity.FILTER_PARAM_POS_ORDER_BY);
 
+        ArrayList locations = new ArrayList();
+        locations.addAll(Arrays.asList(location.split(";")));
+
+        ArrayList categories = new ArrayList();
+        categories.addAll(Arrays.asList(category.split(";")));
+
+
         userInfo.requestStatements(adapter.getItemCount() - 1, false,
-                sell, rent, category, location, priceFrom, priceTo, orderBy);
+                sell, rent, categories, locations, priceFrom, priceTo, orderBy);
     }
 
     @Override
@@ -350,12 +375,20 @@ public class MainActivity extends RootActivity
     }
 
     @Override
-    public void onRecyclerItemClick(int pos) {
-        if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > pos) {
-            StatementItem item = statementsEvent.getStatements().get(pos);
+    public void onItemClick(int position) {
+        if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > position) {
+            StatementItem item = statementsEvent.getStatements().get(position);
             StatementDetailsActivity.start(this, item.getStatementId());
         }
     }
+
+    @Override
+    public void onFavoritesClick(int position) {
+        if (!userInfo.isAuthorized()) {
+            showAuthorizationDialog(null);
+        }
+    }
+
 
     @Override
     public void onActivityResultEvent(ActivityResultEvent event) {
@@ -364,7 +397,7 @@ public class MainActivity extends RootActivity
                 case AppConsts.RC_FILTER:
                     filterValues = Parcels.unwrap(event.getData().getParcelableExtra(AppConsts.PARAM_FILTER_PARAMS));
                     statementsEvent = new StatementsEvent();
-                    adapter.setData(new ArrayList<StatementItem>());
+                    setUpRecyclerView();
                     break;
             }
         }
@@ -407,7 +440,11 @@ public class MainActivity extends RootActivity
         } else if (id == R.id.nav_inbox) {
             InboxActivity.start(this);
         } else if (id == R.id.nav_new_statement) {
-            NewStatementActivity.start(this);
+            if (!userInfo.isAuthorized()){
+                showAuthorizationDialog(null);
+            } else {
+                NewStatementActivity.start(MainActivity.this);
+            }
         } else if (id == R.id.nav_settings) {
             SettingsActivity.start(this);
         } else if (id == R.id.nav_terms_and_conditions) {

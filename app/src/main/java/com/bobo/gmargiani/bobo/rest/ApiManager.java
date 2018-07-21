@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.LogInData;
 import com.bobo.gmargiani.bobo.model.NetDataListener;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
@@ -43,25 +44,36 @@ public class ApiManager {
     }
 
     public void authorizeByToken(final String token) {
+        netApi.logInByToken(token, new RestCallback<ApiResponse<OwnerDetails>>() {
+            @Override
+            public void onResponse(ApiResponse<OwnerDetails> response) {
+                super.onResponse(response);
+                dataListener.onAuthorizeByTokenEvent(response, token);
+            }
 
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                ApiResponse<OwnerDetails> response = new ApiResponse<>();
+                response.setCode("-1");
+                dataListener.onAuthorizeByTokenEvent(response, token);
+            }
+        });
 
     }
 
 
     public void getStatements(final int from, final int count, final boolean sell, final boolean rent,
-                              final String category, final String location, final BigDecimal priceFrom,
+                              final ArrayList<String> categories, final ArrayList<String> locations, final BigDecimal priceFrom,
                               final BigDecimal priceTo, final String orderBy) {
 
-        System.out.println("request statements - from: " + from + "; count: " + count + "; sell: " + sell
-                + "; rent: " + rent + "; category: " + category + "; location: " + location + "; priceFrom: " + priceFrom
-                + "; priceTo: " + priceTo + "; orderBy: " + orderBy);
 
-        netApi.getStatements(from, count, sell, rent, category, location, priceFrom, priceTo, orderBy, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
+        netApi.getStatements(from, count, sell, rent, null, categories, locations, priceFrom, priceTo, orderBy, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
             @Override
             public void onResponse(ApiResponse<ArrayList<StatementItem>> response) {
                 super.onResponse(response);
                 dataListener.onStatementsEvent(response, from, count,
-                        sell, rent, category, location, priceFrom, priceTo, orderBy);
+                        sell, rent, categories, locations, priceFrom, priceTo, orderBy);
             }
 
             @Override
@@ -70,7 +82,7 @@ public class ApiManager {
                 ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
                 response.setCode("-1");
                 dataListener.onStatementsEvent(response, from, count,
-                        sell, rent, category, location, priceFrom, priceTo, orderBy);
+                        sell, rent, categories, locations, priceFrom, priceTo, orderBy);
             }
         });
     }
@@ -112,10 +124,6 @@ public class ApiManager {
         });
     }
 
-    public void getUserDetails(RestCallback<ApiResponse<OwnerDetails>> callback) {
-        netApi.getUserDetails(callback);
-    }
-
     public void getOwnerDetails(final String ownerId) {
         netApi.getOwnerDetails(ownerId, new RestCallback<ApiResponse<OwnerDetails>>() {
             @Override
@@ -132,15 +140,15 @@ public class ApiManager {
                 dataListener.onOwnerInfoDetails(response, ownerId);
             }
         });
-      //  dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId);
+        //  dataListener.onOwnerInfoDetails(ModelGenerator.getOwnerDetails(ownerId), ownerId);
     }
 
-    public void getSimilarStatements(final String statementId) {
-        netApi.getSimilarStatements(statementId, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
+    public void getSimilarStatements(final String setCategoryId) {
+        netApi.getSimilarStatements(setCategoryId, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
             @Override
             public void onResponse(ApiResponse<ArrayList<StatementItem>> response) {
                 super.onResponse(response);
-                dataListener.onSimilarStatements(statementId, response);
+                dataListener.onSimilarStatements(setCategoryId, response);
             }
 
             @Override
@@ -148,23 +156,65 @@ public class ApiManager {
                 super.onFailure(t);
                 ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
                 response.setCode("-1");
-                dataListener.onSimilarStatements(statementId, response);
+                dataListener.onSimilarStatements(setCategoryId, response);
             }
         });
     }
 
-    public void getStatementsByOwner(String ownerId) {
-      //  dataListener.onOwnerStatements(ownerId, ModelGenerator.generateStatements(10));
+    public void getStatementsByOwner(final String ownerId) {
+       netApi.getUserStatements(ownerId, 0, 10000, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
+           @Override
+           public void onResponse(ApiResponse<ArrayList<StatementItem>> response) {
+               super.onResponse(response);
+               dataListener.onOwnerStatements(ownerId, response);
+           }
+
+           @Override
+           public void onFailure(Throwable t) {
+               super.onFailure(t);
+               ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
+               response.setCode("-1");
+               dataListener.onOwnerStatements(ownerId, response);
+           }
+       });
     }
 
-    public void searchStatements(int from, int count, String query) {
-     //   dataListener.onSearchStatements(ModelGenerator.generateStatements(count), from, query, count);
+    public void searchStatements(final int from, final int count, final String query) {
+        netApi.getStatements(from, count, true, true, query, null, new ArrayList<String>(), null,
+                null, null, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
+                    @Override
+                    public void onResponse(ApiResponse<ArrayList<StatementItem>> response) {
+                        super.onResponse(response);
+                        dataListener.onSearchStatements(response, from, query, count);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
+                        response.setCode("-1");
+                        dataListener.onSearchStatements(response, from, query, count);
+                    }
+                });
     }
 
-    public void searchOwners(int from, int count, String query) {
-      //  dataListener.onSearchOwners(ModelGenerator.getOwnerDetails(count), from, query, count);
-    }
+    public void searchOwners(final int from, final int count, final String query) {
+        netApi.getUsers(from, count, query, new RestCallback<ApiResponse<ArrayList<OwnerDetails>>>() {
+            @Override
+            public void onResponse(ApiResponse<ArrayList<OwnerDetails>> response) {
+                super.onResponse(response);
+                dataListener.onSearchOwners(response, from, query, count);
+            }
 
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                ApiResponse<ArrayList<OwnerDetails>> response = new ApiResponse<>();
+                response.setCode("-1");
+                dataListener.onSearchOwners(response, from, query, count);
+            }
+        });
+    }
 
 
 }

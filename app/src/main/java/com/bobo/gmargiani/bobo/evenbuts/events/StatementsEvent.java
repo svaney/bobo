@@ -1,11 +1,14 @@
 package com.bobo.gmargiani.bobo.evenbuts.events;
 
+import android.text.TextUtils;
+
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class StatementsEvent extends RootEvent {
     private boolean canLoadMore = true;
@@ -13,40 +16,93 @@ public class StatementsEvent extends RootEvent {
 
     private boolean selling;
     private boolean rent;
-    private String category = "";
-    private String location = "";
+    private ArrayList<String> categories = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
     private BigDecimal priceFrom;
     private BigDecimal priceTo;
     private String orderBy = "";
 
     private ArrayList<StatementItem> statements = new ArrayList<>();
 
-    public StatementsEvent(){
+    public StatementsEvent() {
 
     }
 
-    public StatementsEvent(boolean sell, boolean rent, String category, String location,
-                           BigDecimal priceFrom, BigDecimal priceTo, String orderBy){
+    public StatementsEvent(boolean sell, boolean rent, ArrayList<String> categories, ArrayList<String> locations,
+                           BigDecimal priceFrom, BigDecimal priceTo, String orderBy) {
         setSelling(sell);
         setRent(rent);
-        setCategory(category);
-        setLocation(location);
+        setCategories(categories);
+        setLocations(locations);
         setPriceFrom(priceFrom);
         setPriceTo(priceTo);
         setOrderBy(orderBy);
     }
 
-    public boolean hasSameParameters(boolean sell, boolean rent, String category, String location,
+    public boolean hasSameParameters(boolean sell, boolean rent, ArrayList<String> categories, ArrayList<String> locations,
                                      BigDecimal priceFrom, BigDecimal priceTo, String orderBy) {
 
         if (isRent() != rent || isSelling() != sell
-                || !Utils.equals(getCategory(), category)
-                || !Utils.equals(getLocation(), location)
                 || !Utils.equals(getPriceFrom(), priceFrom)
                 || !Utils.equals(getPriceTo(), priceTo)
                 || !Utils.equals(getOrderBy(), orderBy)) {
             return false;
         }
+
+
+        HashSet<String> localCategories = new HashSet<>();
+        HashSet<String> passedCategories = new HashSet<>();
+
+        if (getCategories() != null) {
+            for (String cat : getCategories()) {
+                if (!TextUtils.isEmpty(cat))
+                    localCategories.add(cat);
+            }
+        }
+
+        if (categories != null) {
+            for (String cat : categories) {
+                if (!TextUtils.isEmpty(cat))
+                    passedCategories.add(cat);
+            }
+        }
+
+        HashSet<String> localLocations = new HashSet<>();
+        HashSet<String> passedLocations = new HashSet<>();
+
+        if (getLocations() != null) {
+            for (String loc : getLocations()) {
+                if (!TextUtils.isEmpty(loc))
+                    localLocations.add(loc);
+            }
+        }
+
+        if (locations != null) {
+            for (String loc : locations) {
+                if (!TextUtils.isEmpty(loc))
+                    passedLocations.add(loc);
+            }
+        }
+
+
+        if (localLocations.size() != passedLocations.size()
+                || localCategories.size() != passedCategories.size()) {
+            return false;
+        }
+
+        for (String loc : localLocations) {
+            if (!passedLocations.contains(loc)) {
+                return false;
+            }
+        }
+
+        for (String cat : localCategories) {
+            if (!passedCategories.contains(cat)) {
+                return false;
+            }
+        }
+
+
         return true;
     }
 
@@ -58,8 +114,8 @@ public class StatementsEvent extends RootEvent {
         ev.setFrom(getFrom());
         ev.setSelling(isSelling());
         ev.setRent(isRent());
-        ev.setCategory(getCategory());
-        ev.setLocation(getLocation());
+        ev.setCategories(getCategories());
+        ev.setLocations(getLocations());
         ev.setPriceFrom(getPriceFrom());
         ev.setPriceTo(getPriceTo());
         ev.setOrderBy(getOrderBy());
@@ -121,20 +177,20 @@ public class StatementsEvent extends RootEvent {
         this.rent = rent;
     }
 
-    public String getCategory() {
-        return category;
+    public ArrayList<String> getCategories() {
+        return categories;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategories(ArrayList<String> categories) {
+        this.categories = categories;
     }
 
-    public String getLocation() {
-        return location;
+    public ArrayList<String> getLocations() {
+        return locations;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocations(ArrayList<String> locations) {
+        this.locations = locations;
     }
 
     public BigDecimal getPriceFrom() {

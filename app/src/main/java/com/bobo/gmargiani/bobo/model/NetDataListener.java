@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public interface NetDataListener {
     void onAppVersionEvent(ApiResponse<AppVersion> response);
 
-    void onAuthorizeByTokenEvent(ApiResponse<Token> response);
+    void onAuthorizeByTokenEvent(ApiResponse<OwnerDetails> response, String token);
 
     void onStatementsEvent(ApiResponse<ArrayList<StatementItem>> response, int from, int count, boolean sell, boolean rent,
-                           String category, String location, BigDecimal priceFrom, BigDecimal priceTo, String orderBy);
+                           ArrayList<String> categories, ArrayList<String> locations, BigDecimal priceFrom, BigDecimal priceTo, String orderBy);
 
     void onLocationsResponse(ApiResponse<ArrayList<KeyValue>> response);
 

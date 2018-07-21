@@ -17,6 +17,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
+import com.bobo.gmargiani.bobo.ui.activites.SearchActivity;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.OwnerAdapter;
@@ -29,7 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class SearchListFragment extends RootFragment implements LazyLoaderListener, RecyclerItemClickListener {
+public class SearchListFragment extends RootFragment implements LazyLoaderListener, StatementRecyclerAdapter.StatementItemClickListener {
     public static final int LIST_TYPE_STATEMENT = 0;
     public static final int LIST_TYPE_OWNER = 10;
 
@@ -170,10 +171,10 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
     public void onLastItemIsVisible() {
         switch (listType) {
             case LIST_TYPE_OWNER:
-                App.getInstance().getUserInfo().searchOwners(searchQuery, ownerAdapter.getItemCount() - 1);
+                userInfo.searchOwners(searchQuery, ownerAdapter.getItemCount() - 1);
                 break;
             default:
-                App.getInstance().getUserInfo().searchStatements(searchQuery, statementAdapter.getItemCount() - 1);
+                userInfo.searchStatements(searchQuery, statementAdapter.getItemCount() - 1);
                 break;
         }
 
@@ -185,18 +186,30 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
     }
 
     @Override
-    public void onRecyclerItemClick(int pos) {
+    public void onItemClick(int position) {
         switch (listType) {
             case LIST_TYPE_OWNER:
-                if (ownerSearchEvent != null && ownerSearchEvent.getOwners() != null && pos >=0 && pos < ownerSearchEvent.getOwners().size()){
-                    OwnerProfileActivity.start(getContext(), ownerSearchEvent.getOwners().get(pos).getOwnerId());
+                if (ownerSearchEvent != null && ownerSearchEvent.getOwners() != null && position >= 0 && position < ownerSearchEvent.getOwners().size()) {
+                    OwnerProfileActivity.start(getContext(), ownerSearchEvent.getOwners().get(position).getOwnerId());
                 }
                 break;
             default:
-                if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && pos >=0 && pos < statementSearchEvent.getStatements().size()){
-                    StatementDetailsActivity.start(getContext(), statementSearchEvent.getStatements().get(pos));
+                if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && position >= 0 && position < statementSearchEvent.getStatements().size()) {
+                    StatementDetailsActivity.start(getContext(), statementSearchEvent.getStatements().get(position));
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onFavoritesClick(int position) {
+
+        try {
+            if (!userInfo.isAuthorized()) {
+                ((SearchActivity) getActivity()).showAuthorizationDialog(null);
+            }
+        } catch (Exception e) {
+
         }
 
     }

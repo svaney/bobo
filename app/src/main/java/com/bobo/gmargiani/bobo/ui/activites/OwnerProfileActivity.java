@@ -16,13 +16,16 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.ui.fragments.StatementListFragment;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
@@ -60,6 +63,9 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
     @BindView(R.id.app_bar)
     View appBar;
 
+    @BindView(R.id.subscribe_button)
+    TextView subscribeButton;
+
 
     private LocationsEvent locationsEvent;
 
@@ -82,13 +88,36 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
         locationsEvent = userInfo.getLocationsEvent();
 
         ownerId = getIntent().getStringExtra(AppConsts.PARAM_OWNER_ID);
+
+        subscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!userInfo.isAuthorized()){
+                    showAuthorizationDialog(null);
+                } else {
+
+                }
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        userInfo.requestLogInEvent();
         if (!TextUtils.isEmpty(ownerId)) {
             userInfo.requestOwnerDetails(ownerId);
+        }
+    }
+
+    private LogInEvent logInEvent;
+    @Subscribe
+    public void onLoginEvent(LogInEvent event) {
+        if (logInEvent != event) {
+            logInEvent = event;
+            if (userInfo.isAuthorized()) {
+                closeAuthorizeDialog();
+            }
         }
     }
 
@@ -135,10 +164,17 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
     private void setUpOwnerDetails() {
         if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null) {
-            ImageLoader.load(ownerPic)
-                    .setUrl(ownerDetailsEvent.getOwnerDetails().getAvatar())
-                    .setOval(true)
-                    .build();
+            if (!TextUtils.isEmpty(ownerDetailsEvent.getOwnerDetails().getAvatar())) {
+                ImageLoader.load(ownerPic)
+                        .setUrl(ownerDetailsEvent.getOwnerDetails().getAvatar())
+                        .setOval(true)
+                        .build();
+            } else {
+                ImageLoader.load(ownerPic)
+                        .setRes(R.drawable.ic_avatar_default)
+                        .setOval(true)
+                        .build();
+            }
 
             ImageLoader.load(icOwnerLocation)
                     .setRes(R.drawable.ic_blue_location)
@@ -155,6 +191,8 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
             ownerTel.setText(ownerDetailsEvent.getOwnerDetails().getPhone());
 
             ownerLocation.setText(locationsEvent.getValueByKey(ownerDetailsEvent.getOwnerDetails().getLocation()));
+
+            icOwnerLocation.setVisibility(TextUtils.isEmpty(ownerDetailsEvent.getOwnerDetails().getLocation()) ? View.GONE : View.VISIBLE);
 
             setUpOwnerTabs();
         }
@@ -177,6 +215,19 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
     public void onOwnerErrorClick() {
         if (!TextUtils.isEmpty(ownerId)) {
             userInfo.requestOwnerDetails(ownerId);
+        }
+    }
+
+    @OnClick(R.id.owner_tel)
+    public void onCallOwnerClick() {
+        if (ownerDetailsEvent != null && ownerDetailsEvent.getOwnerDetails() != null)
+            AppUtils.callNumber(this, ownerDetailsEvent.getOwnerDetails().getPhone());
+    }
+
+    @Subscribe
+    public void onPermissionGranted(GrantedPermissionsEvent event) {
+        if (event.getRequestCode() == AppConsts.PERMISSION_PHONE) {
+            onCallOwnerClick();
         }
     }
 

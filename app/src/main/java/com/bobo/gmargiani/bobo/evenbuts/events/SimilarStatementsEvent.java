@@ -6,15 +6,15 @@ import com.bobo.gmargiani.bobo.model.StatementItem;
 import java.util.ArrayList;
 
 public class SimilarStatementsEvent extends RootEvent {
-    private String statementId;
+    private String categoryId;
     private ArrayList<StatementItem> similarStatements;
 
-    public String getStatementId() {
-        return statementId;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setStatementId(String statementId) {
-        this.statementId = statementId;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public ArrayList<StatementItem> getSimilarStatements() {
@@ -28,7 +28,7 @@ public class SimilarStatementsEvent extends RootEvent {
     @Override
     public Object copyData() {
         SimilarStatementsEvent ev = new SimilarStatementsEvent();
-        ev.setStatementId(getStatementId());
+        ev.setCategoryId(getCategoryId());
         ev.setSimilarStatements(getSimilarStatements());
         return ev;
     }

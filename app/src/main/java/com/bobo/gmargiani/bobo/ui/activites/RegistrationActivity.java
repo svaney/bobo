@@ -1,9 +1,12 @@
 package com.bobo.gmargiani.bobo.ui.activites;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.os.Bundle;
@@ -19,20 +22,28 @@ import android.widget.ScrollView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
+import com.bobo.gmargiani.bobo.ui.views.NewImageView;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
+import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
+import com.bobo.gmargiani.bobo.utils.ImagePicker;
 import com.bobo.gmargiani.bobo.utils.Utils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class RegistrationActivity extends RootDetailedActivity {
+public class RegistrationActivity extends RootDetailedActivity implements NewImageView.NewImageListener{
 
     @BindView(R.id.user_profile_picture)
     ImageView userAvatar;
@@ -135,15 +146,75 @@ public class RegistrationActivity extends RootDetailedActivity {
             }
         });
 
+    userAvatarWrapper.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onImageClick(0);
+        }
+    });
+    }
+
+
+    @Subscribe
+    public void onActivityResultEvent(ActivityResultEvent event) {
+        if (ImagePicker.isImagePickedSuccessfully(event.getRequestCode(), event.getResultCode())) {
+            ImagePicker.beginCrop(this, event.getResultCode(), event.getData(), 0);
+
+        } else if (ImagePicker.isImageCroppedSuccessfully(event.getRequestCode(), event.getResultCode())) {
+            Bitmap bitmap = ImagePicker.getCroppedImage(this, event.getResultCode(), event.getData());
+            ImageLoader.load(userAvatar)
+                    .setBitmap(bitmap)
+                    .setOval(true)
+                    .build();
+        }
+    }
+
+    @Override
+    public void onCloseImageClick(int position) {
 
     }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onImageClick(int pos) {
+        if (!AppUtils.hasPermission(this, Manifest.permission.CAMERA) && !permissionRequested) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, AppConsts.PERMISSION_CAMERA);
+        } else {
+            permissionRequested = false;
+            ImagePicker.pickImageUsingChooser(RegistrationActivity.this, R.string.common_text_avatar, R.string.common_text_avatar);
+        }
+    }
+
+    private boolean permissionRequested;
+
+    @Subscribe
+    public void onGrantedPermissionEvent(GrantedPermissionsEvent event) {
+        if (event.getGrantedPermissions().size() > 0) {
+            if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
+                onImageClick(0);
+            }
+        }
+    }
+
+    @Subscribe
+    public void onDeniedPermissionEvent(DeniedPermissionsEvent event) {
+        if (event.getDeniedPermissions().size() > 0) {
+            if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
+                permissionRequested = true;
+                onImageClick(0);
+                AlertManager.showError(this, "თქვენ უარი თქვით კამერის გამოყენების უფლებაზე. " +
+                        "შესაბამისად შესაძლებელი იქნება სურათების მხოლოდ გალერეედან ატვირთვა", AlertManager.VERY_LONG);
+            }
+        }
+    }
+
 
     @OnClick(R.id.register_button)
     public void onRegisterClick() {
         if (validateInputs()) {
             showFullLoading();
             App.getNetApi().registerUser(isCompany.isChecked(), userName.getText().toString(), userLastName.getText().toString(),
-                    companyName.getText().toString(), userPassword.getText().toString(),  userMail.getText().toString(), userPhone.getText().toString(),
+                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(),
                     new RestCallback<ApiResponse<Object>>() {
                         @Override
                         public void onResponse(ApiResponse<Object> response) {
