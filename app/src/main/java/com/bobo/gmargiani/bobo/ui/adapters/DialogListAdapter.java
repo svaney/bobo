@@ -25,15 +25,13 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int listType;
     private Context context;
     private ArrayList<DialogPair> data;
+    private RecyclerItemClickListener listener;
 
-    public DialogListAdapter(Context context, ArrayList<DialogPair> data) {
-        this(context, data, ListDialog.DIALOG_LIST_TYPE_SINGLE);
-    }
-
-    public DialogListAdapter(Context context, ArrayList<DialogPair> data, int type) {
+    public DialogListAdapter(Context context, ArrayList<DialogPair> data, int type, RecyclerItemClickListener listener) {
         this.listType = type;
         this.context = context;
         this.data = data;
+        this.listener = listener;
     }
 
     public void setData(ArrayList<DialogPair> data) {
@@ -70,8 +68,10 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
             default:
                 SingleItemHolder h1 = (SingleItemHolder) holder;
+                h1.itemRadio.setOnCheckedChangeListener(null);
                 h1.itemText.setText(data.get(position).getKey());
                 h1.itemRadio.setChecked(data.get(position).getValue());
+                h1.itemRadio.setOnCheckedChangeListener(h1);
                 break;
         }
     }
@@ -154,6 +154,9 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 data.get(getAdapterPosition()).setValue(b);
 
+                if (listener != null){
+                    listener.onRecyclerItemClick(getAdapterPosition());
+                }
             }
         }
     }

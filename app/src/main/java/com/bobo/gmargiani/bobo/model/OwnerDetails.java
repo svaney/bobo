@@ -21,6 +21,30 @@ public class OwnerDetails {
     private ArrayList<String> subscribedUsers;
     private ArrayList<String> favourites;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ArrayList<String> getSubscribedUsers() {
+        return subscribedUsers;
+    }
+
+    public void setSubscribedUsers(ArrayList<String> subscribedUsers) {
+        this.subscribedUsers = subscribedUsers;
+    }
+
+    public ArrayList<String> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(ArrayList<String> favourites) {
+        this.favourites = favourites;
+    }
+
     public String getAvatar() {
         return avatar;
     }

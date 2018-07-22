@@ -23,8 +23,12 @@ import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.NetApi;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.dialogs.AuthorizationDialog;
+import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.LocaleHelper;
@@ -44,6 +48,7 @@ import butterknife.ButterKnife;
 
 public abstract class RootActivity extends AppCompatActivity {
     protected UserInfo userInfo;
+    protected NetApi netApi;
 
     protected Handler handler = new Handler();
 
@@ -55,6 +60,7 @@ public abstract class RootActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         this.userInfo = App.getInstance().getUserInfo();
+        this.netApi = App.getNetApi();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -233,6 +239,96 @@ public abstract class RootActivity extends AppCompatActivity {
         builder.setOnDismissListener(onDismissListener);
 
         builder.show();
+    }
+
+    public void changeItemFavorite(final String statementId, final RestCallback<ApiResponse<Object>> onResponse) {
+
+        final boolean isFavorite = userInfo.isStatementFavorite(statementId);
+
+        if (isFavorite) {
+            userInfo.removeFromFavorites(statementId);
+        } else {
+            userInfo.addToFavorites(statementId);
+        }
+
+
+        netApi.setFavorite(statementId, !isFavorite, new RestCallback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(ApiResponse<Object> response) {
+                super.onResponse(response);
+                if (!response.isSuccess()) {
+                    if (isFavorite) {
+                        userInfo.addToFavorites(statementId);
+                    } else {
+                        userInfo.removeFromFavorites(statementId);
+                    }
+
+                    AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
+                    if (onResponse != null) {
+                        onResponse.onResponse(response);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (isFavorite) {
+                    userInfo.addToFavorites(statementId);
+                } else {
+                    userInfo.removeFromFavorites(statementId);
+                }
+                AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
+                if (onResponse != null) {
+                    onResponse.onFailure(t);
+                }
+            }
+        });
+    }
+
+    public void changeUserSubscribtion(final String ownerId, final RestCallback<ApiResponse<Object>> onResponse) {
+
+        final boolean isFavorite = userInfo.isUserSubscribed(ownerId);
+
+        if (isFavorite) {
+            userInfo.removeFromSubscribed(ownerId);
+        } else {
+            userInfo.subscribeUser(ownerId);
+        }
+
+
+        netApi.subscribeUser(ownerId, !isFavorite, new RestCallback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(ApiResponse<Object> response) {
+                super.onResponse(response);
+                if (!response.isSuccess()) {
+                    if (isFavorite) {
+                        userInfo.subscribeUser(ownerId);
+                    } else {
+                        userInfo.removeFromSubscribed(ownerId);
+                    }
+
+                    AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
+                    if (onResponse != null) {
+                        onResponse.onResponse(response);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (isFavorite) {
+                    userInfo.subscribeUser(ownerId);
+                } else {
+                    userInfo.removeFromSubscribed(ownerId);
+                }
+                AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
+                if (onResponse != null) {
+                    onResponse.onFailure(t);
+                }
+            }
+        });
     }
 
     public abstract int getLayoutId();

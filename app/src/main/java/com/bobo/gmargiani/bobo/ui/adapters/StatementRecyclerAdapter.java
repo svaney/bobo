@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.utils.DummyRecyclerViewHolder;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.Utils;
@@ -24,6 +25,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
     public static final int ADAPTER_TYPE_GRID = 20;
     public static final int ADAPTER_TYPE_SIMILAR = 30;
 
+    private UserInfo userInfo;
 
     private StatementItemClickListener clickListener;
 
@@ -33,11 +35,12 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
         return adapterType == ADAPTER_TYPE_GRID;
     }
 
-    public StatementRecyclerAdapter(Context context, int adapterType, StatementItemClickListener clickListener, LazyLoaderListener listener) {
+    public StatementRecyclerAdapter(Context context, int adapterType, StatementItemClickListener clickListener, LazyLoaderListener listener, UserInfo userInfo) {
         this.context = context;
         this.adapterType = adapterType;
         this.lazyLoaderListener = listener;
         this.clickListener = clickListener;
+        this.userInfo = userInfo;
     }
 
 
@@ -76,8 +79,16 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                     .setErroPlaceHolder(R.drawable.statement_image_place_holder)
                     .build();
 
-            if (holder.favoritesIc != null)
-                holder.favoritesIc.setVisibility(View.VISIBLE);
+
+            if (holder.favoritesIcFilled != null && holder.favoritesIc != null) {
+                if (userInfo.isStatementFavorite(item.getStatementId())) {
+                    holder.favoritesIcFilled.setVisibility(View.VISIBLE);
+                    holder.favoritesIc.setVisibility(View.GONE);
+                } else {
+                    holder.favoritesIc.setVisibility(View.VISIBLE);
+                    holder.favoritesIcFilled.setVisibility(View.GONE);
+                }
+            }
 
         }
     }
@@ -114,6 +125,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                 });
             }
 
+
             if (favoritesIcFilled != null) {
                 ImageLoader.load(favoritesIcFilled)
                         .setRes(R.drawable.ic_favorite_filled)
@@ -130,6 +142,7 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                 });
             }
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,8 +156,9 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
         }
     }
 
-    public interface StatementItemClickListener{
+    public interface StatementItemClickListener {
         void onItemClick(int position);
+
         void onFavoritesClick(int position);
     }
 }

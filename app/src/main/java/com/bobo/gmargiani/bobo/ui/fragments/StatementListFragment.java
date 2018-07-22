@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
+import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
@@ -63,7 +66,8 @@ public class StatementListFragment extends RootFragment implements StatementRecy
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             }
 
-            adapter = new StatementRecyclerAdapter(getContext(), isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, null);
+            adapter = new StatementRecyclerAdapter(getContext(), isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST,
+                    this, null, userInfo);
             adapter.setIsLoading(false);
 
             adapter.setData(statements);
@@ -82,13 +86,43 @@ public class StatementListFragment extends RootFragment implements StatementRecy
     }
 
     @Override
-    public void onFavoritesClick(int position) {
-        if (userInfo == null || userInfo.isAuthorized()) {
-            try {
-                ((OwnerProfileActivity) getActivity()).showAuthorizationDialog(null);
-            } catch (Exception ignored) {
+    public void onResume() {
+        super.onResume();
+        refreshInfo();
+    }
 
+    private void refreshInfo() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onFavoritesClick(int position) {
+        try {
+            if (userInfo == null || !userInfo.isAuthorized()) {
+                ((RootActivity) getActivity()).showAuthorizationDialog(null);
+            } else if (statements != null && statements.size() > position) {
+                ((RootActivity) getActivity()).changeItemFavorite(statements.get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                    @Override
+                    public void onResponse(ApiResponse<Object> response) {
+                        super.onResponse(response);
+                        if (!response.isSuccess()) {
+                            refreshInfo();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        refreshInfo();
+                    }
+                });
+               refreshInfo();
             }
+
+        } catch (Exception ignored) {
+
         }
     }
 

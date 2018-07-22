@@ -469,6 +469,27 @@ public class UserInfo implements NetDataListener {
         eventBus.post(categoriesEvent);
     }
 
+    public boolean isStatementFavorite(String statementId) {
+        if (!TextUtils.isEmpty(statementId) && isAuthorized()) {
+            for (String id : logInEvent.getLogInData().getUserDetails().getFavourites()) {
+                if (statementId.equals(id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isUserSubscribed(String ownerId) {
+        if (!TextUtils.isEmpty(ownerId) && isAuthorized()) {
+            for (String id : logInEvent.getLogInData().getUserDetails().getSubscribedUsers()) {
+                if (ownerId.equals(id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public CategoriesEvent getCategoriesEvent() {
         return categoriesEvent;
@@ -484,7 +505,24 @@ public class UserInfo implements NetDataListener {
     }
 
     public boolean isAuthorized() {
-        return logInEvent == null ? false : logInEvent.isLoggedIn();
+        if (logInEvent != null) {
+            if (!logInEvent.isLoggedIn() || logInEvent.getLogInData() == null || logInEvent.getLogInData().getUserDetails() == null) {
+                logInEvent.setLoggedIn(false);
+            }
+        } else {
+            logInEvent = new LogInEvent();
+            logInEvent.setState(RootEvent.STATE_SUCCESS);
+            logInEvent.setLoggedIn(false);
+        }
+        if (logInEvent.isLoggedIn()) {
+            if (logInEvent.getLogInData().getUserDetails().getFavourites() == null) {
+                logInEvent.getLogInData().getUserDetails().setFavourites(new ArrayList<String>());
+            }
+            if (logInEvent.getLogInData().getUserDetails().getSubscribedUsers() == null) {
+                logInEvent.getLogInData().getUserDetails().setSubscribedUsers(new ArrayList<String>());
+            }
+        }
+        return logInEvent.isLoggedIn();
     }
 
     public boolean shouldNotRefresh(RootEvent event, boolean update) {
@@ -508,4 +546,39 @@ public class UserInfo implements NetDataListener {
     }
 
 
+    public void addToFavorites(String statementId) {
+        if (!TextUtils.isEmpty(statementId) && isAuthorized()) {
+            for (String id : logInEvent.getLogInData().getUserDetails().getFavourites()) {
+                if (statementId.equals(id)) {
+                    return;
+                }
+            }
+
+            logInEvent.getLogInData().getUserDetails().getFavourites().add(statementId);
+        }
+    }
+
+    public void removeFromFavorites(String statementId) {
+        if (!TextUtils.isEmpty(statementId) && isAuthorized()) {
+            logInEvent.getLogInData().getUserDetails().getFavourites().remove(statementId);
+        }
+    }
+
+    public void subscribeUser(String userId) {
+        if (!TextUtils.isEmpty(userId) && isAuthorized()) {
+            for (String id : logInEvent.getLogInData().getUserDetails().getSubscribedUsers()) {
+                if (userId.equals(id)) {
+                    return;
+                }
+            }
+
+            logInEvent.getLogInData().getUserDetails().getSubscribedUsers().add(userId);
+        }
+    }
+
+    public void removeFromSubscribed(String userId) {
+        if (!TextUtils.isEmpty(userId) && isAuthorized()) {
+            logInEvent.getLogInData().getUserDetails().getSubscribedUsers().remove(userId);
+        }
+    }
 }

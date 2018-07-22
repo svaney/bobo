@@ -58,4 +58,10 @@ public interface RetrofitService {
 
     @POST("/statements/search")
     Call<ApiResponse<ArrayList<StatementItem>>> getUserStatements(@Body RetrofitApi.OwnerStatements body);
+
+    @POST("/users/setFavourite")
+    Call<ApiResponse<Object>> setFavorite(@Header("Authorization") String token, @Body RetrofitApi.FavoriteStatement favorite);
+
+    @POST("/users/subscribeUser")
+    Call<ApiResponse<Object>> setSubscribed(@Header("Authorization") String token, @Body RetrofitApi.SubscribeUser subscribe);
 }

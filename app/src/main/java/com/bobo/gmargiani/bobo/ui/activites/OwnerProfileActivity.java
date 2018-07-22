@@ -23,6 +23,8 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.fragments.StatementListFragment;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
@@ -92,10 +94,24 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
         subscribeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!userInfo.isAuthorized()){
+                if (!userInfo.isAuthorized()) {
                     showAuthorizationDialog(null);
-                } else {
+                } else if (ownerDetailsEvent != null && ownerDetailsEvent.getState() == RootEvent.STATE_SUCCESS
+                        && ownerDetailsEvent.getOwnerDetails() != null) {
+                    changeUserSubscribtion(ownerDetailsEvent.getOwnerDetails().getOwnerId(), new RestCallback<ApiResponse<Object>>() {
+                        @Override
+                        public void onResponse(ApiResponse<Object> response) {
+                            super.onResponse(response);
+                            refreshInfo();
+                        }
 
+                        @Override
+                        public void onFailure(Throwable t) {
+                            super.onFailure(t);
+                            refreshInfo();
+                        }
+                    });
+                    refreshInfo();
                 }
             }
         });
@@ -111,13 +127,32 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
     }
 
     private LogInEvent logInEvent;
+
     @Subscribe
     public void onLoginEvent(LogInEvent event) {
         if (logInEvent != event) {
             logInEvent = event;
             if (userInfo.isAuthorized()) {
                 closeAuthorizeDialog();
+                refreshInfo();
+
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshInfo();
+    }
+
+    private void refreshInfo() {
+        if (ownerDetailsEvent != null && ownerDetailsEvent.getState() == RootEvent.STATE_SUCCESS
+                && ownerDetailsEvent.getOwnerDetails() != null) {
+            subscribeButton.setText(userInfo.isUserSubscribed(ownerDetailsEvent.getOwnerDetails().getOwnerId()) ? getString(R.string.common_text_unsubscribe)
+                    : getString(R.string.common_text_subscribe));
+        } else {
+            subscribeButton.setText(getString(R.string.common_text_subscribe));
         }
     }
 
@@ -139,6 +174,7 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
         } else {
             userInfo.requestOwnerStatements(ownerId);
         }
+        refreshInfo();
     }
 
     @Subscribe
@@ -158,7 +194,6 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
                     break;
             }
         }
-
         refreshHeaderText();
     }
 

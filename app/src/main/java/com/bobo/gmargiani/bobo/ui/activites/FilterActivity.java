@@ -299,7 +299,7 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         ListDialog categoryDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
             @Override
             public void onItemsSelected(ArrayList<Integer> itemPositions) {
-                if (itemPositions != null && itemPositions.size() > 0) {
+                if (itemPositions != null) {
                     String newCategories = "";
                     for (Integer i : itemPositions) {
                         newCategories += categoriesEvent.getCategories().get(i).getKey() + ";";
@@ -322,7 +322,7 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     @OnClick(R.id.location)
     public void onLocationClick() {
-        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
+        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
             @Override
             public void onItemsSelected(ArrayList<Integer> itemPositions) {
                 if (itemPositions != null) {

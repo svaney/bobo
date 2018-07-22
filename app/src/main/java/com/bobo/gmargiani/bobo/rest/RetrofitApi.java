@@ -6,6 +6,7 @@ import com.bobo.gmargiani.bobo.model.LogInData;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -107,6 +108,20 @@ public class RetrofitApi extends NetApi {
         call.enqueue(new RetrofitCallback<>(callback));
     }
 
+    @Override
+    public void setFavorite(String statementId, boolean isFavorite, RestCallback<ApiResponse<Object>> callback) {
+        Call<ApiResponse<Object>> call = retService.setFavorite("Bearer " + PreferencesApiManager.getInstance().getToken(), new FavoriteStatement(statementId, isFavorite));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void subscribeUser(String userId, boolean isSubscribed, RestCallback<ApiResponse<Object>> callback) {
+        Call<ApiResponse<Object>> call = retService.setSubscribed("Bearer " + PreferencesApiManager.getInstance().getToken(), new SubscribeUser(userId, isSubscribed));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
     public class OwnerStatements {
         int from;
         int count;
@@ -128,6 +143,26 @@ public class RetrofitApi extends NetApi {
             this.from = from;
             this.count = to;
             this.searchQuery = searchQuery;
+        }
+    }
+
+    public class FavoriteStatement {
+        String statementId;
+        boolean isFavourite;
+
+        public FavoriteStatement(String statementId, boolean isFavourite) {
+            this.statementId = statementId;
+            this.isFavourite = isFavourite;
+        }
+    }
+
+    public class SubscribeUser {
+        String userId;
+        boolean isSubscribed;
+
+        public SubscribeUser(String userId, boolean isSubscribed) {
+            this.userId = userId;
+            this.isSubscribed = isSubscribed;
         }
     }
 

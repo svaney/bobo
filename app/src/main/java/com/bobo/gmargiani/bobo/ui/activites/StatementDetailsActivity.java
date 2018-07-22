@@ -21,6 +21,8 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.FullScreenGalleryView;
@@ -196,7 +198,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
                 }
             });
 
-            galleryFooter.showFilledFavorite(false);
+            galleryFooter.showFilledFavorite(userInfo.isStatementFavorite(statementItem.getStatementId()));
             galleryFooter.setOnFavoriteClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -219,9 +221,41 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshInfo();
+    }
+
+    private void refreshInfo() {
+        if (galleryFooter != null) {
+            galleryFooter.showFilledFavorite(userInfo.isStatementFavorite(statementItem.getStatementId()));
+        }
+        if (fullGalleryFooter != null) {
+            fullGalleryFooter.showFilledFavorite(userInfo.isStatementFavorite(statementItem.getStatementId()));
+        }
+    }
+
     private void onFavoriteClick() {
         if (!userInfo.isAuthorized()) {
             showAuthorizationDialog(null);
+        } else if (statementItem != null) {
+            changeItemFavorite(statementItem.getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                @Override
+                public void onResponse(ApiResponse<Object> response) {
+                    super.onResponse(response);
+                    if (!response.isSuccess()) {
+                        refreshInfo();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    super.onFailure(t);
+                    refreshInfo();
+                }
+            });
+            refreshInfo();
         }
     }
 
@@ -237,7 +271,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
             fullGallery.setImageTouchable(true);
             fullGallery.addOnPageChangeListener(fullGalleryFooter);
 
-            fullGalleryFooter.showFilledFavorite(false);
+            fullGalleryFooter.showFilledFavorite(userInfo.isStatementFavorite(statementItem.getStatementId()));
             fullGalleryFooter.setDataSize(statementItem.getImages() == null ? 0 : statementItem.getImages().size());
             fullGalleryFooter.setGallery(fullGallery);
             fullGalleryFooter.setSelectedPos(pos);
@@ -330,7 +364,8 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
                 LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
                 similarRecycler.setLayoutManager(layoutManager);
-                StatementRecyclerAdapter adapter = new StatementRecyclerAdapter(this, StatementRecyclerAdapter.ADAPTER_TYPE_SIMILAR, this, null);
+                StatementRecyclerAdapter adapter = new StatementRecyclerAdapter(this, StatementRecyclerAdapter.ADAPTER_TYPE_SIMILAR,
+                        this, null, userInfo);
                 adapter.setIsLoading(false);
                 adapter.setData(similarStatementsEvent.getSimilarStatements());
                 similarRecycler.setAdapter(adapter);
@@ -366,6 +401,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
     }
 
     private LogInEvent logInEvent;
+
     @Subscribe
     public void onLoginEvent(LogInEvent event) {
         if (logInEvent != event) {

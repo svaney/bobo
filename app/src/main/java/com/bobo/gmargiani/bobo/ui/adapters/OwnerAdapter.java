@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,15 +12,18 @@ import android.widget.TextView;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.model.OwnerDetails;
+import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 
 public class OwnerAdapter extends InfinityAdapter {
     private StatementRecyclerAdapter.StatementItemClickListener clickListener;
+    private UserInfo userInfo;
 
-    public OwnerAdapter(Context context, StatementRecyclerAdapter.StatementItemClickListener clickListener, LazyLoaderListener listener) {
+    public OwnerAdapter(Context context, StatementRecyclerAdapter.StatementItemClickListener clickListener, LazyLoaderListener listener, UserInfo userInfo) {
         this.context = context;
         this.lazyLoaderListener = listener;
         this.clickListener = clickListener;
+        this.userInfo = userInfo;
     }
 
     @Override
@@ -52,10 +56,21 @@ public class OwnerAdapter extends InfinityAdapter {
                         .build();
             }
 
-            ImageLoader.load(holder.subscribeImage)
-                    .setRes(R.drawable.ic_subscribe_empty)
-                    .applyTint(false)
-                    .build();
+            if (userInfo.isUserSubscribed(item.getOwnerId())){
+                ImageLoader.load(holder.subscribeImage)
+                        .setRes(R.drawable.ic_subscribe_full)
+                        .applyTint(true)
+                        .build();
+                holder.subscribeText.setText(context.getString(R.string.common_text_unsubscribe_two_line));
+                holder.subscribeText.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+            } else {
+                ImageLoader.load(holder.subscribeImage)
+                        .setRes(R.drawable.ic_subscribe_empty)
+                        .applyTint(false)
+                        .build();
+                holder.subscribeText.setText(context.getString(R.string.common_text_subscribe));
+                holder.subscribeText.setTextColor(ContextCompat.getColor(context, R.color.color_black));
+            }
 
         }
     }

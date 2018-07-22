@@ -8,10 +8,11 @@ import android.widget.Button;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.ui.adapters.DialogListAdapter;
+import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 
-public class ListDialog extends BaseDialog {
+public class ListDialog extends BaseDialog implements RecyclerItemClickListener {
     public static final int DIALOG_LIST_TYPE_SINGLE = 10;
     public static final int DIALOG_LIST_TYPE_MULTIPLE = 20;
 
@@ -38,7 +39,7 @@ public class ListDialog extends BaseDialog {
 
         findViews();
 
-        this.adapter = new DialogListAdapter(getContext(), data, listType);
+        this.adapter = new DialogListAdapter(getContext(), data, listType, this);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         this.recyclerView.setAdapter(adapter);
     }
@@ -77,6 +78,11 @@ public class ListDialog extends BaseDialog {
     @Override
     protected int layoutId() {
         return R.layout.dialog_list;
+    }
+
+    @Override
+    public void onRecyclerItemClick(int pos) {
+        okButton.callOnClick();
     }
 
     public interface ListDialogItemsSelectedListener {

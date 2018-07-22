@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.rest.NetApi;
 
 /**
  * Created by gmargiani on 1/30/2018.
@@ -17,17 +18,21 @@ import com.bobo.gmargiani.bobo.model.UserInfo;
 
 public class RootFragment extends Fragment {
     protected UserInfo userInfo;
+    protected NetApi netApi;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.userInfo = App.getInstance().getUserInfo();
+        this.netApi = App.getNetApi();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.userInfo = App.getInstance().getUserInfo();
+        this.netApi = App.getNetApi();
         return super.onCreateView(inflater, container, savedInstanceState);
+
     }
 }

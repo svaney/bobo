@@ -16,7 +16,10 @@ import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
+import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.activites.SearchActivity;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
@@ -150,14 +153,14 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
 
             switch (listType) {
                 case LIST_TYPE_OWNER:
-                    ownerAdapter = new OwnerAdapter(getContext(), this, this);
+                    ownerAdapter = new OwnerAdapter(getContext(), this, this, userInfo);
                     ownerAdapter.setIsLoading(true);
                     ownerAdapter.setData(new ArrayList<>());
                     recyclerView.setAdapter(ownerAdapter);
                     break;
                 default:
                     statementAdapter = new StatementRecyclerAdapter(getContext(),
-                            isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this);
+                            isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this, userInfo);
                     statementAdapter.setIsLoading(true);
                     statementAdapter.setData(new ArrayList<>());
                     recyclerView.setAdapter(statementAdapter);
@@ -206,12 +209,70 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
 
         try {
             if (!userInfo.isAuthorized()) {
-                ((SearchActivity) getActivity()).showAuthorizationDialog(null);
+                ((RootActivity) getActivity()).showAuthorizationDialog(null);
+            } else {
+                switch (listType) {
+                    case LIST_TYPE_OWNER:
+                        if (ownerSearchEvent != null && ownerSearchEvent.getOwners() != null && ownerSearchEvent.getOwners().size() > position) {
+                            ((RootActivity) getActivity()).changeUserSubscribtion(ownerSearchEvent.getOwners().get(position).getOwnerId(), new RestCallback<ApiResponse<Object>>() {
+                                @Override
+                                public void onResponse(ApiResponse<Object> response) {
+                                    super.onResponse(response);
+                                    if (!response.isSuccess()) {
+                                        refreshInfo();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    super.onFailure(t);
+                                    refreshInfo();
+                                }
+                            });
+                            refreshInfo();
+                        }
+                        break;
+                    default:
+                        if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && statementSearchEvent.getStatements().size() > position) {
+                            ((RootActivity) getActivity()).changeItemFavorite(statementSearchEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                                @Override
+                                public void onResponse(ApiResponse<Object> response) {
+                                    super.onResponse(response);
+                                    if (!response.isSuccess()) {
+                                        refreshInfo();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Throwable t) {
+                                    super.onFailure(t);
+                                    refreshInfo();
+                                }
+                            });
+                            refreshInfo();
+                        }
+                        break;
+                }
             }
         } catch (Exception e) {
 
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshInfo();
+    }
+
+    private void refreshInfo() {
+        if (statementAdapter != null) {
+            statementAdapter.notifyDataSetChanged();
+        }
+        if (ownerAdapter != null){
+            ownerAdapter.notifyDataSetChanged();
+        }
     }
 }
 

@@ -25,10 +25,14 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.UserInfo;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
+import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
@@ -184,7 +188,7 @@ public class MainActivity extends RootActivity
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!userInfo.isAuthorized()){
+                if (!userInfo.isAuthorized()) {
                     showAuthorizationDialog(null);
                 } else {
                     NewStatementActivity.start(MainActivity.this);
@@ -246,6 +250,9 @@ public class MainActivity extends RootActivity
                             .build();
 
                 authorizeText.setText(event.getLogInData().getUserDetails().getDisplayName());
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
         }
@@ -270,7 +277,8 @@ public class MainActivity extends RootActivity
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-        adapter = new StatementRecyclerAdapter(this, isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST, this, this);
+        adapter = new StatementRecyclerAdapter(this, isGrid ? StatementRecyclerAdapter.ADAPTER_TYPE_GRID : StatementRecyclerAdapter.ADAPTER_TYPE_LIST,
+                this, this, userInfo);
         adapter.setIsLoading(true);
         statementsEvent = null;
         adapter.setData(new ArrayList<StatementItem>());
@@ -386,9 +394,37 @@ public class MainActivity extends RootActivity
     public void onFavoritesClick(int position) {
         if (!userInfo.isAuthorized()) {
             showAuthorizationDialog(null);
+        } else if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > position) {
+            changeItemFavorite(statementsEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                @Override
+                public void onResponse(ApiResponse<Object> response) {
+                    super.onResponse(response);
+                    if (!response.isSuccess()) {
+                        refreshInfo();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    super.onFailure(t);
+                    refreshInfo();
+                }
+            });
+            refreshInfo();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshInfo();
+    }
+
+    private void refreshInfo() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onActivityResultEvent(ActivityResultEvent event) {
@@ -440,7 +476,7 @@ public class MainActivity extends RootActivity
         } else if (id == R.id.nav_inbox) {
             InboxActivity.start(this);
         } else if (id == R.id.nav_new_statement) {
-            if (!userInfo.isAuthorized()){
+            if (!userInfo.isAuthorized()) {
                 showAuthorizationDialog(null);
             } else {
                 NewStatementActivity.start(MainActivity.this);
