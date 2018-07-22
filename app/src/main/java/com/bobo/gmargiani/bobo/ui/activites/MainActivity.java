@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.ui.activites;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,7 @@ import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.adapters.LazyLoaderListener;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
 import com.bobo.gmargiani.bobo.ui.adapters.StatementRecyclerAdapter;
+import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
 import com.bobo.gmargiani.bobo.ui.views.ToolbarSearchWidget;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
@@ -73,6 +76,9 @@ public class MainActivity extends RootActivity
 
     @BindView(R.id.recycler_view)
     protected RecyclerView recyclerView;
+
+    @BindView(R.id.filter_value_wrapper)
+    protected FrameLayout filterTextViewWrapper;
 
     @BindView(R.id.floating_component)
     protected ViewGroup floatingButton;
@@ -345,6 +351,7 @@ public class MainActivity extends RootActivity
         if (statementsEvent != event) {
             statementsEvent = event;
 
+            filterTextViewWrapper.setVisibility(View.GONE);
             switch (event.getState()) {
                 case RootEvent.STATE_LOADING:
                     adapter.setIsLoading(true);
@@ -353,10 +360,79 @@ public class MainActivity extends RootActivity
                     adapter.setError();
                     break;
                 case RootEvent.STATE_SUCCESS:
+                    setUpFilterTypeView();
                     adapter.setData(event.getStatements());
                     adapter.setIsLoading(event.canLoadMore());
                     break;
             }
+        }
+    }
+
+
+    private void setUpFilterTypeView(){
+        BigDecimal priceFrom = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
+                null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM));
+
+        BigDecimal priceTo = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_TO)) ?
+                null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_TO));
+
+        String category = filterValues.get(FilterActivity.FILTER_PARAM_POS_CATEGORY);
+        String location = filterValues.get(FilterActivity.FILTER_PARAM_POS_LOCATION);
+        String orderBy = filterValues.get(FilterActivity.FILTER_PARAM_POS_ORDER_BY);
+
+        ArrayList<String> locations = new ArrayList();
+        locations.addAll(Arrays.asList(location.split(";")));
+
+        ArrayList<String> categories = new ArrayList();
+        categories.addAll(Arrays.asList(category.split(";")));
+
+        String filterText = "";
+
+        if (categories != null){
+            if (categories.size() > 0 && !TextUtils.isEmpty(categories.get(0))) {
+                filterText += getString(R.string.filter_title_category) +": ";
+                for (String cat : categories) {
+                    filterText += userInfo.getCategoriesEvent().getValueByKey(cat) + "; ";
+                }
+            }
+        }
+
+        if (locations != null){
+            if (locations.size() > 0 && !TextUtils.isEmpty(locations.get(0))) {
+                filterText += getString(R.string.filter_title_location) +": ";
+                for (String cat : locations) {
+                    filterText += userInfo.getLocationsEvent().getValueByKey(cat) + "; ";
+                }
+            }
+        }
+
+        if (priceFrom != null){
+            filterText += getString(R.string.filter_title_price_from) + ": " + String.valueOf(priceFrom) + "; ";
+        }
+
+        if (priceTo != null){
+            filterText += getString(R.string.filter_title_price_to) + ": " + String.valueOf(priceTo) + "; ";
+        }
+
+        if (!TextUtils.isEmpty(filterText)) {
+            filterTextViewWrapper.setVisibility(View.VISIBLE);
+            FilterTextView filterTextView = new FilterTextView(this);
+            filterTextView.showCloseButton(true);
+            filterTextView.setText(filterText);
+            filterTextViewWrapper.removeAllViews();
+            filterTextViewWrapper.addView(filterTextView);
+            filterTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    filterValues = new ArrayList<>();
+
+                    for (int i = 0; i < FilterActivity.FILTER_PARAMS_SIZE; i++) {
+                        filterValues.add("");
+                    }
+                    statementsEvent = new StatementsEvent();
+                    setUpRecyclerView();
+                }
+            });
         }
     }
 
@@ -404,22 +480,26 @@ public class MainActivity extends RootActivity
         if (!userInfo.isAuthorized()) {
             showAuthorizationDialog(null);
         } else if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > position) {
-            changeItemFavorite(statementsEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
-                @Override
-                public void onResponse(ApiResponse<Object> response) {
-                    super.onResponse(response);
-                    if (!response.isSuccess()) {
+            if (userInfo.isUsersItem(statementsEvent.getStatements().get(position).getOwnerId())) {
+                NewStatementActivity.start(this, statementsEvent.getStatements().get(position));
+            } else {
+                changeItemFavorite(statementsEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                    @Override
+                    public void onResponse(ApiResponse<Object> response) {
+                        super.onResponse(response);
+                        if (!response.isSuccess()) {
+                            refreshInfo();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
                         refreshInfo();
                     }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    super.onFailure(t);
-                    refreshInfo();
-                }
-            });
-            refreshInfo();
+                });
+                refreshInfo();
+            }
         }
     }
 
@@ -482,16 +562,16 @@ public class MainActivity extends RootActivity
             ManageSubscriptionsActivity.start(this);
         } else if (id == R.id.nav_my_statements) {
             MyStatementsActivity.start(this);
-     //   } else if (id == R.id.nav_inbox) {
-     //       InboxActivity.start(this);
+            //   } else if (id == R.id.nav_inbox) {
+            //       InboxActivity.start(this);
         } else if (id == R.id.nav_new_statement) {
             if (!userInfo.isAuthorized()) {
                 showAuthorizationDialog(null);
             } else {
                 NewStatementActivity.start(MainActivity.this);
             }
-    //    } else if (id == R.id.nav_settings) {
-    //        SettingsActivity.start(this);
+            //    } else if (id == R.id.nav_settings) {
+            //        SettingsActivity.start(this);
         } else if (id == R.id.nav_terms_and_conditions) {
             TermsActivity.start(this);
         } else if (id == R.id.nav_about) {

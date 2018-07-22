@@ -14,11 +14,13 @@
 
     <TextView
         android:id="@+id/text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/item_default_small_margin"
         android:textColor="@color/color_black"
+        android:maxLines="1"
         android:textSize="@dimen/text_size_descriptions" />/>
 
     <ImageView
@@ -28,5 +30,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/item_default_small_margin"
         android:visibility="gone" />
+
 
 </LinearLayout>

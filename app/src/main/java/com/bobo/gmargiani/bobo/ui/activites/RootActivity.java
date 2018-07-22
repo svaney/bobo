@@ -243,7 +243,6 @@ public abstract class RootActivity extends AppCompatActivity {
     }
 
     public void changeItemFavorite(final String statementId, final RestCallback<ApiResponse<Object>> onResponse) {
-
         final boolean isFavorite = userInfo.isStatementFavorite(statementId);
 
         if (isFavorite) {

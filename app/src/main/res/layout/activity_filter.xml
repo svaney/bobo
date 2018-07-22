@@ -39,8 +39,7 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_text_filter"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                    android:text="@string/button_text_filter" />
 
                 <Button
                     android:id="@+id/cancel_button"
@@ -289,7 +288,7 @@
                                     android:layout_height="wrap_content"
                                     android:hint="@string/filter_title_price_from"
                                     android:imeOptions="actionNext"
-                                    android:inputType="number"
+                                    android:inputType="numberDecimal"
                                     android:maxLength="7"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_medium" />
@@ -312,7 +311,7 @@
                                     android:layout_height="wrap_content"
                                     android:hint="@string/filter_title_price_to"
                                     android:imeOptions="actionDone"
-                                    android:inputType="number"
+                                    android:inputType="numberDecimal"
                                     android:maxLength="7"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_medium" />
@@ -362,10 +361,6 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/one_dp"
-                        android:background="@color/divider_color" />
 
 
                 </LinearLayout>

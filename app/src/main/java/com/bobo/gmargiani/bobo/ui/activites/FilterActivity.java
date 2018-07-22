@@ -71,6 +71,9 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
     @BindView(R.id.order_by_values_wrapper)
     LinearLayout orderByValueWrapper;
 
+    @BindView(R.id.order_by)
+    View orderByParent;
+
     private ArrayList<String> filterValues;
 
     private LocationsEvent locationsEvent;
@@ -144,11 +147,10 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
         } catch (Exception ignored) {
             filterValues.set(FILTER_PARAM_POS_PRICE_TO, "");
         }
-
-
     }
 
     private void setOrderByValue() {
+        orderByParent.setVisibility(View.GONE);
         orderByValueWrapper.removeAllViews();
 
         String value = filterValues.get(FILTER_PARAM_POS_ORDER_BY);

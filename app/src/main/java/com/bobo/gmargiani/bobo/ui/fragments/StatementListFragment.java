@@ -16,6 +16,7 @@ import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
+import com.bobo.gmargiani.bobo.ui.activites.NewStatementActivity;
 import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
 import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.activites.StatementDetailsActivity;
@@ -103,22 +104,26 @@ public class StatementListFragment extends RootFragment implements StatementRecy
             if (userInfo == null || !userInfo.isAuthorized()) {
                 ((RootActivity) getActivity()).showAuthorizationDialog(null);
             } else if (statements != null && statements.size() > position) {
-                ((RootActivity) getActivity()).changeItemFavorite(statements.get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
-                    @Override
-                    public void onResponse(ApiResponse<Object> response) {
-                        super.onResponse(response);
-                        if (!response.isSuccess()) {
+                if (userInfo.isUsersItem(statements.get(position).getOwnerId())){
+                    NewStatementActivity.start(getActivity(), statements.get(position));
+                } else {
+                    ((RootActivity) getActivity()).changeItemFavorite(statements.get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                        @Override
+                        public void onResponse(ApiResponse<Object> response) {
+                            super.onResponse(response);
+                            if (!response.isSuccess()) {
+                                refreshInfo();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+                            super.onFailure(t);
                             refreshInfo();
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        super.onFailure(t);
-                        refreshInfo();
-                    }
-                });
-               refreshInfo();
+                    });
+                    refreshInfo();
+                }
             }
 
         } catch (Exception ignored) {

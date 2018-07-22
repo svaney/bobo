@@ -41,8 +41,7 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_text_add_statement"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                    android:text="@string/button_text_add_statement"/>
 
             </LinearLayout>
 
@@ -275,7 +274,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/common_text_price"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
                             android:maxLength="7"
                             android:maxLines="1"
                             android:textSize="@dimen/text_size_medium" />

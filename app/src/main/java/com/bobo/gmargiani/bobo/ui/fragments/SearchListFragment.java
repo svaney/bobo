@@ -18,6 +18,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
+import com.bobo.gmargiani.bobo.ui.activites.NewStatementActivity;
 import com.bobo.gmargiani.bobo.ui.activites.OwnerProfileActivity;
 import com.bobo.gmargiani.bobo.ui.activites.RootActivity;
 import com.bobo.gmargiani.bobo.ui.activites.SearchActivity;
@@ -234,22 +235,27 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
                         break;
                     default:
                         if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && statementSearchEvent.getStatements().size() > position) {
-                            ((RootActivity) getActivity()).changeItemFavorite(statementSearchEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
-                                @Override
-                                public void onResponse(ApiResponse<Object> response) {
-                                    super.onResponse(response);
-                                    if (!response.isSuccess()) {
+                            if (userInfo.isUsersItem(statementSearchEvent.getStatements().get(position).getOwnerId())){
+                                NewStatementActivity.start(getActivity(),statementSearchEvent.getStatements().get(position));
+                            } else {
+
+                                ((RootActivity) getActivity()).changeItemFavorite(statementSearchEvent.getStatements().get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                                    @Override
+                                    public void onResponse(ApiResponse<Object> response) {
+                                        super.onResponse(response);
+                                        if (!response.isSuccess()) {
+                                            refreshInfo();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+                                        super.onFailure(t);
                                         refreshInfo();
                                     }
-                                }
-
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    super.onFailure(t);
-                                    refreshInfo();
-                                }
-                            });
-                            refreshInfo();
+                                });
+                                refreshInfo();
+                            }
                         }
                         break;
                 }

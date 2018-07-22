@@ -39,6 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
+        <FrameLayout
+            android:id="@+id/filter_value_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/item_default_small_margin" />
+
         <include
             layout="@layout/component_floating_button"
             android:layout_width="wrap_content"

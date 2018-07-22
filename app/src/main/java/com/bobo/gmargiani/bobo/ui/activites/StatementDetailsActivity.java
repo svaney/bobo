@@ -231,22 +231,26 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
         if (!userInfo.isAuthorized()) {
             showAuthorizationDialog(null);
         } else if (statementItem != null) {
-            changeItemFavorite(statementItem.getStatementId(), new RestCallback<ApiResponse<Object>>() {
-                @Override
-                public void onResponse(ApiResponse<Object> response) {
-                    super.onResponse(response);
-                    if (!response.isSuccess()) {
+            if (userInfo.isUsersItem(statementItem.getOwnerId())) {
+                NewStatementActivity.start(this, statementItem);
+            } else {
+                changeItemFavorite(statementItem.getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                    @Override
+                    public void onResponse(ApiResponse<Object> response) {
+                        super.onResponse(response);
+                        if (!response.isSuccess()) {
+                            refreshInfo();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
                         refreshInfo();
                     }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    super.onFailure(t);
-                    refreshInfo();
-                }
-            });
-            refreshInfo();
+                });
+                refreshInfo();
+            }
         }
     }
 
