@@ -231,16 +231,40 @@
                     </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/edit_text_wrapper"
+                        android:id="@+id/price_wrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/common_text_price"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="7"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/one_dp"
+                        android:background="@color/divider_color" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edit_text_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/item_default_margin">
 
                         <EditText
                             android:id="@+id/statement_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/item_default_margin"
-                            android:hint="განცხადების დასახელება"
+                            android:hint="@string/statement_name"
                             android:imeOptions="actionNext"
                             android:inputType="text"
                             android:maxLength="100"
@@ -256,7 +280,7 @@
                         android:layout_marginTop="@dimen/item_default_margin"
                         android:background="@drawable/new_statement_text_area_background"
                         android:gravity="top"
-                        android:hint="განცხადების აღწერა"
+                        android:hint="@string/statement_desc"
                         android:inputType="textMultiLine"
                         android:maxLength="500"
                         android:minLines="6"

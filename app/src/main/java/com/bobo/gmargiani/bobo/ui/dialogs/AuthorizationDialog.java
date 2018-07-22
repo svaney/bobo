@@ -116,7 +116,7 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
         if (v == closeButton) {
             cancel();
         } else if (v == registerButton) {
-            RegistrationActivity.start(activity);
+            RegistrationActivity.start(activity, null);
         }
     }
 

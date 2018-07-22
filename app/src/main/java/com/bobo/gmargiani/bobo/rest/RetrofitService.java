@@ -15,7 +15,9 @@ import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
@@ -44,8 +46,9 @@ public interface RetrofitService {
     @POST("/statements/similar")
     Call<ApiResponse<ArrayList<StatementItem>>> getSimilarStatements(@Body RetrofitApi.CategoryId categoryId);
 
+    @Multipart
     @POST("/users/register")
-    Call<ApiResponse<Object>> registerUser(@Body RetrofitApi.RegisterUser user);
+    Call<ApiResponse<Object>> registerUser(@Part RetrofitApi.RegisterUser user);
 
     @POST("/users/login")
     Call<ApiResponse<LogInData>> logIn(@Body RetrofitApi.LogIn logIn);

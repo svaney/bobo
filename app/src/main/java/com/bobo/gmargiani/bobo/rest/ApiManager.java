@@ -217,4 +217,21 @@ public class ApiManager {
     }
 
 
+    public void requestFavoriteStatements(ArrayList<String> favourites) {
+        netApi.requestFavoriteStatements(favourites, new RestCallback<ApiResponse<ArrayList<StatementItem>>>() {
+            @Override
+            public void onResponse(ApiResponse<ArrayList<StatementItem>> response) {
+                super.onResponse(response);
+                dataListener.onFavoriteStatements(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                ApiResponse<ArrayList<StatementItem>> response = new ApiResponse<>();
+                response.setCode("-1");
+                dataListener.onFavoriteStatements(response);
+            }
+        });
+    }
 }

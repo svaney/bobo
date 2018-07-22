@@ -18,8 +18,8 @@ public class StatementItem {
     private int totalViews;
     private int totalFavorites;
     private String location;
-    private boolean isSelling;
-    private boolean isRenting;
+    private boolean selling;
+    private boolean renting;
     private String categoryId;
 
     public String getMainImage() {
@@ -118,19 +118,19 @@ public class StatementItem {
     }
 
     public boolean isSelling() {
-        return isSelling;
+        return selling;
     }
 
     public void setSelling(boolean selling) {
-        isSelling = selling;
+        this.selling = selling;
     }
 
     public boolean isRenting() {
-        return isRenting;
+        return renting;
     }
 
     public void setRenting(boolean renting) {
-        isRenting = renting;
+        this.renting = renting;
     }
 
     public String getCategory() {

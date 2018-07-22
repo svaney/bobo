@@ -18,12 +18,12 @@ public class AppConsts {
     public final static int PERMISSION_PHONE = 503;
 
     public final static String PARAM_FILTER_PARAMS = "FILTER_PARAMS";
-    public final static String PARAM_STATEMENT_ID = "PARAM_STATEMENT_ID";
     public final static String PARAM_STATEMENT = "PARAM_STATEMENT";
     public final static String PARAM_OWNER_ID = "PARAM_OWNER_ID";
     public final static String PARAM_SEARCH_QUERY = "PARAM_SEARCH_QUERY";
     public final static String PARAM_LIST_TYPE = "PARAM_LIST_TYPE";
     public final static String PARAM_EMAIL = "PARAM_EMAIL";
+    public final static String PARAM_OWNER= "PARAM_OWNER";
 
 
 

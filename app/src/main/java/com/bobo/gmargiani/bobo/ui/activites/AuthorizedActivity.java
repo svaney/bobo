@@ -8,7 +8,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import org.greenrobot.eventbus.Subscribe;
 
 public abstract class AuthorizedActivity extends RootDetailedActivity implements DialogInterface.OnCancelListener {
-    private LogInEvent logInEvent;
+    protected LogInEvent logInEvent;
 
     @Override
     protected void onStart() {
@@ -29,6 +29,7 @@ public abstract class AuthorizedActivity extends RootDetailedActivity implements
                     break;
                 case RootEvent.STATE_SUCCESS:
                     showContent();
+                    closeAuthorizeDialog();
                     if (event.isLoggedIn()) {
                         userIsLoggedIn();
                     } else {
@@ -53,9 +54,7 @@ public abstract class AuthorizedActivity extends RootDetailedActivity implements
         finish();
     }
 
-    public void userIsLoggedIn(){
-        closeAuthorizeDialog();
-    }
+    public abstract void userIsLoggedIn();
 
 
 }

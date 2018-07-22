@@ -34,6 +34,9 @@
     <string name="activity_name_help">Help</string>
     <string name="activity_name_registration">Registration</string>
     <string name="activity_name_statement_details">Details</string>
+    <string name="activity_name_edit_statement">Edit</string>
+    <string name="activity_name_edit_profile">Edit Profile</string>
+
 
     <string name="common_text_email">E-mail</string>
     <string name="common_text_password">Password</string>
@@ -110,5 +113,11 @@
     <string name="error_pass_mail">No user was found by email and password</string>
     <string name="common_text_registration_succesful">Registration completed successfully</string>
     <string name="common_text_avatar">Avatar</string>
+    <string name="log_out">Log out</string>
+    <string name="common_text_price">Price (₾)</string>
+    <string name="statement_name">განცხადების დასახელება</string>
+    <string name="statement_desc">განცხადების აღწერა</string>
+    <string name="new_password">ახალი პაროლი</string>
+    <string name="save">დამახსოვრება</string>
 
 </resources>

@@ -83,6 +83,7 @@ public class MainActivity extends RootActivity
     protected View userAvatarWrapper;
     protected View languageChangebtn;
     protected TextView authorizeText;
+    protected View logout;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -164,6 +165,7 @@ public class MainActivity extends RootActivity
         userAvatarWrapper.setOnClickListener(this);
         languageChangebtn.setOnClickListener(this);
         authorizeText.setOnClickListener(this);
+        logout.setOnClickListener(this);
 
         ImageLoader.load((ImageView) floatingButton.findViewById(R.id.icon))
                 .setRes(R.drawable.ic_camera)
@@ -207,6 +209,7 @@ public class MainActivity extends RootActivity
 
         userAvatar = navView.getHeaderView(0).findViewById(R.id.user_profile_picture);
         userAvatarWrapper = navView.getHeaderView(0).findViewById(R.id.use_profile_picture_wrapper);
+        logout = navView.getHeaderView(0).findViewById(R.id.log_out);
         languageChangebtn = navView.getHeaderView(0).findViewById(R.id.language_change);
         languageImage = navView.getHeaderView(0).findViewById(R.id.language_image);
         authorizeText = navView.getHeaderView(0).findViewById(R.id.nav_login_register);
@@ -250,11 +253,10 @@ public class MainActivity extends RootActivity
                             .build();
 
                 authorizeText.setText(event.getLogInData().getUserDetails().getDisplayName());
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
+                refreshInfo();
             }
 
+            logout.setVisibility(userInfo.isAuthorized() ? View.VISIBLE : View.GONE);
         }
 
     }
@@ -370,13 +372,20 @@ public class MainActivity extends RootActivity
         if (v != null) {
             if (v == userAvatarWrapper || v == authorizeText) {
                 if (userInfo.isAuthorized()) {
-
+                    RegistrationActivity.start(MainActivity.this, logInEvent.getLogInData().getUserDetails());
                 } else {
                     showAuthorizationDialog(null);
                 }
                 drawer.closeDrawer(GravityCompat.START);
             } else if (v == languageChangebtn) {
                 LocaleHelper.changeLanguage(MainActivity.this);
+                userInfo.clearData();
+                adapter = null;
+                restartApp();
+            } else if (v == logout) {
+                PreferencesApiManager.getInstance().saveToken("");
+                userInfo.clearData();
+                adapter = null;
                 restartApp();
             }
         }
@@ -386,7 +395,7 @@ public class MainActivity extends RootActivity
     public void onItemClick(int position) {
         if (statementsEvent != null && statementsEvent.getStatements() != null && statementsEvent.getStatements().size() > position) {
             StatementItem item = statementsEvent.getStatements().get(position);
-            StatementDetailsActivity.start(this, item.getStatementId());
+            StatementDetailsActivity.start(this, item, userInfo);
         }
     }
 

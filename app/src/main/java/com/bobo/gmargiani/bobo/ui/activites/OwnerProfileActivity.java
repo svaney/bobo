@@ -135,7 +135,6 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
             if (userInfo.isAuthorized()) {
                 closeAuthorizeDialog();
                 refreshInfo();
-
             }
         }
     }
@@ -151,6 +150,9 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
                 && ownerDetailsEvent.getOwnerDetails() != null) {
             subscribeButton.setText(userInfo.isUserSubscribed(ownerDetailsEvent.getOwnerDetails().getOwnerId()) ? getString(R.string.common_text_unsubscribe)
                     : getString(R.string.common_text_subscribe));
+            if (viewPager != null && viewPager.getAdapter() != null){
+                ((PagerAdapter)viewPager.getAdapter()).refresh();
+            }
         } else {
             subscribeButton.setText(getString(R.string.common_text_subscribe));
         }
@@ -343,6 +345,16 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
                     return archivedStatements;
                 default:
                     return null;
+            }
+        }
+
+        public void refresh(){
+            if (activeStatements != null){
+                activeStatements.refreshInfo();
+            }
+
+            if (archivedStatements != null){
+                archivedStatements.refreshInfo();
             }
         }
 

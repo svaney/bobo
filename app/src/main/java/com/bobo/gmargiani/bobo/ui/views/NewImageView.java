@@ -23,7 +23,6 @@ public class NewImageView extends FrameLayout {
     private ImageView closeIcon;
     private NewImageListener listener;
 
-    private Bitmap bitmap;
     private int position;
 
     public NewImageView(@NonNull Context context) {
@@ -64,7 +63,6 @@ public class NewImageView extends FrameLayout {
     }
 
     public void clearImage() {
-        bitmap = null;
         addButton.setVisibility(VISIBLE);
         userImage.setVisibility(GONE);
         closeButtonWrapper.setVisibility(GONE);
@@ -79,6 +77,19 @@ public class NewImageView extends FrameLayout {
             userImage.setVisibility(VISIBLE);
             ImageLoader.load(userImage)
                     .setBitmap(bitmap)
+                    .build();
+        }
+    }
+
+    public void setLink(String link){
+        if (link == null){
+            clearImage();
+        } else {
+            addButton.setVisibility(GONE);
+            closeButtonWrapper.setVisibility(VISIBLE);
+            userImage.setVisibility(VISIBLE);
+            ImageLoader.load(userImage)
+                    .setUrl(link)
                     .build();
         }
     }

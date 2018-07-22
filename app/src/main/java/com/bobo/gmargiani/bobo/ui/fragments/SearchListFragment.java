@@ -198,7 +198,7 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
                 break;
             default:
                 if (statementSearchEvent != null && statementSearchEvent.getStatements() != null && position >= 0 && position < statementSearchEvent.getStatements().size()) {
-                    StatementDetailsActivity.start(getContext(), statementSearchEvent.getStatements().get(position));
+                    StatementDetailsActivity.start(getContext(), statementSearchEvent.getStatements().get(position), userInfo);
                 }
                 break;
         }
@@ -266,7 +266,7 @@ public class SearchListFragment extends RootFragment implements LazyLoaderListen
         refreshInfo();
     }
 
-    private void refreshInfo() {
+    public void refreshInfo() {
         if (statementAdapter != null) {
             statementAdapter.notifyDataSetChanged();
         }

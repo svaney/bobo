@@ -20,9 +20,18 @@ public class OwnerDetails {
     private String email;
     private ArrayList<String> subscribedUsers;
     private ArrayList<String> favourites;
+    private ArrayList<String> userStatementIds = new ArrayList<>();
 
     public String getEmail() {
         return email;
+    }
+
+    public ArrayList<String> getUserStatementIds() {
+        return userStatementIds;
+    }
+
+    public void setUserStatementIds(ArrayList<String> userStatementIds) {
+        this.userStatementIds = userStatementIds;
     }
 
     public void setEmail(String email) {

@@ -1,5 +1,7 @@
 package com.bobo.gmargiani.bobo.rest;
 
+import android.graphics.Bitmap;
+
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.LogInData;
@@ -28,7 +30,7 @@ public abstract class NetApi {
 
     public abstract void getSimilarStatements(String setCategoryId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
 
-    public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback);
+    public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, Bitmap bitmap, RestCallback<ApiResponse<Object>> callback);
 
     public abstract void logIn(String email, String password, RestCallback<ApiResponse<LogInData>> callback);
 
@@ -41,4 +43,6 @@ public abstract class NetApi {
     public abstract void setFavorite(String statementId, boolean isFavorite, RestCallback<ApiResponse<Object>> callback);
 
     public abstract void subscribeUser(String userId, boolean isSubscribed, RestCallback<ApiResponse<Object>> callback);
+
+    public abstract void requestFavoriteStatements(ArrayList<String> favourites, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
 }

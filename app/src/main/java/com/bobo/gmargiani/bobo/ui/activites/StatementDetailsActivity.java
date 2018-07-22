@@ -21,6 +21,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.model.UserInfo;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.adapters.RecyclerItemClickListener;
@@ -147,21 +148,17 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
 
-    public static void start(Context context, String statementId) {
+    public static void start(Context context, StatementItem item, UserInfo userInfo) {
         if (context != null) {
-            Intent intent = new Intent(context, StatementDetailsActivity.class);
-            intent.putExtra(AppConsts.PARAM_STATEMENT_ID, statementId);
-            context.startActivity(intent);
-        }
-    }
-
-    public static void start(Context context, StatementItem item) {
-        if (context != null) {
-            Intent intent = new Intent(context, StatementDetailsActivity.class);
-            if (item != null) {
-                intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
+            if (userInfo.isUsersItem(item.getOwnerId())) {
+                NewStatementActivity.start(context, item);
+            } else {
+                Intent intent = new Intent(context, StatementDetailsActivity.class);
+                if (item != null) {
+                    intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(item));
+                }
+                context.startActivity(intent);
             }
-            context.startActivity(intent);
         }
     }
 
@@ -172,13 +169,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
         categoriesEvent = userInfo.getCategoriesEvent();
         locationsEvent = userInfo.getLocationsEvent();
 
-        String id = getIntent().getStringExtra(AppConsts.PARAM_STATEMENT_ID);
-
-        statementItem = userInfo.getStatementItemById(id);
-
-        if (statementItem == null) {
-            statementItem = Parcels.unwrap(getIntent().getParcelableExtra(AppConsts.PARAM_STATEMENT));
-        }
+        statementItem = Parcels.unwrap(getIntent().getParcelableExtra(AppConsts.PARAM_STATEMENT));
 
         if (statementItem != null) {
             setUpGallery();
@@ -381,7 +372,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
         if (similarStatementsEvent != null && similarStatementsEvent.getSimilarStatements() != null && similarStatementsEvent.getSimilarStatements().size() > position) {
             StatementItem item = similarStatementsEvent.getSimilarStatements().get(position);
 
-            StatementDetailsActivity.start(this, item);
+            StatementDetailsActivity.start(this, item, userInfo);
         }
     }
 
@@ -409,6 +400,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
             if (userInfo.isAuthorized()) {
                 closeAuthorizeDialog();
             }
+            refreshInfo();
         }
     }
 

@@ -1,5 +1,7 @@
 package com.bobo.gmargiani.bobo.rest;
 
+import android.graphics.Bitmap;
+
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.LogInData;
@@ -81,7 +83,12 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, RestCallback<ApiResponse<Object>> callback) {
+    public void requestFavoriteStatements(ArrayList<String> favourites, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
+
+    }
+
+    @Override
+    public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, Bitmap bitmap, RestCallback<ApiResponse<Object>> callback) {
         Call<ApiResponse<Object>> call = retService.registerUser(new RegisterUser(email, password, isCompany, firstName, lastName, phoneNum, companyName));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));

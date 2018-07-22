@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.bobo.gmargiani.bobo.evenbuts.RootEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppVersionEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.FavoriteStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.OwnerDetailsEvent;
@@ -17,7 +18,6 @@ import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
-import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 
@@ -45,9 +45,25 @@ public class UserInfo implements NetDataListener {
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
     private OwnerSearchEvent ownerSearchEvent;
+    private FavoriteStatementsEvent favoriteStatementsEvent;
 
     private LogInEvent logInEvent;
     private TokenAuthorizationEvent tokenAuthorizationEvent;
+
+    public void clearData() {
+        statementsEvent = null;
+        locationsEvent = null;
+        categoriesEvent = null;
+        similarStatementsEvent = null;
+        ownerStatementsEvent = null;
+        ownerDetailsList = new ArrayList<>();
+        statementSearchEvent = null;
+        ownerSearchEvent = null;
+        logInEvent = null;
+        tokenAuthorizationEvent = null;
+        favoriteStatementsEvent = null;
+    }
+
 
     public UserInfo(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -254,6 +270,35 @@ public class UserInfo implements NetDataListener {
 
             eventBus.post(statementSearchEvent);
         }
+    }
+
+    public void requestFavoriteStatements(boolean update) {
+        if (shouldNotRefresh(favoriteStatementsEvent, update)) {
+
+            eventBus.post(favoriteStatementsEvent);
+        } else {
+
+            favoriteStatementsEvent = new FavoriteStatementsEvent();
+
+            favoriteStatementsEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(favoriteStatementsEvent);
+
+            apiManager.requestFavoriteStatements(logInEvent.getLogInData().getUserDetails().getFavourites());
+        }
+    }
+
+    @Override
+    public void onFavoriteStatements(ApiResponse<ArrayList<StatementItem>> response) {
+        favoriteStatementsEvent = new FavoriteStatementsEvent();
+        if (response.isSuccess()) {
+            favoriteStatementsEvent.setState(RootEvent.STATE_SUCCESS);
+            favoriteStatementsEvent.setStatementItems(response.getResult());
+
+        } else {
+            favoriteStatementsEvent.setState(RootEvent.STATE_ERROR);
+        }
+
+        eventBus.post(favoriteStatementsEvent);
     }
 
     public void requestStatements(final int from, boolean update,
@@ -553,14 +598,15 @@ public class UserInfo implements NetDataListener {
                     return;
                 }
             }
-
             logInEvent.getLogInData().getUserDetails().getFavourites().add(statementId);
+            requestFavoriteStatements(true);
         }
     }
 
     public void removeFromFavorites(String statementId) {
         if (!TextUtils.isEmpty(statementId) && isAuthorized()) {
             logInEvent.getLogInData().getUserDetails().getFavourites().remove(statementId);
+            requestFavoriteStatements(true);
         }
     }
 
@@ -580,5 +626,13 @@ public class UserInfo implements NetDataListener {
         if (!TextUtils.isEmpty(userId) && isAuthorized()) {
             logInEvent.getLogInData().getUserDetails().getSubscribedUsers().remove(userId);
         }
+    }
+
+
+    public boolean isUsersItem(String ownerId) {
+        if (isAuthorized()) {
+            return (logInEvent.getLogInData().getUserDetails().getOwnerId().equals(ownerId));
+        }
+        return false;
     }
 }

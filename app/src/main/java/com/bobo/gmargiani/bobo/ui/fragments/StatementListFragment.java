@@ -81,7 +81,7 @@ public class StatementListFragment extends RootFragment implements StatementRecy
         if (statements != null && statements.size() > position) {
             StatementItem item = statements.get(position);
 
-            StatementDetailsActivity.start(getContext(), item);
+            StatementDetailsActivity.start(getContext(), item, userInfo);
         }
     }
 
@@ -91,7 +91,7 @@ public class StatementListFragment extends RootFragment implements StatementRecy
         refreshInfo();
     }
 
-    private void refreshInfo() {
+    public void refreshInfo() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }

@@ -322,7 +322,7 @@ public class FilterActivity extends RootDetailedActivity implements CompoundButt
 
     @OnClick(R.id.location)
     public void onLocationClick() {
-        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
+        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
             @Override
             public void onItemsSelected(ArrayList<Integer> itemPositions) {
                 if (itemPositions != null) {

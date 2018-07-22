@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
+import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.views.NewImageView;
@@ -37,13 +39,14 @@ import com.bobo.gmargiani.bobo.utils.Utils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class RegistrationActivity extends RootDetailedActivity implements NewImageView.NewImageListener{
+public class RegistrationActivity extends RootDetailedActivity implements NewImageView.NewImageListener {
 
     @BindView(R.id.user_profile_picture)
     ImageView userAvatar;
@@ -87,11 +90,23 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
     @BindView(R.id.company_wrapper)
     View companyWrapper;
 
+    @BindView(R.id.register_button)
+    Button registerButton;
+
+
+    private OwnerDetails ownerDetails;
+
     private ArrayList<EditText> inputs = new ArrayList<>();
 
-    public static void start(Activity context) {
+    public static void start(Activity context, OwnerDetails ownerDetails) {
         if (context != null) {
-            context.startActivityForResult(new Intent(context, RegistrationActivity.class), AppConsts.RC_REGISTER);
+            Intent intent = new Intent(context, RegistrationActivity.class);
+            if (ownerDetails != null) {
+                intent.putExtra(AppConsts.PARAM_OWNER, Parcels.wrap(ownerDetails));
+                context.startActivity(intent);
+            } else {
+                context.startActivityForResult(intent, AppConsts.RC_REGISTER);
+            }
         }
     }
 
@@ -99,17 +114,38 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ownerDetails = Parcels.unwrap(getIntent().getParcelableExtra(AppConsts.PARAM_OWNER));
+
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
         bg.setColor(ContextCompat.getColor(this, R.color.color_accent_light));
 
         userAvatarWrapper.setBackground(bg);
-        ImageLoader.load(userAvatar)
-                .setRes(R.drawable.ic_avatar_default)
-                .setOval(true)
-                .build();
+
+        if (ownerDetails != null && !TextUtils.isEmpty(ownerDetails.getAvatar())) {
+            ImageLoader.load(userAvatar)
+                    .setUrl(ownerDetails.getAvatar())
+                    .setOval(true)
+                    .build();
+        } else {
+            ImageLoader.load(userAvatar)
+                    .setRes(R.drawable.ic_avatar_default)
+                    .setOval(true)
+                    .build();
+        }
 
 
+        if (ownerDetails != null) {
+            userName.setText(ownerDetails.getOwnerName());
+            userLastName.setText(ownerDetails.getOwnerSecondName());
+            userMail.setText(ownerDetails.getEmail());
+            userPhone.setText(ownerDetails.getPhone());
+            companyName.setText(ownerDetails.getCompanyName());
+            userPassword.setHint(getString(R.string.new_password));
+            registerButton.setText(getString(R.string.save));
+        } else {
+            isCompany.setChecked(false);
+        }
         inputs.add(userName);
         inputs.add(userLastName);
         inputs.add(userMail);
@@ -117,10 +153,8 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
         inputs.add(userPassword);
         inputs.add(userPasswordSecond);
 
-
         companyName.setVisibility(View.GONE);
 
-        isCompany.setChecked(false);
 
         isCompany.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -145,15 +179,22 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                 }
             }
         });
-
-    userAvatarWrapper.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            onImageClick(0);
+        if (ownerDetails != null) {
+            isCompany.setChecked(ownerDetails.isCompany());
         }
-    });
+
+
+        userAvatarWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onImageClick(0);
+            }
+        });
+        refreshHeaderText();
     }
 
+
+    Bitmap bitmap;
 
     @Subscribe
     public void onActivityResultEvent(ActivityResultEvent event) {
@@ -161,7 +202,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
             ImagePicker.beginCrop(this, event.getResultCode(), event.getData(), 0);
 
         } else if (ImagePicker.isImageCroppedSuccessfully(event.getRequestCode(), event.getResultCode())) {
-            Bitmap bitmap = ImagePicker.getCroppedImage(this, event.getResultCode(), event.getData());
+            bitmap = ImagePicker.getCroppedImage(this, event.getResultCode(), event.getData());
             ImageLoader.load(userAvatar)
                     .setBitmap(bitmap)
                     .setOval(true)
@@ -214,7 +255,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
         if (validateInputs()) {
             showFullLoading();
             App.getNetApi().registerUser(isCompany.isChecked(), userName.getText().toString(), userLastName.getText().toString(),
-                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(),
+                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(), bitmap,
                     new RestCallback<ApiResponse<Object>>() {
                         @Override
                         public void onResponse(ApiResponse<Object> response) {
@@ -322,6 +363,9 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
     @Override
     protected String getHeaderText() {
+        if (ownerDetails != null){
+            return  getString(R.string.activity_name_edit_profile);
+        }
         return getString(R.string.activity_name_registration);
     }
 }

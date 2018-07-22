@@ -27,9 +27,11 @@
     <string name="activity_name_help">დახმარება</string>
     <string name="activity_name_registration">რეგისტრაცია</string>
     <string name="activity_name_statement_details">დეტალები</string>
+    <string name="activity_name_edit_statement">განცხადების ცვლილება</string>
+    <string name="activity_name_edit_profile">პროფილის ცვლილება</string>
 
     <string name="common_text_email">ელექტორნული ფოსტა</string>
-    <string name="common_text_password">Password</string>
+    <string name="common_text_password">პაროლი</string>
     <string name="common_text_log_in">შესვლა</string>
     <string name="common_text_register">რეგისტრაცია</string>
     <string name="common_text_sell">გაყიდე</string>
@@ -104,7 +106,12 @@
     <string name="error_pass_mail">მომხარებელი მითითებული იმეილით და პაროლით, არ მოიძებნა</string>
     <string name="common_text_registration_succesful">რეგისტრაცია წარმატებით დასრულდა</string>
     <string name="common_text_avatar">ავატარი</string>
-
+    <string name="log_out">გასვლა</string>
+    <string name="common_text_price">ფასი (₾)</string>
+    <string name="statement_name">განცხადების დასახელება</string>
+    <string name="statement_desc">განცხადების აღწერა</string>
+    <string name="new_password">ახალი პაროლი</string>
+    <string name="save">დამახსოვრება</string>
 
 
 </resources>

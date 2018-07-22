@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.transition.TransitionManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 import com.bobo.gmargiani.bobo.R;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.ActivityResultEvent;
@@ -18,7 +20,9 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.DeniedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
 import com.bobo.gmargiani.bobo.ui.dialogs.ListDialog;
 import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
@@ -30,7 +34,9 @@ import com.bobo.gmargiani.bobo.utils.ImagePicker;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.parceler.Parcels;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -61,17 +67,41 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @BindView(R.id.edit_text_wrapper)
     View statementNameWrapper;
 
+    @BindView(R.id.price_wrapper)
+    View statementPriceWrapper;
+
+    @BindView(R.id.price)
+    EditText statementPrice;
+
+    @BindView(R.id.radio_sell)
+    RadioButton radioSell;
+
+    @BindView(R.id.radio_rent)
+    RadioButton radioRent;
+
+    @BindView(R.id.add_statement_button)
+    Button addButton;
+
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
 
+    private StatementItem statementItem;
 
-    private ArrayList<Bitmap> userImages = new ArrayList<>();
+    private ArrayList<Object> userImages = new ArrayList<>();
     private ArrayList<String> userLocations = new ArrayList<>();
     private ArrayList<String> userCategories = new ArrayList<>();
 
     public static void start(Context context) {
         if (context != null) {
             context.startActivity(new Intent(context, NewStatementActivity.class));
+        }
+    }
+
+    public static void start(Context context, StatementItem statementItem) {
+        if (context != null) {
+            Intent intent = new Intent(context, NewStatementActivity.class);
+            intent.putExtra(AppConsts.PARAM_STATEMENT, Parcels.wrap(statementItem));
+            context.startActivity(intent);
         }
     }
 
@@ -84,7 +114,34 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
         newImagesWrapper.addView(new NewImageView(this));
 
+        statementItem = Parcels.unwrap(getIntent().getParcelableExtra(AppConsts.PARAM_STATEMENT));
+
+        if (statementItem != null) {
+            if (!TextUtils.isEmpty(statementItem.getLocation()))
+                userLocations.add(statementItem.getLocation());
+
+            if (!TextUtils.isEmpty(statementItem.getCategory()))
+                userCategories.add(statementItem.getCategory());
+
+            radioRent.setChecked(statementItem.isRenting());
+            radioSell.setChecked(statementItem.isSelling());
+
+            statementName.setText(statementItem.getTitle());
+            statementDesc.setText(statementItem.getDescription());
+
+            statementPrice.setText(String.valueOf(statementItem.getPrice()));
+
+            if (statementItem.getImages() != null) {
+                for (String link : statementItem.getImages()) {
+                    userImages.add(link);
+                }
+            }
+
+            addButton.setText(getString(R.string.save));
+        }
+
         setValues();
+        refreshHeaderText();
     }
 
     private void setValues() {
@@ -101,12 +158,17 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
         } else if (userLocations.isEmpty()) {
             AlertManager.showError(this, "გთხოვთ მიუთითოთ თუ სად მდებარეობს პროდუქტი");
             ViewUtils.shakeView(locationValidateView);
+        } else if (TextUtils.isEmpty(statementPrice.getText())) {
+            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის ფასი");
+            ViewUtils.shakeView(statementPriceWrapper);
         } else if (TextUtils.isEmpty(statementName.getText())) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტი დასახელება");
+            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის დასახელება");
             ViewUtils.shakeView(statementNameWrapper);
         } else if (TextUtils.isEmpty(statementDesc.getText())) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტი აწერა");
+            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის აწერა");
             ViewUtils.shakeView(statementDesc);
+        } else {
+
         }
     }
 
@@ -127,7 +189,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @OnClick(R.id.category)
     public void onCategoryClick() {
-        ListDialog categoryDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
+        ListDialog categoryDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
             @Override
             public void onItemsSelected(ArrayList<Integer> itemPositions) {
                 if (itemPositions != null) {
@@ -152,7 +214,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @OnClick(R.id.location)
     public void onLocationClick() {
-        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_MULTIPLE, new ListDialog.ListDialogItemsSelectedListener() {
+        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
             @Override
             public void onItemsSelected(ArrayList<Integer> itemPositions) {
                 if (itemPositions != null) {
@@ -233,7 +295,11 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
         for (int i = 0; i < userImages.size(); i++) {
             NewImageView img = new NewImageView(this);
-            img.setBitmap(userImages.get(i));
+            if (userImages.get(i) instanceof Bitmap) {
+                img.setBitmap((Bitmap) userImages.get(i));
+            } else {
+                img.setLink((String) userImages.get(i));
+            }
             img.setListener(this, i);
             newImagesWrapper.addView(img);
         }
@@ -331,6 +397,9 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @Override
     protected String getHeaderText() {
+        if (statementItem != null) {
+            return getString(R.string.activity_name_edit_statement);
+        }
         return getString(R.string.activity_name_new_statement);
     }
 

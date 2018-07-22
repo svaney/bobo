@@ -117,17 +117,20 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
     protected void onStart() {
         super.onStart();
         activityStarted = true;
-
         userInfo.requestLogInEvent();
     }
 
     private LogInEvent logInEvent;
+
     @Subscribe
     public void onLoginEvent(LogInEvent event) {
         if (logInEvent != event) {
             logInEvent = event;
             if (userInfo.isAuthorized()) {
                 closeAuthorizeDialog();
+            }
+            if (viewPager != null && viewPager.getAdapter() != null) {
+                ((PagerAdapter) viewPager.getAdapter()).refreshInfo();
             }
         }
     }
@@ -175,7 +178,7 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
 
     @Override
     public boolean needEventBus() {
-        return false;
+        return true;
     }
 
     @Override
@@ -211,6 +214,16 @@ public class SearchActivity extends RootDetailedActivity implements ToolbarSearc
             b2.putInt(AppConsts.PARAM_LIST_TYPE, SearchListFragment.LIST_TYPE_OWNER);
             ownerFragment.setArguments(b2);
 
+        }
+
+        public void refreshInfo() {
+            if (ownerFragment != null) {
+                ownerFragment.refreshInfo();
+            }
+
+            if (statementFragment != null) {
+                statementFragment.refreshInfo();
+            }
         }
 
         @Override
