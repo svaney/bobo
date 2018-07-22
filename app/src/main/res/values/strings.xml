@@ -119,5 +119,7 @@
     <string name="statement_desc">განცხადების აღწერა</string>
     <string name="new_password">ახალი პაროლი</string>
     <string name="save">დამახსოვრება</string>
+    <string name="statement_archive_title">განცხადების სტატუსი</string>
+    <string name="archive_statement">დაარქივება</string>
 
 </resources>

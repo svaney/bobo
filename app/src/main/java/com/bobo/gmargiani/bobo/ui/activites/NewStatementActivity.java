@@ -10,6 +10,7 @@ import android.support.transition.TransitionManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -82,6 +83,12 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @BindView(R.id.add_statement_button)
     Button addButton;
 
+    @BindView(R.id.archive_wrapper)
+    View archiveWrapper;
+
+    @BindView(R.id.archive_check)
+    CheckBox archiveCheckBox;
+
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
 
@@ -137,6 +144,8 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                 }
             }
 
+            archiveWrapper.setVisibility(View.VISIBLE);
+            archiveCheckBox.setChecked(statementItem.isArchive());
             addButton.setText(getString(R.string.save));
         }
 

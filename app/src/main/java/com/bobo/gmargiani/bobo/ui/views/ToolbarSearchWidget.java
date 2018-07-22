@@ -96,6 +96,7 @@ public class ToolbarSearchWidget extends RelativeLayout implements View.OnFocusC
                 .setRes(R.drawable.ic_mail)
                 .applyTint(true)
                 .build();
+        iconInbox.setVisibility(GONE);
 
         ImageLoader.load(iconFavorites)
                 .setRes(R.drawable.ic_favorite_filled)

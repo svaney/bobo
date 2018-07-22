@@ -482,16 +482,16 @@ public class MainActivity extends RootActivity
             ManageSubscriptionsActivity.start(this);
         } else if (id == R.id.nav_my_statements) {
             MyStatementsActivity.start(this);
-        } else if (id == R.id.nav_inbox) {
-            InboxActivity.start(this);
+     //   } else if (id == R.id.nav_inbox) {
+     //       InboxActivity.start(this);
         } else if (id == R.id.nav_new_statement) {
             if (!userInfo.isAuthorized()) {
                 showAuthorizationDialog(null);
             } else {
                 NewStatementActivity.start(MainActivity.this);
             }
-        } else if (id == R.id.nav_settings) {
-            SettingsActivity.start(this);
+    //    } else if (id == R.id.nav_settings) {
+    //        SettingsActivity.start(this);
         } else if (id == R.id.nav_terms_and_conditions) {
             TermsActivity.start(this);
         } else if (id == R.id.nav_about) {

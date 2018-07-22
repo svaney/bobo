@@ -21,6 +21,15 @@ public class StatementItem {
     private boolean selling;
     private boolean renting;
     private String categoryId;
+    private boolean archive;
+
+    public boolean isArchive() {
+        return archive;
+    }
+
+    public void setArchive(boolean archive) {
+        this.archive = archive;
+    }
 
     public String getMainImage() {
         if (imageLinks != null && imageLinks.size() > 0) {

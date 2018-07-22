@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
@@ -74,6 +75,9 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
     @BindView(R.id.user_password)
     EditText userPassword;
+
+    @BindView(R.id.user_pass_wrapper)
+    TextInputLayout userpasswrapper;
 
     @BindView(R.id.user_password_second)
     EditText userPasswordSecond;
@@ -141,7 +145,8 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
             userMail.setText(ownerDetails.getEmail());
             userPhone.setText(ownerDetails.getPhone());
             companyName.setText(ownerDetails.getCompanyName());
-            userPassword.setHint(getString(R.string.new_password));
+          //  userPassword.setHint(getString(R.string.new_password));
+            userpasswrapper.setHint(getString(R.string.new_password));
             registerButton.setText(getString(R.string.save));
         } else {
             isCompany.setChecked(false);
