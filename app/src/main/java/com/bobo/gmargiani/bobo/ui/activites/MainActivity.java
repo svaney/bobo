@@ -369,7 +369,7 @@ public class MainActivity extends RootActivity
     }
 
 
-    private void setUpFilterTypeView(){
+    private void setUpFilterTypeView() {
         BigDecimal priceFrom = TextUtils.isEmpty(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM)) ?
                 null : new BigDecimal(filterValues.get(FilterActivity.FILTER_PARAM_POS_PRICE_FROM));
 
@@ -388,29 +388,29 @@ public class MainActivity extends RootActivity
 
         String filterText = "";
 
-        if (categories != null){
+        if (categories != null) {
             if (categories.size() > 0 && !TextUtils.isEmpty(categories.get(0))) {
-                filterText += getString(R.string.filter_title_category) +": ";
+                filterText += getString(R.string.filter_title_category) + ": ";
                 for (String cat : categories) {
                     filterText += userInfo.getCategoriesEvent().getValueByKey(cat) + "; ";
                 }
             }
         }
 
-        if (locations != null){
+        if (locations != null) {
             if (locations.size() > 0 && !TextUtils.isEmpty(locations.get(0))) {
-                filterText += getString(R.string.filter_title_location) +": ";
+                filterText += getString(R.string.filter_title_location) + ": ";
                 for (String cat : locations) {
                     filterText += userInfo.getLocationsEvent().getValueByKey(cat) + "; ";
                 }
             }
         }
 
-        if (priceFrom != null){
+        if (priceFrom != null) {
             filterText += getString(R.string.filter_title_price_from) + ": " + String.valueOf(priceFrom) + "; ";
         }
 
-        if (priceTo != null){
+        if (priceTo != null) {
             filterText += getString(R.string.filter_title_price_to) + ": " + String.valueOf(priceTo) + "; ";
         }
 

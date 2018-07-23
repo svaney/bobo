@@ -180,11 +180,11 @@ public class UserInfo implements NetDataListener {
         if (appVersionEvent != null) {
             appVersionEvent = (AppVersionEvent) appVersionEvent.copyData();
             if (response.isSuccess() && response.getResult() != null) {
-            /*    response.getResult().setShowDialog(true);
+              /*  response.getResult().setShowDialog(true);
                 response.getResult().setTitle("გთხოვთ განაახლოთ აპლიკაცია");
                 response.getResult().setDialogText("აპლიკაციის გამართულად მუშაობისთვის, საჭიროა მისი განახლება");
                 response.getResult().setOkButtonLink("https://www.google.com/");
-                */
+*/
                 appVersionEvent.setState(RootEvent.STATE_SUCCESS);
                 appVersionEvent.setAppVersion(response.getResult());
             } else {

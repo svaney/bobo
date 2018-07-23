@@ -3,10 +3,12 @@ package com.bobo.gmargiani.bobo.ui.activites;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.transition.TransitionManager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.AppEvents.GrantedPermissionsEvent
 import com.bobo.gmargiani.bobo.evenbuts.events.CategoriesEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
@@ -97,6 +100,9 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     private ArrayList<Object> userImages = new ArrayList<>();
     private ArrayList<String> userLocations = new ArrayList<>();
     private ArrayList<String> userCategories = new ArrayList<>();
+    private boolean isMap;
+    private double lat = -1000;
+    private double lng = -1000;
 
     public static void start(Context context) {
         if (context != null) {
@@ -183,7 +189,16 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @Subscribe
     public void onActivityResultEvent(ActivityResultEvent event) {
-        if (ImagePicker.isImagePickedSuccessfully(event.getRequestCode(), event.getResultCode())) {
+        if (event.getRequestCode() == AppConsts.RC_MAP) {
+            if (event.getResultCode() == RESULT_OK) {
+                isMap = true;
+                lat = event.getData().getDoubleExtra(AppConsts.PARAM_MAP_LAT, -1000);
+                lng = event.getData().getDoubleExtra(AppConsts.PARAM_MAP_LNG, -1000);
+                userLocations = new ArrayList<>();
+                setLocationValues();
+            }
+
+        } else if (ImagePicker.isImagePickedSuccessfully(event.getRequestCode(), event.getResultCode())) {
             ImagePicker.beginCrop(this, event.getResultCode(), event.getData(), 0);
 
         } else if (ImagePicker.isImageCroppedSuccessfully(event.getRequestCode(), event.getResultCode())) {
@@ -223,27 +238,54 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @OnClick(R.id.location)
     public void onLocationClick() {
-        ListDialog locationDialog = new ListDialog(this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
-            @Override
-            public void onItemsSelected(ArrayList<Integer> itemPositions) {
-                if (itemPositions != null) {
-                    userLocations.clear();
-                    for (Integer i : itemPositions) {
-                        userLocations.add(locationsEvent.getLocations().get(i).getKey());
-                    }
-                    setLocationValues();
-                }
-            }
-        });
 
-        ArrayList<DialogPair> data = new ArrayList<>();
-
-        for (KeyValue kv : locationsEvent.getLocations()) {
-            data.add(new DialogPair(kv.getValue(), userLocations.contains(kv.getKey())));
+        AlertDialog.Builder builder;
+        if (AppUtils.atLeastLollipop()) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
         }
 
-        locationDialog.setList(data);
-        locationDialog.show();
+        String[] arr = new String[2];
+        arr[0] = getString(R.string.select_region);
+        arr[1] = getString(R.string.select_on_map);
+
+        builder.setSingleChoiceItems(arr, isMap ? 1 : 0, null)
+                .setPositiveButton(R.string.common_text_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        if (selectedPosition == 0) {
+                            ListDialog locationDialog = new ListDialog(NewStatementActivity.this, ListDialog.DIALOG_LIST_TYPE_SINGLE, new ListDialog.ListDialogItemsSelectedListener() {
+                                @Override
+                                public void onItemsSelected(ArrayList<Integer> itemPositions) {
+                                    if (itemPositions != null) {
+                                        userLocations.clear();
+                                        for (Integer i : itemPositions) {
+                                            userLocations.add(locationsEvent.getLocations().get(i).getKey());
+                                        }
+                                        isMap = false;
+                                        lat = -1000;
+                                        lng = -1000;
+                                        setLocationValues();
+                                    }
+                                }
+                            });
+
+                            ArrayList<DialogPair> data = new ArrayList<>();
+
+                            for (KeyValue kv : locationsEvent.getLocations()) {
+                                data.add(new DialogPair(kv.getValue(), userLocations.contains(kv.getKey())));
+                            }
+
+                            locationDialog.setList(data);
+                            locationDialog.show();
+                        } else {
+                            MapsActivity.start(NewStatementActivity.this, MapsActivity.TYPE_ADD_LOCATION, lat, lng);
+                        }
+                    }
+                })
+                .show();
 
     }
 
@@ -360,36 +402,66 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     private void setLocationValues() {
         locationValuesWrapper.removeAllViews();
 
-        if (!userLocations.isEmpty()) {
-            for (int i = 0; i < userLocations.size(); i++) {
-                String currKey = userLocations.get(i);
-                final FilterTextView txt = new FilterTextView(this);
-                txt.setText(locationsEvent.getValueByKey(currKey));
-                txt.showCloseButton(true);
-                locationValuesWrapper.addView(txt);
+        if (isMap) {
+            final FilterTextView txt = new FilterTextView(this);
+            txt.setText("ruka");
+            txt.showCloseButton(true);
 
-                txt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onLocationClick();
+            locationValuesWrapper.addView(txt);
+            txt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLocationClick();
+                }
+            });
+
+            txt.setOnCloseClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userLocations = new ArrayList<>();
+                    lat = -1;
+                    lng = -1;
+                    isMap = false;
+                    setLocationValues();
+
+                    try {
+                        TransitionManager.beginDelayedTransition(locationValuesWrapper);
+                    } catch (Exception ignored) {
                     }
-                });
+                }
+            });
+        } else {
+            if (!userLocations.isEmpty()) {
+                for (int i = 0; i < userLocations.size(); i++) {
+                    String currKey = userLocations.get(i);
+                    final FilterTextView txt = new FilterTextView(this);
+                    txt.setText(locationsEvent.getValueByKey(currKey));
+                    txt.showCloseButton(true);
+                    locationValuesWrapper.addView(txt);
 
-                final int finalPos = i;
-                txt.setOnCloseClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        userLocations.remove(finalPos);
-                        setLocationValues();
-
-                        try {
-                            TransitionManager.beginDelayedTransition(locationValuesWrapper);
-                        } catch (Exception ignored) {
+                    txt.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onLocationClick();
                         }
-                    }
-                });
-            }
+                    });
 
+                    final int finalPos = i;
+                    txt.setOnCloseClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            userLocations.remove(finalPos);
+                            setLocationValues();
+
+                            try {
+                                TransitionManager.beginDelayedTransition(locationValuesWrapper);
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    });
+                }
+
+            }
         }
     }
 

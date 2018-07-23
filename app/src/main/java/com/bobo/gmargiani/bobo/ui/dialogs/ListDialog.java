@@ -42,6 +42,8 @@ public class ListDialog extends BaseDialog implements RecyclerItemClickListener 
         this.adapter = new DialogListAdapter(getContext(), data, listType, this);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         this.recyclerView.setAdapter(adapter);
+
+        okButton.setVisibility(listType == DIALOG_LIST_TYPE_SINGLE ? View.GONE : View.VISIBLE);
     }
 
     private void findViews() {

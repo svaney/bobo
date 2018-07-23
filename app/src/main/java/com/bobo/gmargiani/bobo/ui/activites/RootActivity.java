@@ -209,7 +209,7 @@ public abstract class RootActivity extends AppCompatActivity {
                            final View.OnClickListener onCancelClickListener, final DialogInterface.OnDismissListener onDismissListener) {
         AlertDialog.Builder builder;
         if (AppUtils.atLeastLollipop()) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
         } else {
             builder = new AlertDialog.Builder(this);
         }
