@@ -21,6 +21,7 @@
         android:layout_marginRight="@dimen/item_default_small_margin"
         android:textColor="@color/color_black"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="@dimen/text_size_descriptions" />/>
 
     <ImageView

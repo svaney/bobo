@@ -11,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -118,6 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     resultIntent.putExtra(AppConsts.PARAM_MAP_LNG, userLocation.longitude);
                     resultIntent.putExtra(AppConsts.PARAM_MAP_LAT, userLocation.latitude);
                 }
+
                 resultIntent.putExtra(AppConsts.PARAM_MAP_NAME, locationName);
                 setResult(RESULT_OK, resultIntent);
                 finish();
@@ -241,16 +243,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onCameraIdle() {
                     userLocation = mMap.getCameraPosition().target;
+                    locationName = "";
                     try {
                         List<Address> list = geocoder.getFromLocation(userLocation.latitude, userLocation.longitude, 1);
                         if (list != null & list.size() > 0) {
                             Address address = list.get(0);
-                            locationName = address.getLocality();
-                            if (!TextUtils.isEmpty(address.getSubThoroughfare()));{
-                                locationName= locationName + ", " + address.getSubThoroughfare();
+                            if (!TextUtils.isEmpty(address.getSubThoroughfare())) {
+                                locationName = address.getSubThoroughfare();
                             }
-                            if (!TextUtils.isEmpty(address.getThoroughfare()));{
-                                locationName= locationName + ", " + address.getThoroughfare();
+                            if (!TextUtils.isEmpty(address.getThoroughfare())) {
+                                locationName = locationName + (!TextUtils.isEmpty(locationName) ? ", " : "") + address.getThoroughfare();
+                            }
+                            if (!TextUtils.isEmpty(address.getLocality())) {
+                                locationName = locationName + (!TextUtils.isEmpty(locationName) ? ", " : "") + address.getLocality();
+                            }
+                            if (!TextUtils.isEmpty(address.getCountryName())) {
+                                locationName = locationName + (!TextUtils.isEmpty(locationName) ? ", " : "") + address.getCountryName();
                             }
                         }
                     } catch (Exception e) {
