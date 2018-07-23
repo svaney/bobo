@@ -6,12 +6,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bobo.gmargiani.bobo.R;
@@ -25,6 +28,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -84,6 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int operationType;
     private double lat;
     private double lng;
+    private Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +118,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     resultIntent.putExtra(AppConsts.PARAM_MAP_LNG, userLocation.longitude);
                     resultIntent.putExtra(AppConsts.PARAM_MAP_LAT, userLocation.latitude);
                 }
+                resultIntent.putExtra(AppConsts.PARAM_MAP_NAME, locationName);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
 
         fabButton.setVisibility(operationType == TYPE_ADD_LOCATION ? View.VISIBLE : View.GONE);
+
+        geocoder = new Geocoder(this, Locale.getDefault());
 
     }
 
@@ -222,7 +232,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    LatLng userLocation;
+    private LatLng userLocation;
+    private String locationName;
 
     private void listenToCamera() {
         if (mMap != null) {
@@ -230,6 +241,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onCameraIdle() {
                     userLocation = mMap.getCameraPosition().target;
+                    try {
+                        List<Address> list = geocoder.getFromLocation(userLocation.latitude, userLocation.longitude, 1);
+                        if (list != null & list.size() > 0) {
+                            Address address = list.get(0);
+                            locationName = address.getLocality();
+                            if (!TextUtils.isEmpty(address.getSubThoroughfare()));{
+                                locationName= locationName + ", " + address.getSubThoroughfare();
+                            }
+                            if (!TextUtils.isEmpty(address.getThoroughfare()));{
+                                locationName= locationName + ", " + address.getThoroughfare();
+                            }
+                        }
+                    } catch (Exception e) {
+
+                    }
+
                 }
             });
         }

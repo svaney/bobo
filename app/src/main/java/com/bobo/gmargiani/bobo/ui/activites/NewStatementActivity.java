@@ -68,6 +68,9 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @BindView(R.id.location_values_wrapper)
     LinearLayout locationValuesWrapper;
 
+    @BindView(R.id.single_location_wrapper)
+    LinearLayout singleLocationWrapper;
+
     @BindView(R.id.edit_text_wrapper)
     View statementNameWrapper;
 
@@ -103,6 +106,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     private boolean isMap;
     private double lat = -1000;
     private double lng = -1000;
+    private String mapLocationName = "";
 
     public static void start(Context context) {
         if (context != null) {
@@ -194,6 +198,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                 isMap = true;
                 lat = event.getData().getDoubleExtra(AppConsts.PARAM_MAP_LAT, -1000);
                 lng = event.getData().getDoubleExtra(AppConsts.PARAM_MAP_LNG, -1000);
+                mapLocationName = event.getData().getStringExtra(AppConsts.PARAM_MAP_NAME);
                 userLocations = new ArrayList<>();
                 setLocationValues();
             }
@@ -267,6 +272,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                                         isMap = false;
                                         lat = -1000;
                                         lng = -1000;
+                                        mapLocationName = null;
                                         setLocationValues();
                                     }
                                 }
@@ -401,13 +407,19 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     private void setLocationValues() {
         locationValuesWrapper.removeAllViews();
+        singleLocationWrapper.removeAllViews();
 
         if (isMap) {
             final FilterTextView txt = new FilterTextView(this);
-            txt.setText("ruka");
+            if (!TextUtils.isEmpty(mapLocationName)) {
+                txt.setText(mapLocationName);
+            } else {
+                txt.setText("რუკაზე ნახვა");
+            }
+
             txt.showCloseButton(true);
 
-            locationValuesWrapper.addView(txt);
+            singleLocationWrapper.addView(txt);
             txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -419,9 +431,10 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                 @Override
                 public void onClick(View v) {
                     userLocations = new ArrayList<>();
-                    lat = -1;
-                    lng = -1;
+                    lat = -1000;
+                    lng = -1000;
                     isMap = false;
+                    mapLocationName = null;
                     setLocationValues();
 
                     try {

@@ -30,6 +30,7 @@ public class AppConsts {
     public final static String PARAM_MAP_OPERATION_TYPE = "PARAM_MAP_OPERATION_TYPE";
     public final static String PARAM_MAP_LAT = "PARAM_MAP_LAT";
     public final static String PARAM_MAP_LNG = "PARAM_MAP_LNG";
+    public final static String PARAM_MAP_NAME = "PARAM_MAP_NAME";
 
 
 
