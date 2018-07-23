@@ -125,9 +125,9 @@ public class ApiManager {
     }
 
     public void getOwnerDetails(final String ownerId) {
-        netApi.getOwnerDetails(ownerId, new RestCallback<ApiResponse<OwnerDetails>>() {
+        netApi.getOwnerDetails(ownerId, new RestCallback<ApiResponse<ArrayList<OwnerDetails>>>() {
             @Override
-            public void onResponse(ApiResponse<OwnerDetails> response) {
+            public void onResponse(ApiResponse<ArrayList<OwnerDetails>> response) {
                 super.onResponse(response);
                 dataListener.onOwnerInfoDetails(response, ownerId);
             }
@@ -135,7 +135,7 @@ public class ApiManager {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                ApiResponse<OwnerDetails> response = new ApiResponse<>();
+                ApiResponse<ArrayList<OwnerDetails>> response = new ApiResponse<>();
                 response.setCode("-1");
                 dataListener.onOwnerInfoDetails(response, ownerId);
             }

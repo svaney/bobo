@@ -12,6 +12,13 @@
         android:layout_height="match_parent"
         tools:context=".ui.activites.MapsActivity" />
 
+    <FrameLayout
+        android:id="@+id/location_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/item_default_margin" />
+
     <View
         android:id="@+id/center_view"
         android:layout_width="1dp"

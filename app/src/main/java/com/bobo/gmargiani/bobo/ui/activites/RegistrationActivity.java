@@ -42,6 +42,7 @@ import com.bobo.gmargiani.bobo.utils.ViewUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -200,14 +201,15 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
 
     Bitmap bitmap;
+    File imageFile;
 
     @Subscribe
     public void onActivityResultEvent(ActivityResultEvent event) {
         if (ImagePicker.isImagePickedSuccessfully(event.getRequestCode(), event.getResultCode())) {
             ImagePicker.beginCrop(this, event.getResultCode(), event.getData(), 0);
-
         } else if (ImagePicker.isImageCroppedSuccessfully(event.getRequestCode(), event.getResultCode())) {
             bitmap = ImagePicker.getCroppedImage(this, event.getResultCode(), event.getData());
+            imageFile = ImagePicker.getCroppedImageFile(event.getResultCode(), event.getData());
             ImageLoader.load(userAvatar)
                     .setBitmap(bitmap)
                     .setOval(true)
@@ -260,7 +262,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
         if (validateInputs()) {
             showFullLoading();
             App.getNetApi().registerUser(isCompany.isChecked(), userName.getText().toString(), userLastName.getText().toString(),
-                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(), bitmap,
+                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(), imageFile,
                     new RestCallback<ApiResponse<Object>>() {
                         @Override
                         public void onResponse(ApiResponse<Object> response) {

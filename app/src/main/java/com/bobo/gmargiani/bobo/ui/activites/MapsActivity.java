@@ -17,8 +17,10 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.bobo.gmargiani.bobo.R;
+import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -92,6 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double lat;
     private double lng;
     private Geocoder geocoder;
+    private FrameLayout titleWrapper;
+    private FilterTextView titleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +133,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fabButton.setVisibility(operationType == TYPE_ADD_LOCATION ? View.VISIBLE : View.GONE);
 
         geocoder = new Geocoder(this, Locale.getDefault());
+
+        titleWrapper = findViewById(R.id.location_title);
+        titleText = new FilterTextView(this);
+        titleText.showBg(true);
+        titleWrapper.setVisibility(View.GONE);
+        titleWrapper.addView(titleText);
 
     }
 
@@ -260,6 +270,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (!TextUtils.isEmpty(address.getCountryName())) {
                                 locationName = locationName + (!TextUtils.isEmpty(locationName) ? ", " : "") + address.getCountryName();
                             }
+
+                            titleText.setVisibility(TextUtils.isEmpty(locationName) ? View.GONE : View.VISIBLE);
+                            titleText.setText(locationName);
                         }
                     } catch (Exception e) {
 

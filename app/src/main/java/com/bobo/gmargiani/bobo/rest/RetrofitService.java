@@ -9,6 +9,8 @@ import com.bobo.gmargiani.bobo.model.Token;
 
 import java.util.ArrayList;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -41,14 +43,21 @@ public interface RetrofitService {
     Call<ApiResponse<ArrayList<StatementItem>>> getStatements(@Body RetrofitApi.StatementJson body);
 
     @POST("/users/details")
-    Call<ApiResponse<OwnerDetails>> getOwnerDetails(@Body RetrofitApi.UserId userId);
+    Call<ApiResponse<ArrayList<OwnerDetails>>> getOwnerDetails(@Body RetrofitApi.UserId userIds);
 
     @POST("/statements/similar")
     Call<ApiResponse<ArrayList<StatementItem>>> getSimilarStatements(@Body RetrofitApi.CategoryId categoryId);
 
-    @Multipart
     @POST("/users/register")
-    Call<ApiResponse<Object>> registerUser(@Part RetrofitApi.RegisterUser user);
+    @Multipart
+    Call<ApiResponse<Object>> registerUser(@Part MultipartBody.Part avatar,
+                                           @Part("email") RequestBody email,
+                                           @Part("password") RequestBody password,
+                                           @Part("isCompany") RequestBody isCompany,
+                                           @Part("firstName") RequestBody firstName,
+                                           @Part("lastName") RequestBody lastName,
+                                           @Part("phoneNum") RequestBody phoneNum,
+                                           @Part("companyName") RequestBody companyName);
 
     @POST("/users/login")
     Call<ApiResponse<LogInData>> logIn(@Body RetrofitApi.LogIn logIn);

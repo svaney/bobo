@@ -59,6 +59,10 @@ public class FilterTextView extends LinearLayout {
         textView.setTextColor(ContextCompat.getColor(getContext(), show ? R.color.color_white : R.color.color_black));
     }
 
+    public void showBg(boolean show){
+        itemWrapper.setBackground(show ? bg : null);
+    }
+
     public void setText(String text) {
         textView.setText(text);
     }

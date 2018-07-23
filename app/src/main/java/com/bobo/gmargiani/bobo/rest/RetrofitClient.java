@@ -25,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     public static final String BASE_URL_IP = "http://35.159.23.0:4000";
+//    public static final String BASE_URL_IP = "http://192.168.1.101:4000";
 //    public static final String BASE_URL = "login.bog.ge";
  //   public static final String BASE_SEGMENT = "rb-middleware-api-connector";
 //

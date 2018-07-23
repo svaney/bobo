@@ -9,6 +9,7 @@ import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -26,11 +27,11 @@ public abstract class NetApi {
 
     public abstract void getStatements(int from, int count, boolean sell, boolean rent, String searchQuery, ArrayList<String> categories, ArrayList<String> locations, BigDecimal priceFrom, BigDecimal priceTo, String orderBy, RestCallback<ApiResponse<ArrayList<StatementItem>>> restCallback);
 
-    public abstract void getOwnerDetails(String ownerId, RestCallback<ApiResponse<OwnerDetails>> restCallback);
+    public abstract void getOwnerDetails(String ownerId, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> restCallback);
 
     public abstract void getSimilarStatements(String setCategoryId, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
 
-    public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, Bitmap bitmap, RestCallback<ApiResponse<Object>> callback);
+    public abstract void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, File bitmap, RestCallback<ApiResponse<Object>> callback);
 
     public abstract void logIn(String email, String password, RestCallback<ApiResponse<LogInData>> callback);
 

@@ -2,6 +2,7 @@ package com.bobo.gmargiani.bobo.rest;
 
 import android.graphics.Bitmap;
 
+import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.AppVersion;
 import com.bobo.gmargiani.bobo.model.KeyValue;
 import com.bobo.gmargiani.bobo.model.LogInData;
@@ -9,11 +10,20 @@ import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
 import com.bobo.gmargiani.bobo.model.Token;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Multipart;
 
 /**
  * Created by gmargiani on 1/30/2018.
@@ -62,8 +72,8 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void getOwnerDetails(String ownerId, RestCallback<ApiResponse<OwnerDetails>> callback) {
-        Call<ApiResponse<OwnerDetails>> call = retService.getOwnerDetails(new UserId(ownerId));
+    public void getOwnerDetails(String ownerId, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback) {
+        Call<ApiResponse<ArrayList<OwnerDetails>>> call = retService.getOwnerDetails(new UserId(ownerId));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
     }
@@ -88,10 +98,32 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
-    public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, Bitmap bitmap, RestCallback<ApiResponse<Object>> callback) {
-        Call<ApiResponse<Object>> call = retService.registerUser(new RegisterUser(email, password, isCompany, firstName, lastName, phoneNum, companyName));
+    public void registerUser(boolean isCompany, String firstName, String lastName, String companyName, String password, String email, String phoneNum, File imageFile, RestCallback<ApiResponse<Object>> callback) {
+
+        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), email);
+        RequestBody passwordBody = RequestBody.create(MediaType.parse("text/plain"), password);
+        RequestBody companyNameBody = RequestBody.create(MediaType.parse("text/plain"), companyName);
+        RequestBody isCompanyBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(isCompany));
+        RequestBody firstNameBody = RequestBody.create(MediaType.parse("text/plain"), firstName);
+        RequestBody lastNameBody = RequestBody.create(MediaType.parse("text/plain"), lastName);
+        RequestBody phoneNumBody = RequestBody.create(MediaType.parse("text/plain"), phoneNum);
+
+        MultipartBody.Part avatarBody = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+            avatarBody = MultipartBody.Part.createFormData("avatar", imageFile.getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Call<ApiResponse<Object>> call = retService.registerUser(avatarBody, emailBody, passwordBody, isCompanyBody, firstNameBody,
+                lastNameBody, phoneNumBody, companyNameBody);
+
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
+
+
     }
 
     @Override
@@ -182,15 +214,24 @@ public class RetrofitApi extends NetApi {
     }
 
     public class RegisterUser {
+        @SerializedName("email")
         String email;
+        @SerializedName("password")
         String password;
+        @SerializedName("isCompany")
         boolean isCompany;
+        @SerializedName("firstName")
         String firstName;
+        @SerializedName("lastName")
         String lastName;
+        @SerializedName("phoneNum")
         String phoneNum;
+        @SerializedName("companyName")
         String companyName;
+        @SerializedName("avatar")
+        MultipartBody.Part avatar;
 
-        public RegisterUser(String email, String password, boolean isCompany, String firstName, String lastName, String phoneNum, String companyName) {
+        public RegisterUser(String email, String password, boolean isCompany, String firstName, String lastName, String phoneNum, String companyName, MultipartBody.Part avatar) {
             this.email = email;
             this.password = password;
             this.isCompany = isCompany;
@@ -198,6 +239,7 @@ public class RetrofitApi extends NetApi {
             this.lastName = lastName;
             this.phoneNum = phoneNum;
             this.companyName = companyName;
+            this.avatar = avatar;
         }
     }
 
@@ -213,10 +255,11 @@ public class RetrofitApi extends NetApi {
 
 
     public class UserId {
-        String userId;
+        ArrayList<String> userIds;
 
         public UserId(String userId) {
-            this.userId = userId;
+            this.userIds = new ArrayList<>();
+            this.userIds.add(userId);
         }
     }
 

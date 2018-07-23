@@ -385,7 +385,7 @@ public class UserInfo implements NetDataListener {
     }
 
     @Override
-    public void onOwnerInfoDetails(ApiResponse<OwnerDetails> response, String ownerId) {
+    public void onOwnerInfoDetails(ApiResponse<ArrayList<OwnerDetails>> response, String ownerId) {
         if (ownerDetailsList == null) {
             ownerDetailsList = new ArrayList<>();
         }
@@ -402,9 +402,9 @@ public class UserInfo implements NetDataListener {
 
         ownerDetailsList.add(event);
 
-        if (response.isSuccess()) {
+        if (response.isSuccess() && response.getResult() != null && response.getResult().size() > 0) {
             event.setState(RootEvent.STATE_SUCCESS);
-            event.setDetails(response.getResult());
+            event.setDetails(response.getResult().get(0));
 
         } else {
             event.setState(RootEvent.STATE_ERROR);

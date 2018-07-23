@@ -34,8 +34,7 @@
                     android:id="@+id/user_profile_picture"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_gravity="center"
-                    android:paddingTop="@dimen/nav_header_vertical_spacing" />
+                    android:layout_gravity="center"/>
             </FrameLayout>
 
             <TextView
