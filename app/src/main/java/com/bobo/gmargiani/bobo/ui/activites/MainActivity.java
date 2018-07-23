@@ -331,10 +331,12 @@ public class MainActivity extends RootActivity
         String orderBy = filterValues.get(FilterActivity.FILTER_PARAM_POS_ORDER_BY);
 
         ArrayList locations = new ArrayList();
-        locations.addAll(Arrays.asList(location.split(";")));
+        if (!TextUtils.isEmpty(location))
+            locations.addAll(Arrays.asList(location.split(";")));
 
         ArrayList categories = new ArrayList();
-        categories.addAll(Arrays.asList(category.split(";")));
+        if (!TextUtils.isEmpty(category))
+            categories.addAll(Arrays.asList(category.split(";")));
 
 
         userInfo.requestStatements(adapter.getItemCount() - 1, false,

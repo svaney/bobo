@@ -127,11 +127,15 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
         userAvatarWrapper.setBackground(bg);
 
+        isCompany.setEnabled(ownerDetails != null ? false : true);
+        userMail.setEnabled(ownerDetails != null ? false : true);
+        
         if (ownerDetails != null && !TextUtils.isEmpty(ownerDetails.getAvatar())) {
             ImageLoader.load(userAvatar)
                     .setUrl(ownerDetails.getAvatar())
                     .setOval(true)
                     .build();
+
         } else {
             ImageLoader.load(userAvatar)
                     .setRes(R.drawable.ic_avatar_default)
@@ -146,7 +150,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
             userMail.setText(ownerDetails.getEmail());
             userPhone.setText(ownerDetails.getPhone());
             companyName.setText(ownerDetails.getCompanyName());
-          //  userPassword.setHint(getString(R.string.new_password));
+            //  userPassword.setHint(getString(R.string.new_password));
             userpasswrapper.setHint(getString(R.string.new_password));
             registerButton.setText(getString(R.string.save));
         } else {
@@ -370,8 +374,8 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
     @Override
     protected String getHeaderText() {
-        if (ownerDetails != null){
-            return  getString(R.string.activity_name_edit_profile);
+        if (ownerDetails != null) {
+            return getString(R.string.activity_name_edit_profile);
         }
         return getString(R.string.activity_name_registration);
     }
