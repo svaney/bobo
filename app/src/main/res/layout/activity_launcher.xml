@@ -11,6 +11,13 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="92dp"
+        android:src="@drawable/vovo_logo" />
+
     <FrameLayout
         android:id="@+id/full_retry"
         android:layout_width="match_parent"

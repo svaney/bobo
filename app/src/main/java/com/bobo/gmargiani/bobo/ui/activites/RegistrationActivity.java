@@ -291,8 +291,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
             if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
                 permissionRequested = true;
                 onImageClick(0);
-                AlertManager.showError(this, "თქვენ უარი თქვით კამერის გამოყენების უფლებაზე. " +
-                        "შესაბამისად შესაძლებელი იქნება სურათების მხოლოდ გალერეედან ატვირთვა", AlertManager.VERY_LONG);
+                AlertManager.showError(this, getString(R.string.no_image_permission), AlertManager.VERY_LONG);
             }
         }
     }
@@ -356,7 +355,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                                     finish();
 
                                 } else if (!TextUtils.isEmpty(response.getMessage()) && response.getMessage().contains("duplicate")) {
-                                    AlertManager.showError(RegistrationActivity.this, getString(R.string.register_error_duplicate_user));
+                                    AlertManager.showError(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.register_error_duplicate_user));
                                 } else {
                                     AlertManager.showError(RegistrationActivity.this, getString(R.string.common_text_error));
                                 }
@@ -383,7 +382,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                     @Override
                     public void run() {
                         scrollView.scrollTo(0, e.getBottom());
-                        AlertManager.showError(RegistrationActivity.this, "გთხოვთ შეავსოთ ყველა ველი");
+                        AlertManager.showError(RegistrationActivity.this, getString(R.string.fill_all_values));
                         ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(RegistrationActivity.this, R.color.error_red_color));
                         ViewCompat.setBackgroundTintList(e, colorStateList);
                         ViewUtils.shakeView(e);
@@ -399,7 +398,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                 @Override
                 public void run() {
                     scrollView.scrollTo(0, scrollView.getBottom());
-                    AlertManager.showError(RegistrationActivity.this, "პაროლები არ ემთხვევა ერთმანეთს");
+                    AlertManager.showError(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.password_mismatch));
                     ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(RegistrationActivity.this, R.color.error_red_color));
                     ViewCompat.setBackgroundTintList(userPasswordSecond, colorStateList);
                     ViewUtils.shakeView(userPasswordSecond);
@@ -413,7 +412,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                 @Override
                 public void run() {
                     scrollView.scrollTo(0, userMail.getBottom());
-                    AlertManager.showError(RegistrationActivity.this, "გთხოვთ შეიყვანოთ სწორი ელ. ფოსტის მისამართი");
+                    AlertManager.showError(RegistrationActivity.this, getString(R.string.error_wrong_email));
                     ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(RegistrationActivity.this, R.color.error_red_color));
                     ViewCompat.setBackgroundTintList(userMail, colorStateList);
                     ViewUtils.shakeView(userMail);
@@ -427,7 +426,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                 @Override
                 public void run() {
                     scrollView.scrollTo(0, scrollView.getBottom());
-                    AlertManager.showError(RegistrationActivity.this, "პაროლის სიგრძე უნდა აღემატებოდეს 6 სიმბოლოს");
+                    AlertManager.showError(RegistrationActivity.this, getString(R.string.error_short_password));
                     ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(RegistrationActivity.this, R.color.error_red_color));
                     ViewCompat.setBackgroundTintList(userPassword, colorStateList);
                     ViewUtils.shakeView(userPassword);

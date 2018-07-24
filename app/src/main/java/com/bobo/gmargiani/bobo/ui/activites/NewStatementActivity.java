@@ -267,7 +267,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                 public void onResponse(ApiResponse<Object> response) {
                     super.onResponse(response);
                     if (response.isSuccess()) {
-                        AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით წაიშალა");
+                        AlertManager.showInfo(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.statement_deleted));
                         userInfo.invalidateStatementsEvent();
                         Handler h = new Handler();
                         h.postDelayed(new Runnable() {
@@ -295,19 +295,19 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @OnClick(R.id.add_statement_button)
     public void onCreateClick() {
         if (userCategories.isEmpty()) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ თუ რა კატერგორიას მიეკუთვნება პროდუქტი");
+            AlertManager.showError(this, getString(R.string.error_no_category));
             ViewUtils.shakeView(categoryValidateView);
         } else if (userLocations.isEmpty() && lat == -1000 && lng == -1000) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ თუ სად მდებარეობს პროდუქტი");
+            AlertManager.showError(this, getString(R.string.error_no_location));
             ViewUtils.shakeView(locationValidateView);
         } else if (TextUtils.isEmpty(statementPrice.getText())) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის ფასი");
+            AlertManager.showError(this, getString(R.string.error_no_price));
             ViewUtils.shakeView(statementPriceWrapper);
         } else if (TextUtils.isEmpty(statementName.getText())) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის დასახელება");
+            AlertManager.showError(this, getString(R.string.error_no_title));
             ViewUtils.shakeView(statementNameWrapper);
         } else if (TextUtils.isEmpty(statementDesc.getText())) {
-            AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის აწერა");
+            AlertManager.showError(this, getString(R.string.eror_no_description));
             ViewUtils.shakeView(statementDesc);
         } else {
             showFullLoading();
@@ -323,7 +323,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                             public void onResponse(ApiResponse<Object> response) {
                                 super.onResponse(response);
                                 if (response.isSuccess()) {
-                                    AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით შეიცვალა");
+                                    AlertManager.showInfo(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.operation_succsessful));
                                     userInfo.invalidateStatementsEvent();
                                     Handler h = new Handler();
                                     h.postDelayed(new Runnable() {
@@ -352,7 +352,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                             public void onResponse(ApiResponse<Object> response) {
                                 super.onResponse(response);
                                 if (response.isSuccess()) {
-                                    AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით დაემატა");
+                                    AlertManager.showInfo(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.operation_succsessful));
                                     userInfo.invalidateStatementsEvent();
                                     Handler h = new Handler();
                                     h.postDelayed(new Runnable() {
@@ -545,7 +545,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
             if (event.getRequestCode() == AppConsts.PERMISSION_CAMERA) {
                 permissionRequested = true;
                 onImageClick(lastClickedImagePosition);
-                AlertManager.showError(this, "თქვენ უარი თქვით კამერის გამოყენების უფლებაზე. შესაბამისად შესაძლებელი იქნება სურათების მხოლოდ გალერეედან ატვირთვა", AlertManager.VERY_LONG);
+                AlertManager.showError(this, getString(R.string.no_image_permission), AlertManager.VERY_LONG);
             }
         }
     }
@@ -620,7 +620,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
             if (!TextUtils.isEmpty(mapLocationName)) {
                 txt.setText(mapLocationName);
             } else {
-                txt.setText("რუკაზე ნახვა");
+                txt.setText(getString(R.string.sho_on_map));
             }
 
             txt.showCloseButton(true);

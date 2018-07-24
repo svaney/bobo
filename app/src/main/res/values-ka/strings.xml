@@ -118,9 +118,21 @@
     <string name="select_on_map">რუკაზე მონიშვნა</string>
     <string name="login_success">თქვენ წარმატებით გაიარეთ ავტორიზაცია</string>
     <string name="show_on_map">რუკაზე ნახვა</string>
-    <string name="delete">DELETE</string>
+    <string name="delete">წაშლა</string>
     <string name="operation_succsessful">ოპერაცია წარმატებით დასრულდა</string>
     <string name="create_date">შექმნის თარიღი</string>
+    <string name="statement_deleted">განცხადება წარმატებით წაიშალა</string>
+    <string name="error_no_category">გთხოვთ მიუთითოთ თუ რა კატერგორიას მიეკუთვნება პროდუქტი</string>
+    <string name="error_no_location">გთხოვთ მიუთითოთ თუ სად მდებარეობს პროდუქტი</string>
+    <string name="error_no_price">გთხოვთ მიუთითოთ პროდუქტის ფასი</string>
+    <string name="error_no_title">გთხოვთ მიუთითოთ პროდუქტის დასახელება</string>
+    <string name="eror_no_description">გთხოვთ მიუთითოთ პროდუქტის აწერა</string>
+    <string name="no_image_permission">თქვენ უარი თქვით კამერის გამოყენების უფლებაზე. შესაბამისად შესაძლებელი იქნება სურათების მხოლოდ გალერეედან ატვირთვა</string>
+    <string name="sho_on_map">რუკაზე ნახვა</string>
+    <string name="fill_all_values">გთხოვთ შეავსოთ ყველა ველი</string>
+    <string name="password_mismatch">პაროლები არ ემთხვევა ერთმანეთს</string>
+    <string name="error_wrong_email">გთხოვთ შეიყვანოთ სწორი ელ. ფოსტის მისამართი</string>
+    <string name="image">სურათი</string>
 
 
 </resources>
