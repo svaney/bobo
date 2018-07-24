@@ -194,12 +194,7 @@ public class UserInfo implements NetDataListener {
             } else {
                 appVersionEvent.setState(RootEvent.STATE_ERROR);
             }
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    eventBus.post(appVersionEvent);
-                }
-            }, 3000);
+            eventBus.post(appVersionEvent);
 
         }
     }
