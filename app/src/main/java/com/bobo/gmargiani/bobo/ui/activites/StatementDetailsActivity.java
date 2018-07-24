@@ -290,7 +290,7 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
             statementTitle.setText(statementItem.getTitle());
             statementPrice.setText(Utils.getAmountWithGel(statementItem.getPrice()));
 
-            statementViews.setText(String.valueOf(statementItem.getTotalViews()));
+          //  statementViews.setText(String.valueOf(statementItem.getTotalViews()));
             statementFavorites.setText(String.valueOf(statementItem.getTotalFavorites()));
 
             //   statementDate.setText(Utils.getFullDate(statementItem.getCreateDate(), this));
@@ -319,6 +319,11 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
                 .setRes(R.drawable.ic_favorite)
                 .applyTint(R.color.ic_grey_color)
                 .build();
+
+        icFavorites.setVisibility(View.GONE);
+        icViews.setVisibility(View.GONE);
+     //   statementViews.setVisibility(View.GONE);
+        statementFavorites.setVisibility(View.GONE);
 
         ImageLoader.load(icViews)
                 .setRes(R.drawable.ic_views)

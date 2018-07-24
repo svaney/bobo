@@ -89,6 +89,15 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <TextView
+                            android:id="@+id/statement_views"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/create_date"
+                            android:textSize="@dimen/text_size_small" />
+
                         <ImageView
                             android:id="@+id/ic_statistics_views"
                             android:layout_width="22dp"
@@ -97,15 +106,6 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true" />
 
-                        <TextView
-                            android:id="@+id/statement_views"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/item_default_margin"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/text_size_medium" />
 
                         <ImageView
                             android:id="@+id/ic_statistics_favorite"

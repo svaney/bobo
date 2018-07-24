@@ -28,30 +28,9 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="250dp"
+                    android:layout_height="1dp"
                     android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="@dimen/item_default_margin"
-                        android:elevation="3dp"
-                        android:src="@mipmap/ic_launcher_round" />
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="@dimen/item_default_margin"
-                        android:elevation="3dp"
-                        android:src="@mipmap/ic_launcher_round" />
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="@dimen/item_default_margin"
-                        android:elevation="3dp"
-                        android:src="@mipmap/ic_launcher_round" />
 
                 </LinearLayout>
 
@@ -111,7 +90,7 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/common_text_log_in"/>
+                    android:text="@string/common_text_log_in" />
 
                 <Button
                     android:id="@+id/register_button"

@@ -43,6 +43,8 @@ public class GalleryFooter extends FrameLayout implements ViewPager.OnPageChange
         icFavoriteFilled = findViewById(R.id.item_favorites_ic_filled);
         icShare = findViewById(R.id.ic_share);
 
+        icShare.setVisibility(GONE);
+
         ImageLoader.load(icFavorite)
                 .setRes(R.drawable.ic_favorite)
                 .applyTint(R.color.color_white)
