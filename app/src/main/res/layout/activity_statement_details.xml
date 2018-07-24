@@ -225,6 +225,7 @@
 
                         </LinearLayout>
 
+
                     </LinearLayout>
 
 
@@ -313,6 +314,7 @@
 
                 </LinearLayout>
 
+
                 <TextView
                     android:id="@+id/statement_type"
                     android:layout_width="wrap_content"
@@ -322,6 +324,14 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/text_size_titles" />
 
+                <Button
+                    android:id="@+id/show_on_map"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/item_default_small_margin"
+                    android:text="@string/show_on_map"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -350,10 +360,10 @@
                 android:background="@color/divider_color" />
 
             <TextView
+                android:id="@+id/similar_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/item_default_margin"
-                android:id="@+id/similar_title"
                 android:maxLines="1"
                 android:text="@string/statement_details_similars"
                 android:textSize="@dimen/text_size_medium" />

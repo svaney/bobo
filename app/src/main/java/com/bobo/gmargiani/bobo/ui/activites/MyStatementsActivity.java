@@ -49,22 +49,21 @@ public class MyStatementsActivity extends AuthorizedActivity implements TabLayou
         userInfo.requestOwnerStatements(ownerId);
     }
 
+
     @Subscribe
     public void onOwnerStatementsEvent(OwnerStatementsEvent event) {
-        if (ownerStatementsEvent != event && Utils.equals(event.getOwnerId(), ownerId)) {
-            ownerStatementsEvent = event;
-            switch (event.getState()) {
-                case RootEvent.STATE_LOADING:
-                    showFullLoading();
-                    break;
-                case RootEvent.STATE_ERROR:
-                    showFullError();
-                    break;
-                case RootEvent.STATE_SUCCESS:
-                    setUpOwnerTabs();
-                    showContent();
-                    break;
-            }
+        ownerStatementsEvent = event;
+        switch (event.getState()) {
+            case RootEvent.STATE_LOADING:
+                showFullLoading();
+                break;
+            case RootEvent.STATE_ERROR:
+                showFullError();
+                break;
+            case RootEvent.STATE_SUCCESS:
+                setUpOwnerTabs();
+                showContent();
+                break;
         }
         refreshHeaderText();
     }
@@ -86,6 +85,15 @@ public class MyStatementsActivity extends AuthorizedActivity implements TabLayou
     public void onOwnerErrorClick() {
         if (!TextUtils.isEmpty(ownerId)) {
             userInfo.requestOwnerDetails(ownerId);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (logInEvent != null && logInEvent.isLoggedIn()){
+            ownerId = logInEvent.getLogInData().getUserDetails().getOwnerId();
+            userInfo.requestOwnerStatements(ownerId);
         }
     }
 
@@ -118,9 +126,15 @@ public class MyStatementsActivity extends AuthorizedActivity implements TabLayou
 
             Bundle b = new Bundle();
             b.putString(AppConsts.PARAM_OWNER_ID, ownerId);
+            b.putBoolean(AppConsts.PARAM_ARCHIVED, false);
 
             activeStatements.setArguments(b);
-            archivedStatements.setArguments(b);
+
+            Bundle b2 = new Bundle();
+            b2.putString(AppConsts.PARAM_OWNER_ID, ownerId);
+            b2.putBoolean(AppConsts.PARAM_ARCHIVED, true);
+
+            archivedStatements.setArguments(b2);
         }
 
         @Override

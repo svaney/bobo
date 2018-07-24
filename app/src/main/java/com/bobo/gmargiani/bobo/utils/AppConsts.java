@@ -22,6 +22,7 @@ public class AppConsts {
     public final static String PARAM_FILTER_PARAMS = "FILTER_PARAMS";
     public final static String PARAM_STATEMENT = "PARAM_STATEMENT";
     public final static String PARAM_OWNER_ID = "PARAM_OWNER_ID";
+    public final static String PARAM_ARCHIVED = "PARAM_ARCHIVED";
     public final static String PARAM_SEARCH_QUERY = "PARAM_SEARCH_QUERY";
     public final static String PARAM_LIST_TYPE = "PARAM_LIST_TYPE";
     public final static String PARAM_EMAIL = "PARAM_EMAIL";

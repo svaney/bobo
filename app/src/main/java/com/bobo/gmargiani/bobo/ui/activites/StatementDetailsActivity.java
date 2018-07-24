@@ -107,6 +107,9 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
     @BindView(R.id.statement_type)
     TextView statementType;
 
+    @BindView(R.id.show_on_map)
+    View mapButton;
+
     @BindView(R.id.ic_statement_category)
     ImageView icStatementCategory;
 
@@ -299,6 +302,16 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
             statementCategory.setText(categoriesEvent.getValueByKey(statementItem.getCategory()));
             statementType.setText(statementItem.isSelling() ? getString(R.string.common_text_selling) :
                     (statementItem.isRenting() ? getString(R.string.common_text_renting) : ""));
+
+            if (statementItem.getLat() != null && statementItem.getLon() != null){
+                mapButton.setVisibility(View.VISIBLE);
+                mapButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MapsActivity.start(StatementDetailsActivity.this, MapsActivity.TYPE_SHOW_LOCATION, statementItem.getLat(), statementItem.getLon());
+                    }
+                });
+            }
         }
 
 

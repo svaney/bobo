@@ -265,9 +265,10 @@ public abstract class RootActivity extends AppCompatActivity {
                     }
 
                     AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
-                    if (onResponse != null) {
-                        onResponse.onResponse(response);
-                    }
+                }
+
+                if (onResponse != null) {
+                    onResponse.onResponse(response);
                 }
             }
 
@@ -311,9 +312,10 @@ public abstract class RootActivity extends AppCompatActivity {
                     }
 
                     AlertManager.showError(RootActivity.this, getString(R.string.common_text_error));
-                    if (onResponse != null) {
-                        onResponse.onResponse(response);
-                    }
+
+                }
+                if (onResponse != null) {
+                    onResponse.onResponse(response);
                 }
             }
 

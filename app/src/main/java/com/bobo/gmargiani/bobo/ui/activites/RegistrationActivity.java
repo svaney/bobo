@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -36,13 +37,18 @@ import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
 import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ImagePicker;
+import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 import com.bobo.gmargiani.bobo.utils.Utils;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -129,11 +135,39 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
 
         isCompany.setEnabled(ownerDetails != null ? false : true);
         userMail.setEnabled(ownerDetails != null ? false : true);
-        
+
         if (ownerDetails != null && !TextUtils.isEmpty(ownerDetails.getAvatar())) {
             ImageLoader.load(userAvatar)
-                    .setUrl(ownerDetails.getAvatar())
+                    .setUrl(ownerDetails.getAvatar(), true)
                     .setOval(true)
+                    .setTarget(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                            try {
+                                File f = new File(RegistrationActivity.this.getCacheDir(), "imageFile");
+                                f.createNewFile();
+
+                                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                                byte[] bitmapdata = bos.toByteArray();
+
+
+                                FileOutputStream fos = new FileOutputStream(f);
+                                fos.write(bitmapdata);
+                                fos.flush();
+                                fos.close();
+
+                                imageFile = f;
+
+                                ImageLoader.load(userAvatar)
+                                        .setUrl(ownerDetails.getAvatar())
+                                        .setOval(true)
+                                        .build();
+                            } catch (Exception ignored) {
+                                ignored.printStackTrace();
+                            }
+                        }
+                    })
                     .build();
 
         } else {
@@ -191,6 +225,9 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
         });
         if (ownerDetails != null) {
             isCompany.setChecked(ownerDetails.isCompany());
+            inputs.remove(userMail);
+            inputs.remove(userPassword);
+            inputs.remove(userPasswordSecond);
         }
 
 
@@ -265,34 +302,74 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
     public void onRegisterClick() {
         if (validateInputs()) {
             showFullLoading();
-            App.getNetApi().registerUser(isCompany.isChecked(), userName.getText().toString(), userLastName.getText().toString(),
-                    companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(), imageFile,
-                    new RestCallback<ApiResponse<Object>>() {
-                        @Override
-                        public void onResponse(ApiResponse<Object> response) {
-                            super.onResponse(response);
-                            showContent();
-                            if (response.isSuccess()) {
-                                Intent intent = new Intent();
-                                intent.putExtra(AppConsts.PARAM_EMAIL, userMail.getText().toString());
+            if (ownerDetails != null) {
 
-                                setResult(RESULT_OK, new Intent(intent));
-                                finish();
+                App.getNetApi().updateUser(!TextUtils.isEmpty(companyName.getText().toString()) ? companyName.getText().toString() : null,
+                        !TextUtils.isEmpty(userName.getText().toString()) ? userName.getText().toString() : null,
+                        !TextUtils.isEmpty(userLastName.getText().toString()) ? userLastName.getText().toString() : null,
+                        !TextUtils.isEmpty(userPhone.getText().toString()) ? userPhone.getText().toString() : null,
+                        !TextUtils.isEmpty(userPassword.getText().toString()) ? userLastName.getText().toString() : null,
+                        imageFile,
+                        new RestCallback<ApiResponse<OwnerDetails>>() {
+                            @Override
+                            public void onResponse(ApiResponse<OwnerDetails> response) {
+                                super.onResponse(response);
 
-                            } else if (!TextUtils.isEmpty(response.getMessage()) && response.getMessage().contains("duplicate")) {
-                                AlertManager.showError(RegistrationActivity.this, getString(R.string.register_error_duplicate_user));
-                            } else {
+                                if (response.isSuccess()) {
+                                    AlertManager.showInfo(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.operation_succsessful));
+                                    userInfo.onAuthorizeByTokenEvent(response, PreferencesApiManager.getInstance().getToken());
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finish();
+                                        }
+                                    }, 2000);
+                                } else {
+                                    showContent();
+
+                                    AlertManager.showError(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.common_text_error));
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                super.onFailure(t);
+                                showContent();
+                                AlertManager.showError(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.common_text_error));
+                            }
+                        });
+            } else {
+                App.getNetApi().registerUser(isCompany.isChecked(), userName.getText().toString(), userLastName.getText().toString(),
+                        companyName.getText().toString(), userPassword.getText().toString(), userMail.getText().toString(), userPhone.getText().toString(), imageFile,
+                        new RestCallback<ApiResponse<Object>>() {
+                            @Override
+                            public void onResponse(ApiResponse<Object> response) {
+                                super.onResponse(response);
+                                showContent();
+                                if (response.isSuccess()) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra(AppConsts.PARAM_EMAIL, userMail.getText().toString());
+
+                                    setResult(RESULT_OK, new Intent(intent));
+                                    finish();
+
+                                } else if (!TextUtils.isEmpty(response.getMessage()) && response.getMessage().contains("duplicate")) {
+                                    AlertManager.showError(RegistrationActivity.this, getString(R.string.register_error_duplicate_user));
+                                } else {
+                                    AlertManager.showError(RegistrationActivity.this, getString(R.string.common_text_error));
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                super.onFailure(t);
+                                showContent();
                                 AlertManager.showError(RegistrationActivity.this, getString(R.string.common_text_error));
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            super.onFailure(t);
-                            showContent();
-                            AlertManager.showError(RegistrationActivity.this, getString(R.string.common_text_error));
-                        }
-                    });
+                        });
+            }
         }
     }
 
@@ -345,7 +422,7 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
             return false;
         }
 
-        if (userPassword.getText().length() < 6) {
+        if ((ownerDetails == null && userPassword.getText().length() < 6) || (ownerDetails != null && !TextUtils.isEmpty(userPassword.getText().toString()))) {
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {

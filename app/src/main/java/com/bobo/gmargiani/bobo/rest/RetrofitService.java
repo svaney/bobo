@@ -68,7 +68,7 @@ public interface RetrofitService {
                                               @Part("locationId") RequestBody locationBody,
                                               @Part("categoryId") RequestBody categoryBody,
                                               @Part("lat") RequestBody latBody,
-                                              @Part("lan") RequestBody lngBody,
+                                              @Part("lon") RequestBody lngBody,
                                               @Part("selling") RequestBody sellingBody,
                                               @Part("renting") RequestBody rentingBody,
                                               @Part MultipartBody.Part photo1,
@@ -96,5 +96,20 @@ public interface RetrofitService {
     Call<ApiResponse<Object>> setSubscribed(@Header("Authorization") String token, @Body RetrofitApi.SubscribeUser subscribe);
 
     @POST("/statements/getStatementsByIds")
-    Call<ApiResponse<ArrayList<StatementItem>>> getStatementsByIds(@Body  RetrofitApi.FavoriteStatements favoriteStatements);
+    Call<ApiResponse<ArrayList<StatementItem>>> getStatementsByIds(@Body RetrofitApi.FavoriteStatements favoriteStatements);
+
+    @POST("/statements/delete")
+    Call<ApiResponse<Object>> deleteStatement(@Header("Authorization") String token, @Body RetrofitApi.StatementId statementId);
+
+    @POST("/users/update")
+    @Multipart
+    Call<ApiResponse<OwnerDetails>> updateUser(@Header("Authorization") String token, @Part("password") RequestBody password, @Part MultipartBody.Part avatar,
+                                               @Part("firstName") RequestBody firstName, @Part("lastName") RequestBody lastName, @Part("phoneNum") RequestBody phoneNum, @Part("company") RequestBody company);
+
+    @POST("/statements/update")
+    @Multipart
+    Call<ApiResponse<Object>> updateStatement(@Header("Authorization") String token, @Part("statementId") RequestBody statementId, @Part("title") RequestBody title, @Part("description") RequestBody description, @Part("price") RequestBody price,
+                                              @Part("locationId") RequestBody locationId, @Part("categoryId") RequestBody categoryId, @Part("lat") RequestBody lat,
+                                              @Part("lon") RequestBody lon, @Part("selling") RequestBody selling, @Part("renting") RequestBody renting, @Part("isArchived") RequestBody isArchived,
+                                              @Part MultipartBody.Part photos1, @Part MultipartBody.Part photos2, @Part MultipartBody.Part photos3, @Part MultipartBody.Part photos4, @Part MultipartBody.Part photos5);
 }

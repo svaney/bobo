@@ -304,8 +304,16 @@ public class UserInfo implements NetDataListener {
         eventBus.post(favoriteStatementsEvent);
     }
 
-    public void invalidateStatementsEvent(){
-        statementsEvent.setState(RootEvent.STATE_LOADING);
+    public static boolean statementsInvalidated;
+
+    public void invalidateStatementsEvent() {
+        statementsInvalidated = true;
+
+        statementsEvent.setState(RootEvent.STATE_ERROR);
+        statementsEvent.setStatements(new ArrayList<StatementItem>());
+
+        ownerStatementsEvent = new OwnerStatementsEvent();
+        ownerStatementsEvent.setState(RootEvent.STATE_ERROR);
     }
 
 
@@ -630,14 +638,14 @@ public class UserInfo implements NetDataListener {
                 }
             }
             logInEvent.getLogInData().getUserDetails().getFavourites().add(statementId);
-            requestFavoriteStatements(true);
+            favoriteStatementsEvent = null;
         }
     }
 
     public void removeFromFavorites(String statementId) {
         if (!TextUtils.isEmpty(statementId) && isAuthorized()) {
             logInEvent.getLogInData().getUserDetails().getFavourites().remove(statementId);
-            requestFavoriteStatements(true);
+            favoriteStatementsEvent = null;
         }
     }
 

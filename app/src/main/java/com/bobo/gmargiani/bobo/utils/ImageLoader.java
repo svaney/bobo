@@ -49,6 +49,7 @@ public class ImageLoader {
         private boolean isUri;
         private boolean isFile;
         private boolean hasPlaceHolder;
+        private SimpleTarget<Bitmap> target;
 
         public I(ImageView imageView) {
             this.imageView = imageView;
@@ -116,6 +117,11 @@ public class ImageLoader {
             return this;
         }
 
+        public ImageLoader.I setTarget(SimpleTarget<Bitmap> target) {
+            this.target = target;
+            return this;
+        }
+
         public ImageLoader.I setErroPlaceHolder(@DrawableRes int resId) {
             this.errorId = resId;
             return this;
@@ -128,10 +134,14 @@ public class ImageLoader {
                 Context context = imageView.getContext();
 
                 if (asBitmap) {
-                    Glide.with(context).asBitmap().load(imageUrl).into(new SimpleTarget<Bitmap>() {
+                    RequestOptions options = new RequestOptions().override(400, 400);
+                    Glide.with(context).asBitmap().load(imageUrl).apply(options).into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             imageView.setImageBitmap(resource);
+                            if (target != null) {
+                                target.onResourceReady(resource, transition);
+                            }
                         }
                     });
                     return;

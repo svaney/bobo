@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
@@ -38,13 +39,18 @@ import com.bobo.gmargiani.bobo.ui.views.NewImageView;
 import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.AppUtils;
+import com.bobo.gmargiani.bobo.utils.ImageLoader;
 import com.bobo.gmargiani.bobo.utils.ImagePicker;
 import com.bobo.gmargiani.bobo.utils.ViewUtils;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -82,6 +88,17 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @BindView(R.id.price_wrapper)
     View statementPriceWrapper;
 
+    @BindView(R.id.use_image_one)
+    ImageView usimone;
+    @BindView(R.id.use_image_two)
+    ImageView usetwo;
+    @BindView(R.id.use_image_three)
+    ImageView usethree;
+    @BindView(R.id.use_image_four)
+    ImageView usefour;
+    @BindView(R.id.use_image_five)
+    ImageView usefive;
+
     @BindView(R.id.price)
     EditText statementPrice;
 
@@ -93,6 +110,9 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @BindView(R.id.add_statement_button)
     Button addButton;
+
+    @BindView(R.id.delete_statement)
+    Button delete;
 
     @BindView(R.id.archive_wrapper)
     View archiveWrapper;
@@ -108,6 +128,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     private ArrayList<Bitmap> userImages = new ArrayList<>();
     private ArrayList<String> userImageLinks = new ArrayList<>();
     private ArrayList<File> userImageFiles = new ArrayList<>();
+    private ArrayList<File> userExistingImageFiles = new ArrayList<>();
     private ArrayList<String> userLocations = new ArrayList<>();
     private ArrayList<String> userCategories = new ArrayList<>();
     private boolean isMap;
@@ -140,40 +161,135 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
         statementItem = Parcels.unwrap(getIntent().getParcelableExtra(AppConsts.PARAM_STATEMENT));
 
-        if (statementItem != null) {
-            if (!TextUtils.isEmpty(statementItem.getLocation()))
-                userLocations.add(statementItem.getLocation());
+        showFullLoading();
 
-            if (!TextUtils.isEmpty(statementItem.getCategory()))
-                userCategories.add(statementItem.getCategory());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (statementItem != null) {
+                    if (!TextUtils.isEmpty(statementItem.getLocation()))
+                        userLocations.add(statementItem.getLocation());
 
-            radioRent.setChecked(statementItem.isRenting());
-            radioSell.setChecked(statementItem.isSelling());
+                    if (!TextUtils.isEmpty(statementItem.getCategory()))
+                        userCategories.add(statementItem.getCategory());
 
-            statementName.setText(statementItem.getTitle());
-            statementDesc.setText(statementItem.getDescription());
+                    radioRent.setChecked(statementItem.isRenting());
+                    radioSell.setChecked(statementItem.isSelling());
 
-            statementPrice.setText(String.valueOf(statementItem.getPrice()));
+                    statementName.setText(statementItem.getTitle());
+                    statementDesc.setText(statementItem.getDescription());
 
-            if (statementItem.getImages() != null) {
-                for (String link : statementItem.getImages()) {
-                    userImageLinks.add(link);
+                    statementPrice.setText(String.valueOf(statementItem.getPrice()));
+
+                    if (statementItem.getImages() != null) {
+                        int i = 0;
+                        for (i = 0; i < statementItem.getImages().size(); i++) {
+                            userImageLinks.add(statementItem.getImages().get(i));
+                            ImageView imageView = usimone;
+                            switch (i) {
+                                case 1:
+                                    imageView = usetwo;
+                                    break;
+                                case 2:
+                                    imageView = usethree;
+                                    break;
+                                case 3:
+                                    imageView = usefour;
+                                    break;
+                                case 4:
+                                    imageView = usefive;
+                                    break;
+                            }
+                            final int finalI = i;
+                            ImageLoader.load(imageView)
+                                    .setUrl(statementItem.getImages().get(i), true)
+                                    .setOval(true)
+                                    .setTarget(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                                            try {
+                                                File f = new File(NewStatementActivity.this.getCacheDir(), "imageFile" + finalI);
+                                                f.createNewFile();
+
+                                                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                                                byte[] bitmapdata = bos.toByteArray();
+
+                                                FileOutputStream fos = new FileOutputStream(f);
+                                                fos.write(bitmapdata);
+                                                fos.flush();
+                                                fos.close();
+
+                                                userExistingImageFiles.add(f);
+
+                                            } catch (Exception ignored) {
+                                                ignored.printStackTrace();
+                                            }
+                                        }
+                                    })
+                                    .build();
+
+                        }
+                    }
+
+                    archiveWrapper.setVisibility(View.VISIBLE);
+                    archiveCheckBox.setChecked(statementItem.isArchive());
+                    addButton.setText(getString(R.string.save));
+                    delete.setVisibility(View.VISIBLE);
+
+                    if (statementItem.getLat() != null && statementItem.getLon() != null) {
+                        lat = statementItem.getLat();
+                        lng = statementItem.getLon();
+                        isMap = true;
+                        userLocations = new ArrayList<>();
+                    }
                 }
+
+                setValues();
+                refreshHeaderText();
+                showContent();
             }
-
-            archiveWrapper.setVisibility(View.VISIBLE);
-            archiveCheckBox.setChecked(statementItem.isArchive());
-            addButton.setText(getString(R.string.save));
-        }
-
-        setValues();
-        refreshHeaderText();
+        });
     }
 
     private void setValues() {
         setLocationValues();
         setCategoryValues();
         setImageValues();
+    }
+
+    @OnClick(R.id.delete_statement)
+    public void deleteItem() {
+        showFullLoading();
+        if (statementItem != null) {
+            netApi.deleteStatement(statementItem.getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                @Override
+                public void onResponse(ApiResponse<Object> response) {
+                    super.onResponse(response);
+                    if (response.isSuccess()) {
+                        AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით წაიშალა");
+                        userInfo.invalidateStatementsEvent();
+                        Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, 2000);
+                    } else {
+                        AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                        showContent();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    super.onFailure(t);
+                    AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                    showContent();
+                }
+            });
+        }
     }
 
     @OnClick(R.id.add_statement_button)
@@ -196,7 +312,39 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
         } else {
             showFullLoading();
             if (statementItem != null) {
+                userExistingImageFiles.addAll(userImageFiles);
+                netApi.updateStatement(statementItem.getStatementId(), !TextUtils.isEmpty(statementName.getText().toString()) ? statementName.getText().toString() : null,
+                        !TextUtils.isEmpty(statementDesc.getText().toString()) ? statementDesc.getText().toString() : null,
+                        !TextUtils.isEmpty(statementPrice.getText().toString()) ? statementPrice.getText().toString() : null,
+                        !TextUtils.isEmpty(locationKey) ? locationKey : null,
+                        !TextUtils.isEmpty(categoryKey) ? categoryKey : null,
+                        lat, lng, radioSell.isChecked(), radioRent.isChecked(), archiveCheckBox.isChecked(), userExistingImageFiles, new RestCallback<ApiResponse<Object>>() {
+                            @Override
+                            public void onResponse(ApiResponse<Object> response) {
+                                super.onResponse(response);
+                                if (response.isSuccess()) {
+                                    AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით შეიცვალა");
+                                    userInfo.invalidateStatementsEvent();
+                                    Handler h = new Handler();
+                                    h.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finish();
+                                        }
+                                    }, 2000);
+                                } else {
+                                    AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                                    showContent();
+                                }
+                            }
 
+                            @Override
+                            public void onFailure(Throwable t) {
+                                super.onFailure(t);
+                                AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                                showContent();
+                            }
+                        });
             } else {
                 netApi.createStatement(statementName.getText().toString(), statementDesc.getText().toString(), statementPrice.getText().toString(), locationKey, categoryKey, lat, lng,
                         radioSell.isChecked(), radioRent.isChecked(), userImageFiles, new RestCallback<ApiResponse<Object>>() {
@@ -345,6 +493,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     public void onCloseImageClick(int position) {
         if (position < userImageLinks.size()) {
             userImageLinks.remove(position);
+            userExistingImageFiles.remove(position);
             setImageValues();
             try {
                 TransitionManager.beginDelayedTransition(newImagesWrapper);

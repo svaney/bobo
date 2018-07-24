@@ -125,5 +125,8 @@
     <string name="select_region">რეგიონის არჩევა</string>
     <string name="select_on_map">რუკაზე მონიშვნა</string>
     <string name="login_success">თქვენ წარმატებით გაიარეთ ავტორიზაცია</string>
+    <string name="show_on_map">რუკაზე ნახვა</string>
+    <string name="delete">DELETE</string>
+    <string name="operation_succsessful">ოპერაცია წარმატებით დასრულდა</string>
 
 </resources>

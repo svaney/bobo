@@ -330,9 +330,15 @@ public class OwnerProfileActivity extends RootDetailedActivity implements TabLay
 
             Bundle b = new Bundle();
             b.putString(AppConsts.PARAM_OWNER_ID, ownerId);
+            b.putBoolean(AppConsts.PARAM_ARCHIVED, false);
 
             activeStatements.setArguments(b);
-            archivedStatements.setArguments(b);
+
+            Bundle b2 = new Bundle();
+            b2.putString(AppConsts.PARAM_OWNER_ID, ownerId);
+            b2.putBoolean(AppConsts.PARAM_ARCHIVED, true);
+
+            archivedStatements.setArguments(b2);
         }
 
         @Override

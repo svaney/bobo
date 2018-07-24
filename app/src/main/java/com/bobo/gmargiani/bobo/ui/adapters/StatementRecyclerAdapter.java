@@ -89,6 +89,10 @@ public class StatementRecyclerAdapter extends InfinityAdapter {
                             .applyTint(true)
                             .build();
                 } else if (userInfo.isStatementFavorite(item.getStatementId())) {
+                    ImageLoader.load(holder.favoritesIcFilled)
+                            .setRes(R.drawable.ic_favorite_filled)
+                            .applyTint(true)
+                            .build();
                     holder.favoritesIcFilled.setVisibility(View.VISIBLE);
                     holder.favoritesIc.setVisibility(View.GONE);
                 } else {

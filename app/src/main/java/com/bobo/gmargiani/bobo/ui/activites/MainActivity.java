@@ -237,12 +237,14 @@ public class MainActivity extends RootActivity
     protected void onStart() {
         super.onStart();
         userInfo.requestLogInEvent();
-        if (adapter == null || PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid()) {
+        if (adapter == null || PreferencesApiManager.getInstance().listIsGrid() != adapter.isGrid() || UserInfo.statementsInvalidated) {
+            UserInfo.statementsInvalidated = false;
             setUpRecyclerView();
         }
         adapter.checkLoader(recyclerView);
 
         toolbarWidget.collapseSearch();
+
     }
 
     @Subscribe
@@ -363,8 +365,10 @@ public class MainActivity extends RootActivity
                     break;
                 case RootEvent.STATE_SUCCESS:
                     setUpFilterTypeView();
-                    adapter.setData(event.getStatements());
-                    adapter.setIsLoading(event.canLoadMore());
+                    if (adapter != null) {
+                        adapter.setData(event.getStatements());
+                        adapter.setIsLoading(event.canLoadMore());
+                    }
                     break;
             }
         }

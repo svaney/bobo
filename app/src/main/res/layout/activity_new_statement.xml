@@ -41,7 +41,16 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/button_text_add_statement"/>
+                    android:text="@string/button_text_add_statement" />
+
+                <Button
+                    android:id="@+id/delete_statement"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/item_default_margin"
+                    android:text="@string/delete"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -81,11 +90,11 @@
                         android:paddingTop="@dimen/item_default_margin">
 
                         <LinearLayout
-                            android:visibility="gone"
                             android:id="@+id/archive_wrapper"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -103,7 +112,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/item_default_small_margin"
-                                android:text="@string/archive_statement"/>
+                                android:text="@string/archive_statement" />
 
                         </LinearLayout>
 
@@ -370,5 +379,35 @@
         </FrameLayout>
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/use_image_one"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/use_image_two"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/use_image_three"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/use_image_four"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/use_image_five"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
 
 </LinearLayout>

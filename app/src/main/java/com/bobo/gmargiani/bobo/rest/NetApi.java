@@ -51,4 +51,11 @@ public abstract class NetApi {
 
     public abstract void createStatement(String title, String description, String price, String locationId, String categoryId,
                                          double lat, double lng, boolean selling, boolean renting, ArrayList<File> userImageFiles, RestCallback<ApiResponse<Object>> objectApiResponse);
+
+    public abstract void deleteStatement(String statementId, RestCallback<ApiResponse<Object>> callback) ;
+
+    public abstract void updateUser(String companyName, String firstName, String lastName, String phoneNum, String password, File avatar, RestCallback<ApiResponse<OwnerDetails>> callback);
+
+    public abstract void updateStatement(String statementId, String title, String description, String price, String locationId, String categoryId, double lat, double lon, boolean selling, boolean renting, boolean isArchived,
+                                         ArrayList<File> photos, RestCallback<ApiResponse<Object>> callback);
 }

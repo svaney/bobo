@@ -32,9 +32,12 @@ import java.util.ArrayList;
 public class StatementListFragment extends RootFragment implements StatementRecyclerAdapter.StatementItemClickListener {
 
     private ArrayList<StatementItem> statements;
+    private ArrayList<StatementItem> copyItems = new ArrayList<>();
+
 
     private RecyclerView recyclerView;
     private StatementRecyclerAdapter adapter;
+    private boolean isArchived;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,9 +47,18 @@ public class StatementListFragment extends RootFragment implements StatementRecy
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        isArchived = getArguments().getBoolean(AppConsts.PARAM_ARCHIVED, false);
         statements = userInfo.getOwnerStatements(getArguments().getString(AppConsts.PARAM_OWNER_ID));
 
         if (statements != null) {
+            copyItems = new ArrayList<>();
+
+            for (StatementItem item : statements) {
+                if (item.isArchive() == isArchived) {
+                    copyItems.add(item);
+                }
+            }
+
             recyclerView = view.findViewById(R.id.recycler_view);
 
             boolean isGrid = PreferencesApiManager.getInstance().listIsGrid();
@@ -71,16 +83,17 @@ public class StatementListFragment extends RootFragment implements StatementRecy
                     this, null, userInfo);
             adapter.setIsLoading(false);
 
-            adapter.setData(statements);
+            adapter.setData(copyItems);
             recyclerView.setAdapter(adapter);
 
         }
     }
 
+
     @Override
     public void onItemClick(int position) {
-        if (statements != null && statements.size() > position) {
-            StatementItem item = statements.get(position);
+        if (copyItems != null && copyItems.size() > position) {
+            StatementItem item = copyItems.get(position);
 
             StatementDetailsActivity.start(getContext(), item, userInfo);
         }
@@ -103,11 +116,11 @@ public class StatementListFragment extends RootFragment implements StatementRecy
         try {
             if (userInfo == null || !userInfo.isAuthorized()) {
                 ((RootActivity) getActivity()).showAuthorizationDialog(null);
-            } else if (statements != null && statements.size() > position) {
-                if (userInfo.isUsersItem(statements.get(position).getOwnerId())){
-                    NewStatementActivity.start(getActivity(), statements.get(position));
+            } else if (copyItems != null && copyItems.size() > position) {
+                if (userInfo.isUsersItem(copyItems.get(position).getOwnerId())) {
+                    NewStatementActivity.start(getActivity(), copyItems.get(position));
                 } else {
-                    ((RootActivity) getActivity()).changeItemFavorite(statements.get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
+                    ((RootActivity) getActivity()).changeItemFavorite(copyItems.get(position).getStatementId(), new RestCallback<ApiResponse<Object>>() {
                         @Override
                         public void onResponse(ApiResponse<Object> response) {
                             super.onResponse(response);

@@ -67,7 +67,7 @@ public class ManageSubscriptionsActivity extends AuthorizedActivity implements S
         userInfo.requestSubscribedUsers(logInEvent.getLogInData().getUserDetails().getSubscribedUsers(), false);
     }
 
-    @OnClick(R.id.full_retry)
+    @OnClick(R.id.full_retry_button)
     public void onRetry() {
         if (userInfo.isAuthorized()) {
             userInfo.requestSubscribedUsers(logInEvent.getLogInData().getUserDetails().getSubscribedUsers(), true);
@@ -101,8 +101,8 @@ public class ManageSubscriptionsActivity extends AuthorizedActivity implements S
 
     public void refreshInfo() {
         if (ownerAdapter != null && subscribedUsersEvent.getUsers() != null) {
-            for (int i = subscribedUsersEvent.getUsers().size() - 1; i >=0; i--){
-                if (!userInfo.isUserSubscribed(subscribedUsersEvent.getUsers().get(i).getOwnerId())){
+            for (int i = subscribedUsersEvent.getUsers().size() - 1; i >= 0; i--) {
+                if (!userInfo.isUserSubscribed(subscribedUsersEvent.getUsers().get(i).getOwnerId())) {
                     subscribedUsersEvent.getUsers().remove(i);
                     break;
                 }
@@ -122,9 +122,8 @@ public class ManageSubscriptionsActivity extends AuthorizedActivity implements S
                     @Override
                     public void onResponse(ApiResponse<Object> response) {
                         super.onResponse(response);
-                        if (!response.isSuccess()) {
-                            refreshInfo();
-                        }
+                       refreshInfo();
+
                     }
 
                     @Override
@@ -133,7 +132,6 @@ public class ManageSubscriptionsActivity extends AuthorizedActivity implements S
                         refreshInfo();
                     }
                 });
-                refreshInfo();
             }
 
 

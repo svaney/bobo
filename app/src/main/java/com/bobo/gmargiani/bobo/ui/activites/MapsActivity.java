@@ -196,16 +196,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setUpMarker(LatLng latLng, float zoom) {
         if (operationType == TYPE_SHOW_LOCATION) {
             LatLng position = new LatLng(lat, lng);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom));
-            mMap.addMarker(new MarkerOptions().position(position));
+            MarkerOptions opt = new MarkerOptions().position(position);
+            mMap.addMarker(opt);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(opt.getPosition(), zoom));
+
         } else {
             customMarker.setVisibility(View.VISIBLE);
             if (latLng == null) {
                 getCurrentLocation();
             } else {
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
                 listenToCamera();
             }
 

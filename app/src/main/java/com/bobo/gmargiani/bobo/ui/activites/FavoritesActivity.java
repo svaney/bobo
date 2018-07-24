@@ -94,7 +94,7 @@ public class FavoritesActivity extends AuthorizedActivity implements StatementRe
         }
     }
 
-    @OnClick(R.id.full_retry)
+    @OnClick(R.id.full_retry_button)
     public void onRetry() {
         if (userInfo.isAuthorized()) {
             userInfo.requestFavoriteStatements(false);
@@ -124,8 +124,8 @@ public class FavoritesActivity extends AuthorizedActivity implements StatementRe
 
     public void refreshInfo() {
         if (adapter != null && favoriteStatementsEvent.getStatementItems() != null) {
-            for (int i = favoriteStatementsEvent.getStatementItems().size() - 1; i >=0; i--){
-                if (!userInfo.isStatementFavorite(favoriteStatementsEvent.getStatementItems().get(i).getStatementId())){
+            for (int i = favoriteStatementsEvent.getStatementItems().size() - 1; i >= 0; i--) {
+                if (!userInfo.isStatementFavorite(favoriteStatementsEvent.getStatementItems().get(i).getStatementId())) {
                     favoriteStatementsEvent.getStatementItems().remove(i);
                     break;
                 }
@@ -147,9 +147,7 @@ public class FavoritesActivity extends AuthorizedActivity implements StatementRe
                         @Override
                         public void onResponse(ApiResponse<Object> response) {
                             super.onResponse(response);
-                            if (!response.isSuccess()) {
-                                refreshInfo();
-                            }
+                            refreshInfo();
                         }
 
                         @Override
@@ -158,7 +156,6 @@ public class FavoritesActivity extends AuthorizedActivity implements StatementRe
                             refreshInfo();
                         }
                     });
-                    refreshInfo();
                 }
             }
 

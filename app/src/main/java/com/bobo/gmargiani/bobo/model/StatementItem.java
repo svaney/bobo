@@ -1,9 +1,14 @@
 package com.bobo.gmargiani.bobo.model;
 
+import android.content.Context;
+
+import com.bobo.gmargiani.bobo.utils.Utils;
+
 import org.parceler.Parcel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Parcel
 public class StatementItem {
@@ -21,14 +26,32 @@ public class StatementItem {
     private boolean selling;
     private boolean renting;
     private String categoryId;
-    private boolean archive;
+    private boolean isArchived;
+    private Double lat;
+    private Double lon;
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
 
     public boolean isArchive() {
-        return archive;
+        return isArchived;
     }
 
     public void setArchive(boolean archive) {
-        this.archive = archive;
+        this.isArchived = archive;
     }
 
     public String getMainImage() {
@@ -42,7 +65,7 @@ public class StatementItem {
         return userId;
     }
 
-    public void setOwnerId(String  ownerId) {
+    public void setOwnerId(String ownerId) {
         this.userId = ownerId;
     }
 
@@ -79,7 +102,12 @@ public class StatementItem {
     }
 
     public String getCreateDate() {
-        return createDate;
+        try {
+            return createDate.substring(0, 10);
+        } catch (Exception e) {
+
+        }
+        return "";
     }
 
     public void setCreateDate(String createDate) {

@@ -110,6 +110,13 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
+    public void deleteStatement(String statementId, RestCallback<ApiResponse<Object>> callback) {
+        Call<ApiResponse<Object>> call = retService.deleteStatement("Bearer " + PreferencesApiManager.getInstance().getToken(), new StatementId(statementId));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
     public void createStatement(String title, String description, String price, String locationId, String categoryId, double lat, double lng, boolean selling,
                                 boolean renting, ArrayList<File> userImageFiles, RestCallback<ApiResponse<Object>> callback) {
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
@@ -192,6 +199,151 @@ public class RetrofitApi extends NetApi {
     }
 
     @Override
+    public void updateUser(String companyName, String firstName, String lastName, String phoneNum, String password, File avatar, RestCallback<ApiResponse<OwnerDetails>> callback) {
+
+        RequestBody passwordBody = null;
+        if (!TextUtils.isEmpty(password)) {
+            passwordBody = RequestBody.create(MediaType.parse("text/plain"), password);
+        }
+
+        RequestBody companyNameBody = null;
+        if (!TextUtils.isEmpty(companyName)) {
+            companyNameBody = RequestBody.create(MediaType.parse("text/plain"), companyName);
+        }
+
+        RequestBody firstNameBody = null;
+        if (!TextUtils.isEmpty(firstName)) {
+            firstNameBody = RequestBody.create(MediaType.parse("text/plain"), firstName);
+        }
+        RequestBody lastNameBody = null;
+        if (!TextUtils.isEmpty(lastName)) {
+            lastNameBody = RequestBody.create(MediaType.parse("text/plain"), lastName);
+        }
+
+
+        RequestBody phoneNumBody = null;
+        if (phoneNum != null) {
+            phoneNumBody = RequestBody.create(MediaType.parse("text/plain"), phoneNum);
+        }
+
+        MultipartBody.Part avatarBody = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), avatar);
+            avatarBody = MultipartBody.Part.createFormData("avatar", avatar.getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Call<ApiResponse<OwnerDetails>> call = retService.updateUser("Bearer " + PreferencesApiManager.getInstance().getToken(), passwordBody, avatarBody, firstNameBody, lastNameBody, phoneNumBody, companyNameBody);
+
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+
+
+    }
+
+    @Override
+    public void updateStatement(String statementId, String title, String description, String price, String locationId, String categoryId, double lat, double lon, boolean selling, boolean renting,
+                                boolean isArchived, ArrayList<File> photos, RestCallback<ApiResponse<Object>> callback) {
+
+        RequestBody titleBody = null;
+        if (!TextUtils.isEmpty(title)) {
+            titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        }
+
+        RequestBody descriptionBody = null;
+        if (!TextUtils.isEmpty(description)) {
+            descriptionBody = RequestBody.create(MediaType.parse("text/plain"), description);
+        }
+
+        RequestBody priceBody = null;
+        if (!TextUtils.isEmpty(price)) {
+            priceBody = RequestBody.create(MediaType.parse("text/plain"), price);
+        }
+
+        RequestBody locationIdBody = null;
+        if (!TextUtils.isEmpty(locationId)) {
+            locationIdBody = RequestBody.create(MediaType.parse("text/plain"), locationId);
+        }
+
+
+        RequestBody categoryIdBody = null;
+        if (categoryId != null) {
+            categoryIdBody = RequestBody.create(MediaType.parse("text/plain"), categoryId);
+        }
+
+        RequestBody latBody = null;
+        if (lat != -1000)
+            latBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lat));
+
+        RequestBody lngBody = null;
+        if (lon != -1000)
+            lngBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lon));
+
+        RequestBody sellingBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(selling));
+
+        RequestBody statementIdBody = RequestBody.create(MediaType.parse("text/plain"), statementId);
+
+        RequestBody rentingBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(renting));
+
+        RequestBody isArchivedBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(isArchived));
+
+
+        MultipartBody.Part photos1 = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), photos.get(0));
+            photos1 = MultipartBody.Part.createFormData("photos", photos.get(0).getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MultipartBody.Part photos2 = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), photos.get(1));
+            photos2 = MultipartBody.Part.createFormData("photos", photos.get(1).getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MultipartBody.Part photos3 = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), photos.get(2));
+            photos3 = MultipartBody.Part.createFormData("photos", photos.get(2).getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MultipartBody.Part photos4 = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), photos.get(3));
+            photos4 = MultipartBody.Part.createFormData("photos", photos.get(3).getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        MultipartBody.Part photos5 = null;
+        try {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), photos.get(4));
+            photos5 = MultipartBody.Part.createFormData("photos", photos.get(4).getName(), requestFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Call<ApiResponse<Object>> call = retService.updateStatement("Bearer " + PreferencesApiManager.getInstance().getToken(), statementIdBody, titleBody, descriptionBody, priceBody, locationIdBody, categoryIdBody, latBody,
+                lngBody, sellingBody, rentingBody, isArchivedBody, photos1, photos2, photos3, photos4, photos5);
+
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
     public void logIn(String email, String password, RestCallback<ApiResponse<LogInData>> callback) {
         Call<ApiResponse<LogInData>> call = retService.logIn(new LogIn(email, password));
         callback.setCall(call);
@@ -224,6 +376,14 @@ public class RetrofitApi extends NetApi {
         Call<ApiResponse<Object>> call = retService.setSubscribed("Bearer " + PreferencesApiManager.getInstance().getToken(), new SubscribeUser(userId, isSubscribed));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    public class StatementId {
+        String statementId;
+
+        public StatementId(String statementId) {
+            this.statementId = statementId;
+        }
     }
 
     public class OwnerStatements {
