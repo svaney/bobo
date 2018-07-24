@@ -17,7 +17,7 @@ public class StatementItem {
     private boolean isFavorite;
     private int totalViews;
     private int totalFavorites;
-    private String location;
+    private String locationId;
     private boolean selling;
     private boolean renting;
     private String categoryId;
@@ -119,11 +119,11 @@ public class StatementItem {
     }
 
     public String getLocation() {
-        return location;
+        return locationId;
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        this.locationId = location;
     }
 
     public boolean isSelling() {

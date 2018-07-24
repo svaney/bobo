@@ -271,7 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 locationName = locationName + (!TextUtils.isEmpty(locationName) ? ", " : "") + address.getCountryName();
                             }
 
-                            titleText.setVisibility(TextUtils.isEmpty(locationName) ? View.GONE : View.VISIBLE);
+                            titleWrapper.setVisibility(TextUtils.isEmpty(locationName) ? View.GONE : View.VISIBLE);
                             titleText.setText(locationName);
                         }
                     } catch (Exception e) {

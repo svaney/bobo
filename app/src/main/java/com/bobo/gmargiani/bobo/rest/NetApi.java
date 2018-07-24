@@ -46,4 +46,9 @@ public abstract class NetApi {
     public abstract void subscribeUser(String userId, boolean isSubscribed, RestCallback<ApiResponse<Object>> callback);
 
     public abstract void requestFavoriteStatements(ArrayList<String> favourites, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback);
+
+    public abstract void getSubscribedUserDetails(ArrayList<String> userIds, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback);
+
+    public abstract void createStatement(String title, String description, String price, String locationId, String categoryId,
+                                         double lat, double lng, boolean selling, boolean renting, ArrayList<File> userImageFiles, RestCallback<ApiResponse<Object>> objectApiResponse);
 }

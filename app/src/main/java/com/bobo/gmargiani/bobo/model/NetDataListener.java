@@ -32,4 +32,6 @@ public interface NetDataListener {
     void onSearchOwners(ApiResponse<ArrayList<OwnerDetails>> response, int from, String query, int count);
 
     void onFavoriteStatements(ApiResponse<ArrayList<StatementItem>> response);
+
+    void onSubscribedUsers(ApiResponse<ArrayList<OwnerDetails>> response);
 }

@@ -1,6 +1,7 @@
 package com.bobo.gmargiani.bobo.rest;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.bobo.gmargiani.bobo.app.App;
 import com.bobo.gmargiani.bobo.model.AppVersion;
@@ -73,7 +74,16 @@ public class RetrofitApi extends NetApi {
 
     @Override
     public void getOwnerDetails(String ownerId, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback) {
-        Call<ApiResponse<ArrayList<OwnerDetails>>> call = retService.getOwnerDetails(new UserId(ownerId));
+        ArrayList<String> userIds = new ArrayList<>();
+        userIds.add(ownerId);
+        Call<ApiResponse<ArrayList<OwnerDetails>>> call = retService.getOwnerDetails(new UserId(userIds));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void getSubscribedUserDetails(ArrayList<String> userIds, RestCallback<ApiResponse<ArrayList<OwnerDetails>>> callback) {
+        Call<ApiResponse<ArrayList<OwnerDetails>>> call = retService.getOwnerDetails(new UserId(userIds));
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
     }
@@ -94,6 +104,62 @@ public class RetrofitApi extends NetApi {
 
     @Override
     public void requestFavoriteStatements(ArrayList<String> favourites, RestCallback<ApiResponse<ArrayList<StatementItem>>> callback) {
+        Call<ApiResponse<ArrayList<StatementItem>>> call = retService.getStatementsByIds(new FavoriteStatements(favourites));
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
+    }
+
+    @Override
+    public void createStatement(String title, String description, String price, String locationId, String categoryId, double lat, double lng, boolean selling,
+                                boolean renting, ArrayList<File> userImageFiles, RestCallback<ApiResponse<Object>> callback) {
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), description);
+        RequestBody priceBody = RequestBody.create(MediaType.parse("text/plain"), price);
+        RequestBody locationBody = null;
+        if (!TextUtils.isEmpty(locationId))
+            locationBody = RequestBody.create(MediaType.parse("text/plain"), locationId);
+        RequestBody categoryBody = RequestBody.create(MediaType.parse("text/plain"), categoryId);
+        RequestBody latBody = null;
+        if (lat != -1000)
+            latBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lat));
+        RequestBody lngBody = null;
+        if (lng != -1000)
+            lngBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(lng));
+        RequestBody sellingBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(selling));
+        RequestBody rentingBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(renting));
+
+        MultipartBody.Part photo1 = null;
+        MultipartBody.Part photo2 = null;
+        MultipartBody.Part photo3 = null;
+        MultipartBody.Part photo4 = null;
+        MultipartBody.Part photo5 = null;
+
+        if (userImageFiles != null && userImageFiles.size() > 0) {
+            RequestBody requestFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), userImageFiles.get(0));
+            photo1 = MultipartBody.Part.createFormData("photos", userImageFiles.get(0).getName(), requestFile1);
+            if (userImageFiles.size() > 1) {
+                RequestBody requestFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), userImageFiles.get(1));
+                photo2 = MultipartBody.Part.createFormData("photos", userImageFiles.get(1).getName(), requestFile2);
+                if (userImageFiles.size() > 2) {
+                    RequestBody requestFile3 = RequestBody.create(MediaType.parse("multipart/form-data"), userImageFiles.get(2));
+                    photo3 = MultipartBody.Part.createFormData("photos", userImageFiles.get(2).getName(), requestFile3);
+                    if (userImageFiles.size() > 3) {
+                        RequestBody requestFile4 = RequestBody.create(MediaType.parse("multipart/form-data"), userImageFiles.get(3));
+                        photo4 = MultipartBody.Part.createFormData("photos", userImageFiles.get(3).getName(), requestFile4);
+                        if (userImageFiles.size() > 4) {
+                            RequestBody requestFile5 = RequestBody.create(MediaType.parse("multipart/form-data"), userImageFiles.get(4));
+                            photo5 = MultipartBody.Part.createFormData("photos", userImageFiles.get(4).getName(), requestFile5);
+                        }
+                    }
+                }
+            }
+        }
+
+        Call<ApiResponse<Object>> call = retService.createStatement("Bearer " + PreferencesApiManager.getInstance().getToken(), titleBody, descriptionBody, priceBody, locationBody,
+                categoryBody, latBody, lngBody, sellingBody, rentingBody, photo1, photo2, photo3, photo4, photo5);
+
+        callback.setCall(call);
+        call.enqueue(new RetrofitCallback<>(callback));
 
     }
 
@@ -122,7 +188,6 @@ public class RetrofitApi extends NetApi {
 
         callback.setCall(call);
         call.enqueue(new RetrofitCallback<>(callback));
-
 
     }
 
@@ -254,12 +319,20 @@ public class RetrofitApi extends NetApi {
     }
 
 
+    public class FavoriteStatements {
+        ArrayList<String> statementsIds;
+
+        public FavoriteStatements(ArrayList<String> statementsIds) {
+            this.statementsIds = statementsIds;
+        }
+    }
+
+
     public class UserId {
         ArrayList<String> userIds;
 
-        public UserId(String userId) {
-            this.userIds = new ArrayList<>();
-            this.userIds.add(userId);
+        public UserId(ArrayList<String> userIds) {
+            this.userIds = userIds;
         }
     }
 

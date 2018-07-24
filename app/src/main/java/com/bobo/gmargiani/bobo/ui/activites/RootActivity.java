@@ -251,6 +251,7 @@ public abstract class RootActivity extends AppCompatActivity {
             userInfo.addToFavorites(statementId);
         }
 
+        userInfo.favoriteStatementsEvent = null;
 
         netApi.setFavorite(statementId, !isFavorite, new RestCallback<ApiResponse<Object>>() {
             @Override
@@ -296,6 +297,7 @@ public abstract class RootActivity extends AppCompatActivity {
             userInfo.subscribeUser(ownerId);
         }
 
+        userInfo.subscribedUsersEvent = null;
 
         netApi.subscribeUser(ownerId, !isFavorite, new RestCallback<ApiResponse<Object>>() {
             @Override

@@ -348,8 +348,8 @@ public class StatementDetailsActivity extends RootDetailedActivity implements St
                     .applyTint(R.color.colorAccent)
                     .build();
 
-            ownerLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
-            icOwnerLocation.setVisibility(TextUtils.isEmpty(statementItem.getLocation()) ? View.GONE : View.VISIBLE);
+            ownerLocation.setVisibility(TextUtils.isEmpty(locationsEvent.getValueByKey(ownerDetailsEvent.getOwnerDetails().getLocation())) ? View.GONE : View.VISIBLE);
+            icOwnerLocation.setVisibility(TextUtils.isEmpty(locationsEvent.getValueByKey(ownerDetailsEvent.getOwnerDetails().getLocation())) ? View.GONE : View.VISIBLE);
         }
     }
 

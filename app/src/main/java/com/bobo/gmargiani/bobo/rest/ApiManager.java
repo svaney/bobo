@@ -234,4 +234,22 @@ public class ApiManager {
             }
         });
     }
+
+    public void getSubscribedUsers(ArrayList<String> userIds) {
+        netApi.getSubscribedUserDetails(userIds, new RestCallback<ApiResponse<ArrayList<OwnerDetails>>>() {
+            @Override
+            public void onResponse(ApiResponse<ArrayList<OwnerDetails>> response) {
+                super.onResponse(response);
+                dataListener.onSubscribedUsers(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                ApiResponse<ArrayList<OwnerDetails>> response = new ApiResponse<>();
+                response.setCode("-1");
+                dataListener.onSubscribedUsers(response);
+            }
+        });
+    }
 }

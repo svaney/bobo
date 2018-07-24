@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.bobo.gmargiani.bobo.model.Token;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
 import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.activites.RegistrationActivity;
+import com.bobo.gmargiani.bobo.utils.AlertManager;
 import com.bobo.gmargiani.bobo.utils.AppConsts;
 import com.bobo.gmargiani.bobo.utils.PreferencesApiManager;
 
@@ -81,6 +83,9 @@ public class AuthorizationDialog extends BaseDialog implements View.OnClickListe
                                     resp.setMessage("OK");
                                     resp.setCode("0");
                                     App.getInstance().getUserInfo().onAuthorizeByTokenEvent(resp, response.getResult().getToken());
+                                    if (activity != null) {
+                                        AlertManager.showInfo(activity, activity.getString(R.string.login_success));
+                                    }
                                 } else if (response.getMessage() != null && response.getMessage().contains("Incorrect")) {
                                     loader.setVisibility(View.GONE);
                                     errorText.setText(R.string.error_pass_mail);

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.transition.TransitionManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -26,7 +27,10 @@ import com.bobo.gmargiani.bobo.evenbuts.events.LocationsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.LogInEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
 import com.bobo.gmargiani.bobo.model.KeyValue;
+import com.bobo.gmargiani.bobo.model.OwnerDetails;
 import com.bobo.gmargiani.bobo.model.StatementItem;
+import com.bobo.gmargiani.bobo.rest.ApiResponse;
+import com.bobo.gmargiani.bobo.rest.RestCallback;
 import com.bobo.gmargiani.bobo.ui.dialogs.DialogPair;
 import com.bobo.gmargiani.bobo.ui.dialogs.ListDialog;
 import com.bobo.gmargiani.bobo.ui.views.FilterTextView;
@@ -40,6 +44,7 @@ import com.bobo.gmargiani.bobo.utils.ViewUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -100,7 +105,9 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     private StatementItem statementItem;
 
-    private ArrayList<Object> userImages = new ArrayList<>();
+    private ArrayList<Bitmap> userImages = new ArrayList<>();
+    private ArrayList<String> userImageLinks = new ArrayList<>();
+    private ArrayList<File> userImageFiles = new ArrayList<>();
     private ArrayList<String> userLocations = new ArrayList<>();
     private ArrayList<String> userCategories = new ArrayList<>();
     private boolean isMap;
@@ -150,7 +157,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
             if (statementItem.getImages() != null) {
                 for (String link : statementItem.getImages()) {
-                    userImages.add(link);
+                    userImageLinks.add(link);
                 }
             }
 
@@ -174,7 +181,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
         if (userCategories.isEmpty()) {
             AlertManager.showError(this, "გთხოვთ მიუთითოთ თუ რა კატერგორიას მიეკუთვნება პროდუქტი");
             ViewUtils.shakeView(categoryValidateView);
-        } else if (userLocations.isEmpty()) {
+        } else if (userLocations.isEmpty() && lat == -1000 && lng == -1000) {
             AlertManager.showError(this, "გთხოვთ მიუთითოთ თუ სად მდებარეობს პროდუქტი");
             ViewUtils.shakeView(locationValidateView);
         } else if (TextUtils.isEmpty(statementPrice.getText())) {
@@ -187,7 +194,39 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
             AlertManager.showError(this, "გთხოვთ მიუთითოთ პროდუქტის აწერა");
             ViewUtils.shakeView(statementDesc);
         } else {
+            showFullLoading();
+            if (statementItem != null) {
 
+            } else {
+                netApi.createStatement(statementName.getText().toString(), statementDesc.getText().toString(), statementPrice.getText().toString(), locationKey, categoryKey, lat, lng,
+                        radioSell.isChecked(), radioRent.isChecked(), userImageFiles, new RestCallback<ApiResponse<Object>>() {
+                            @Override
+                            public void onResponse(ApiResponse<Object> response) {
+                                super.onResponse(response);
+                                if (response.isSuccess()) {
+                                    AlertManager.showInfo(NewStatementActivity.this, "განცხადება წარმატებით დაემატა");
+                                    userInfo.invalidateStatementsEvent();
+                                    Handler h = new Handler();
+                                    h.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finish();
+                                        }
+                                    }, 2000);
+                                } else {
+                                    AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                                    showContent();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                super.onFailure(t);
+                                AlertManager.showError(NewStatementActivity.this, NewStatementActivity.this.getString(R.string.common_text_error));
+                                showContent();
+                            }
+                        });
+            }
         }
     }
 
@@ -210,11 +249,14 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
             Bitmap bitmap = ImagePicker.getCroppedImage(this, event.getResultCode(), event.getData());
 
             userImages.add(bitmap);
+            userImageFiles.add(ImagePicker.getCroppedImageFile(event.getResultCode(), event.getData()));
             setImageValues();
 
         }
     }
 
+
+    private String categoryKey;
 
     @OnClick(R.id.category)
     public void onCategoryClick() {
@@ -224,7 +266,8 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                 if (itemPositions != null) {
                     userCategories.clear();
                     for (Integer i : itemPositions) {
-                        userCategories.add(categoriesEvent.getCategories().get(i).getKey());
+                        categoryKey = categoriesEvent.getCategories().get(i).getKey();
+                        userCategories.add(categoryKey);
                     }
                     setCategoryValues();
                 }
@@ -240,6 +283,8 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
         categoryDialog.setList(data);
         categoryDialog.show();
     }
+
+    private String locationKey;
 
     @OnClick(R.id.location)
     public void onLocationClick() {
@@ -267,7 +312,8 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
                                     if (itemPositions != null) {
                                         userLocations.clear();
                                         for (Integer i : itemPositions) {
-                                            userLocations.add(locationsEvent.getLocations().get(i).getKey());
+                                            locationKey = locationsEvent.getLocations().get(i).getKey();
+                                            userLocations.add(locationKey);
                                         }
                                         isMap = false;
                                         lat = -1000;
@@ -297,8 +343,16 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
 
     @Override
     public void onCloseImageClick(int position) {
-        if (position < userImages.size()) {
-            userImages.remove(position);
+        if (position < userImageLinks.size()) {
+            userImageLinks.remove(position);
+            setImageValues();
+            try {
+                TransitionManager.beginDelayedTransition(newImagesWrapper);
+            } catch (Exception ignored) {
+            }
+        } else {
+            userImageFiles.remove(position - userImageLinks.size());
+            userImages.remove(position - userImageLinks.size());
             setImageValues();
             try {
                 TransitionManager.beginDelayedTransition(newImagesWrapper);
@@ -312,7 +366,7 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     @Override
     public void onImageClick(int position) {
         lastClickedImagePosition = position;
-        if (position < userImages.size()) {
+        if (position < userImageLinks.size() + userImageFiles.size()) {
 
         } else {
             if (!AppUtils.hasPermission(this, Manifest.permission.CAMERA) && !permissionRequested) {
@@ -350,20 +404,23 @@ public class NewStatementActivity extends RootDetailedActivity implements NewIma
     private void setImageValues() {
         newImagesWrapper.removeAllViews();
 
-        for (int i = 0; i < userImages.size(); i++) {
+        for (int i = 0; i < userImageLinks.size(); i++) {
             NewImageView img = new NewImageView(this);
-            if (userImages.get(i) instanceof Bitmap) {
-                img.setBitmap((Bitmap) userImages.get(i));
-            } else {
-                img.setLink((String) userImages.get(i));
-            }
+            img.setLink(userImageLinks.get(i));
             img.setListener(this, i);
             newImagesWrapper.addView(img);
         }
 
-        if (userImages.size() < 5) {
+        for (int i = userImageLinks.size(); i < userImageFiles.size() + userImageLinks.size(); i++) {
             NewImageView img = new NewImageView(this);
-            img.setListener(this, userImages.size() + 1);
+            img.setBitmap(userImages.get(i - userImageLinks.size()));
+            img.setListener(this, i);
+            newImagesWrapper.addView(img);
+        }
+
+        if (userImageLinks.size() + userImageFiles.size() < 5) {
+            NewImageView img = new NewImageView(this);
+            img.setListener(this, userImageLinks.size() + userImageFiles.size() + 1);
             img.clearImage();
             newImagesWrapper.addView(img);
         }

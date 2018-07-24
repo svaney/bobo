@@ -15,6 +15,7 @@ import com.bobo.gmargiani.bobo.evenbuts.events.OwnerStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.SimilarStatementsEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementSearchEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.StatementsEvent;
+import com.bobo.gmargiani.bobo.evenbuts.events.SubscribedUsersEvent;
 import com.bobo.gmargiani.bobo.evenbuts.events.TokenAuthorizationEvent;
 import com.bobo.gmargiani.bobo.rest.ApiManager;
 import com.bobo.gmargiani.bobo.rest.ApiResponse;
@@ -37,7 +38,7 @@ public class UserInfo implements NetDataListener {
     private EventBus eventBus;
 
     private AppVersionEvent appVersionEvent;
-    private StatementsEvent statementsEvent;
+    public StatementsEvent statementsEvent;
     private LocationsEvent locationsEvent;
     private CategoriesEvent categoriesEvent;
     private SimilarStatementsEvent similarStatementsEvent;
@@ -45,7 +46,8 @@ public class UserInfo implements NetDataListener {
     private ArrayList<OwnerDetailsEvent> ownerDetailsList = new ArrayList<>();
     private StatementSearchEvent statementSearchEvent;
     private OwnerSearchEvent ownerSearchEvent;
-    private FavoriteStatementsEvent favoriteStatementsEvent;
+    public FavoriteStatementsEvent favoriteStatementsEvent;
+    public SubscribedUsersEvent subscribedUsersEvent;
 
     private LogInEvent logInEvent;
     private TokenAuthorizationEvent tokenAuthorizationEvent;
@@ -62,6 +64,7 @@ public class UserInfo implements NetDataListener {
         logInEvent = null;
         tokenAuthorizationEvent = null;
         favoriteStatementsEvent = null;
+        subscribedUsersEvent = null;
     }
 
 
@@ -301,6 +304,11 @@ public class UserInfo implements NetDataListener {
         eventBus.post(favoriteStatementsEvent);
     }
 
+    public void invalidateStatementsEvent(){
+        statementsEvent.setState(RootEvent.STATE_LOADING);
+    }
+
+
     public void requestStatements(final int from, boolean update,
                                   final boolean sell, final boolean rent, final ArrayList<String> categories, final ArrayList<String> locations,
                                   final BigDecimal priceFrom, final BigDecimal priceTo, final String orderBy) {
@@ -491,6 +499,29 @@ public class UserInfo implements NetDataListener {
         eventBus.post(locationsEvent);
     }
 
+    public void requestSubscribedUsers(ArrayList<String> subscribedUsers, boolean update) {
+        if (shouldNotRefresh(subscribedUsersEvent, update)) {
+            eventBus.post(subscribedUsersEvent);
+        } else {
+            subscribedUsersEvent = new SubscribedUsersEvent();
+            subscribedUsersEvent.setState(RootEvent.STATE_LOADING);
+            eventBus.post(subscribedUsersEvent);
+            apiManager.getSubscribedUsers(subscribedUsers);
+        }
+    }
+
+    @Override
+    public void onSubscribedUsers(ApiResponse<ArrayList<OwnerDetails>> response) {
+        subscribedUsersEvent = new SubscribedUsersEvent();
+        if (response.isSuccess()) {
+            subscribedUsersEvent.setState(RootEvent.STATE_SUCCESS);
+            subscribedUsersEvent.setUsers(response.getResult());
+        } else {
+            subscribedUsersEvent.setState(RootEvent.STATE_ERROR);
+        }
+        eventBus.post(subscribedUsersEvent);
+    }
+
     public void requestCategories() {
         if (shouldNotRefresh(categoriesEvent)) {
             eventBus.post(categoriesEvent);
@@ -635,4 +666,6 @@ public class UserInfo implements NetDataListener {
         }
         return false;
     }
+
+
 }

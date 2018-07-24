@@ -59,6 +59,24 @@ public interface RetrofitService {
                                            @Part("phoneNum") RequestBody phoneNum,
                                            @Part("companyName") RequestBody companyName);
 
+    @POST("/statements/create")
+    @Multipart
+    Call<ApiResponse<Object>> createStatement(@Header("Authorization") String token,
+                                              @Part("title") RequestBody titleBody,
+                                              @Part("description") RequestBody descriptionBody,
+                                              @Part("price") RequestBody priceBody,
+                                              @Part("locationId") RequestBody locationBody,
+                                              @Part("categoryId") RequestBody categoryBody,
+                                              @Part("lat") RequestBody latBody,
+                                              @Part("lan") RequestBody lngBody,
+                                              @Part("selling") RequestBody sellingBody,
+                                              @Part("renting") RequestBody rentingBody,
+                                              @Part MultipartBody.Part photo1,
+                                              @Part MultipartBody.Part photo2,
+                                              @Part MultipartBody.Part photo3,
+                                              @Part MultipartBody.Part photo4,
+                                              @Part MultipartBody.Part photo5);
+
     @POST("/users/login")
     Call<ApiResponse<LogInData>> logIn(@Body RetrofitApi.LogIn logIn);
 
@@ -76,4 +94,7 @@ public interface RetrofitService {
 
     @POST("/users/subscribeUser")
     Call<ApiResponse<Object>> setSubscribed(@Header("Authorization") String token, @Body RetrofitApi.SubscribeUser subscribe);
+
+    @POST("/statements/getStatementsByIds")
+    Call<ApiResponse<ArrayList<StatementItem>>> getStatementsByIds(@Body  RetrofitApi.FavoriteStatements favoriteStatements);
 }

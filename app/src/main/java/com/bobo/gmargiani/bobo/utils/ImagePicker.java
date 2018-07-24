@@ -36,6 +36,7 @@ public class ImagePicker {
     private static final String TAG = "ImagePicker";
     private static final String TEMP_IMAGE_NAME = "tempImage";
     private static final String CROPPED_IMAGE_NAME = "croppedImage";
+    public static int croppedImageCount = 0;
 
     private static final boolean DEBUG_LOG = false;
 
@@ -162,7 +163,8 @@ public class ImagePicker {
         Context context = activity;
         Uri selectedImage = getImageUri(context, resultCode, imageReturnedIntent);
         if (selectedImage != null) {
-            Uri destination = Uri.fromFile(new File(context.getCacheDir(), CROPPED_IMAGE_NAME));
+            Uri destination = Uri.fromFile(new File(context.getCacheDir(), CROPPED_IMAGE_NAME + croppedImageCount));
+            croppedImageCount++;
             UCrop crop = UCrop.of(selectedImage, destination).withAspectRatio(1, 1).withOptions(createCropOptions(context));
             if (maxCroppedSize > 0) {
                 crop = crop.withMaxResultSize(maxCroppedSize, maxCroppedSize);
