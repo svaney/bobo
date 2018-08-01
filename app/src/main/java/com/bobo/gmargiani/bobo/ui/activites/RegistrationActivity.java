@@ -317,7 +317,6 @@ public class RegistrationActivity extends RootDetailedActivity implements NewIma
                                 if (response.isSuccess()) {
                                     AlertManager.showInfo(RegistrationActivity.this, RegistrationActivity.this.getString(R.string.operation_succsessful));
                                     userInfo.onAuthorizeByTokenEvent(response, PreferencesApiManager.getInstance().getToken());
-                                    Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
